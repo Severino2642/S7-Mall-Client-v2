@@ -39,13 +39,14 @@
             </a>
 
             <!-- Sous-menu avec Bootstrap Collapse -->
-            <div class="collapse" [class.show]="item.expanded">
+            <div [style.display]="item.expanded ? 'block' : 'none'">
               <ul class="list-unstyled ms-5 bg-light rounded mx-2">
                 <li *ngFor="let child of item.children">
                   <a
                     href="javascript:void(0)"
                     class="d-block px-3 py-2 text-decoration-none text-muted submenu-link"
                     (click)="navigateTo(child.route)">
+                    <i [class]="child.icon ? child.icon : 'fa fa-arrow-right'"></i>
                     {{ child.label }}
                   </a>
                 </li>

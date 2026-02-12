@@ -21,3 +21,31 @@
   background-color: #f8f9fa;
   min-height: 100vh;
 }
+
+.card {
+  border-radius: 8px;
+}
+
+.badge {
+  padding: 0.4em 0.8em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724 !important;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404 !important;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24 !important;
+}

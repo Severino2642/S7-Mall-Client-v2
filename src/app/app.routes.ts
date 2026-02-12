@@ -8,6 +8,7 @@ import { ParkingComponent } from './components/admin/parking.component/parking.c
 import {InvoicesComponent} from './components/invoice/invoice';
 import {BoxeListeComponent} from './components/admin/boxe/boxe.liste.component/boxe.liste.component';
 import {BoxeSaisieComponent} from './components/admin/boxe/boxe.saisie.component/boxe.saisie.component';
+import {BoxeDetailsComponent} from "./components/admin/boxe/boxe.details/boxe.details.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -17,6 +18,7 @@ export const routes: Routes = [
     { path: 'admin/home', component:  HomeComponent},
     // Boxe
     { path: 'admin/boxe', component:  BoxeListeComponent},
+    { path: 'admin/boxe/details/:id', component:  BoxeDetailsComponent},
     { path: 'admin/boxe/create', component:  BoxeSaisieComponent},
     { path: 'admin/boxe/update/:id', component:  BoxeSaisieComponent},
 

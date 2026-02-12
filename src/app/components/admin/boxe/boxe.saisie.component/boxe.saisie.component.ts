@@ -34,11 +34,10 @@ export class BoxeSaisieComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
-    if (this.id) {
+    if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
       this.isEditMode = true;
-
     } else {
       // Mode création
       this.isEditMode = false;

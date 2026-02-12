@@ -3,12 +3,6 @@
   max-width: 100%;
 }
 
-/* Card */
-.card {
-  border-radius: 12px;
-  transition: box-shadow 0.2s ease;
-}
-
 /* Section Header */
 .section-header {
   padding-bottom: 1rem;

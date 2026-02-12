@@ -16,17 +16,6 @@
   font-weight: 500;
 }
 
-/* Cards */
-.card {
-  border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/*.card:hover {*/
-/*  transform: translateY(-2px);*/
-/*  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;*/
-/*}*/
-
 /* Statistiques */
 .stat-icon {
   width: 40px;
@@ -101,31 +90,6 @@
 .client-badge {
   font-size: 0.75rem;
   min-width: 32px;
-}
-
-/* Badges de statut */
-.badge {
-  padding: 0.4em 0.8em;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 4px;
-}
-
-.badge-success {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.badge-warning {
-  background-color: #fff3cd;
-  color: #856404;
-}
-
-.badge-danger {
-  background-color: #f8d7da;
-  color: #721c24;
 }
 
 /* Boutons */

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {StorageUtil} from '../../../utils/storage.util';
+import {Router} from "@angular/router";
 
 export interface MenuItem {
   label: string;
@@ -44,8 +45,8 @@ export class NavbarComponent implements OnInit{
           icon: 'fa fa-shop',
           route: '',
           children: [
-            { label: 'Saisie', icon: '', route: '/admin/boxes/saisie' },
-            { label: 'Liste', icon: '', route: '/admin/boxes/liste' }
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/boxe/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' }
           ]
         }
       ]
@@ -57,6 +58,9 @@ export class NavbarComponent implements OnInit{
     { label: 'Déconnexion', icon: 'fa-door-open', action: 'logout' }
   ];
 
+  constructor(
+    private router : Router
+  ) {}
   ngOnInit(): void {
     var user = StorageUtil.getFromStorage<any>("auth");
     var mall = StorageUtil.getFromStorage<any>("mall");
@@ -95,7 +99,7 @@ export class NavbarComponent implements OnInit{
   navigateTo(route?: string): void {
     if (route) {
       console.log('Navigate to:', route);
-      // Ajouter votre logique de navigation (ex: this.router.navigate([route]))
+      this.router.navigate([route]);
     }
   }
 
