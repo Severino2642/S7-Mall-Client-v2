@@ -1,0 +1,65 @@
+<aside class="flex flex-col h-screen w-64 text-white" style="background-color: #1A4A54;">
+  <!-- Contenu principal du sidebar -->
+  <div class="flex-1 overflow-y-auto">
+    <!-- Logo -->
+    <div class="w-full flex justify-center pt-10 px-4">
+      <img src="./light-logo.png" alt="Logo" class="w-4/8" />
+    </div>
+
+    <!-- Généraux Section -->
+    <div class="mt-8">
+      <h3 class="px-4 text-xs font-semibold uppercase tracking-wider mb-2" style="color: #DDC9A4;">
+        Généraux
+      </h3>
+      <div class="space-y-1">
+        @for (item of filteredGeneralItems; track item.title) {
+          <a
+            [routerLink]="item.url"
+            class="flex items-center gap-3 px-8 py-2 text-sm transition-colors navigation-link"
+            [style.background-color]="isActivePath(item.url) ? '#DDC9A4' : ''"
+            [style.color]="isActivePath(item.url) ? '#101828' : ''"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getIconSvg(item.icon)"></path>
+            </svg>
+            <span>{{ item.title }}</span>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer avec infos utilisateur et déconnexion -->
+  <div class="p-4 border-t" style="border-color: #4a5565; background-color: #1A4A54;">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200">
+        @if (currentUser.avatar) {
+          <img
+            [src]="currentUser.avatar"
+            [alt]="currentUser.lastName + ' ' + currentUser.firstName"
+            class="w-full h-full rounded-full object-cover"
+          />
+        } @else {
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getIconSvg('user')"></path>
+          </svg>
+        }
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium truncate">
+          {{ currentUser.firstName }} {{ currentUser.lastName }}
+        </p>
+        <p class="text-xs text-gray-400 truncate">{{ currentUser.role }}</p>
+      </div>
+    </div>
+    <button
+      (click)="handleLogout()"
+      class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-300 hover:bg-red-950/50 rounded-lg transition-colors cursor-pointer"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getIconSvg('log-out')"></path>
+      </svg>
+      <span>Déconnexion</span>
+    </button>
+  </div>
+</aside>

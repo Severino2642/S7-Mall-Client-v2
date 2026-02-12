@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --primary-color: #1A4A54;
+  --secondary-color: #DDC9A4;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --hover-color: #ecf0f4;
+  --header-height: 60px;
+  --header-bg: #ffffff;
+  --header-border: #e5e7eb;
+}
+
+
+.main-page {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}

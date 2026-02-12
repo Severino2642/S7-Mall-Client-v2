@@ -1,0 +1,102 @@
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <div class="flex justify-center mb-4">
+        <div class="rounded-full p-4" style="background-color: #1A4A54;">
+          <svg class="h-12 w-12" fill="none" stroke="#DDC9A4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+      </div>
+      <h2 class="text-3xl font-extrabold" style="color: #101828;">Inscription Centre Commercial</h2>
+      <p class="mt-2 text-sm text-gray-600">Créez votre compte centre commercial</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+          <label for="nom" class="block text-sm font-medium text-gray-700 mb-2">Nom du Centre Commercial</label>
+          <input id="nom" type="text" formControlName="nom" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !nom?.invalid || !nom?.touched, 'border-red-500 bg-red-50': nom?.invalid && nom?.touched}" placeholder="Nom du centre" />
+          @if (nom?.invalid && nom?.touched) {
+            <p class="mt-1 text-sm text-red-600">Le nom est requis (min 2 caractères)</p>
+          }
+        </div>
+
+        <div>
+          <label for="adresse" class="block text-sm font-medium text-gray-700 mb-2">Adresse</label>
+          <textarea id="adresse" formControlName="adresse" rows="3" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !adresse?.invalid || !adresse?.touched, 'border-red-500 bg-red-50': adresse?.invalid && adresse?.touched}" placeholder="Adresse complète du centre commercial"></textarea>
+          @if (adresse?.invalid && adresse?.touched) {
+            <p class="mt-1 text-sm text-red-600">L'adresse est requise</p>
+          }
+        </div>
+
+        <div style="gap: 20px;display: flex;justify-content: space-around;align-items: center">
+          <div style="width: 50%">
+            <label for="adresse" class="block text-sm font-medium text-gray-700 mb-2">Heure d'ouverture</label>
+            <input id="heure_ouverture" type="time" formControlName="heure_ouverture" rows="3" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !heure_ouverture?.invalid || !heure_ouverture?.touched, 'border-red-500 bg-red-50': heure_ouverture?.invalid && heure_ouverture?.touched}" placeholder="Adresse complète du centre commercial">
+            @if (heure_ouverture?.invalid && heure_ouverture?.touched) {
+              <p class="mt-1 text-sm text-red-600">L'heure est requise</p>
+            }
+          </div>
+          <div style="width: 50%">
+            <label for="adresse" class="block text-sm font-medium text-gray-700 mb-2">Heure de fermeture</label>
+            <input id="heure_fermeture" type="time" formControlName="heure_fermeture" rows="3" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !heure_fermeture?.invalid || !heure_fermeture?.touched, 'border-red-500 bg-red-50': heure_fermeture?.invalid && heure_fermeture?.touched}" placeholder="Adresse complète du centre commercial">
+            @if (heure_fermeture?.invalid && heure_fermeture?.touched) {
+              <p class="mt-1 text-sm text-red-600">L'heure est requise</p>
+            }
+          </div>
+        </div>
+        <div>
+          <label for="identifiant" class="block text-sm font-medium text-gray-700 mb-2">Identifiant</label>
+          <input id="identifiant" type="text" formControlName="identifiant" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !identifiant?.invalid || !identifiant?.touched, 'border-red-500 bg-red-50': identifiant?.invalid && identifiant?.touched}" placeholder="Choisissez un identifiant" />
+          @if (identifiant?.invalid && identifiant?.touched) {
+            <p class="mt-1 text-sm text-red-600">L'identifiant est requis et doit etre une adresse email</p>
+          }
+        </div>
+        <div>
+          <label for="mdp" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+          <div class="relative">
+            <input id="mdp" [type]="showPassword ? 'text' : 'password'" formControlName="mdp" class="block w-full px-3 pr-10 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !mdp?.invalid || !mdp?.touched, 'border-red-500 bg-red-50': mdp?.invalid && mdp?.touched}" placeholder="••••••••" />
+            <button type="button" (click)="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                @if (showPassword) {
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                } @else {
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                }
+              </svg>
+            </button>
+          </div>
+          @if (mdp?.invalid && mdp?.touched) {
+            <p class="mt-1 text-sm text-red-600">Le mot de passe est requis (min 8 caractères)</p>
+          }
+        </div>
+
+        <button type="submit" [disabled]="isLoading" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" style="background-color: #1A4A54; --tw-ring-color: #1A4A54;" onmouseover="this.style.backgroundColor='#4a5565'" onmouseout="this.style.backgroundColor='#1A4A54'">
+          @if (isLoading) {
+            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2">Inscription en cours...</span>
+          } @else {
+            S'inscrire
+          }
+        </button>
+      </form>
+
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+          Déjà un compte ?
+          <a href="/login" class="font-medium transition-colors" style="color: #1A4A54;" onmouseover="this.style.color='#4a5565'" onmouseout="this.style.color='#1A4A54'">
+            Se connecter
+          </a>
+        </p>
+        <p class="text-sm text-gray-600 mt-2">
+          <a href="/register/client" class="font-medium" style="color: #1A4A54;">Inscription Client</a> |
+          <a href="/register/owner" class="font-medium" style="color: #1A4A54;">Inscription Propriétaire</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Contenu principal -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+      <div class="px-8 py-6">
+        <h1 class="text-3xl font-bold" style="color: #101828;">Plan du parking</h1>
+        <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace d'administration du centre commercial</p>
+      </div>
+    </header>
+
+    <!-- Zone de contenu -->
+    <div class="flex-1 overflow-hidden">
+      <app-parking-plan></app-parking-plan>
+    </div>
+  </main>
+</div>

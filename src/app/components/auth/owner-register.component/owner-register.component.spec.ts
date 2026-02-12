@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { OwnerRegisterComponent } from './owner-register.component';
+
+describe('OwnerRegisterComponent', () => {
+  let component: OwnerRegisterComponent;
+  let fixture: ComponentFixture<OwnerRegisterComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [OwnerRegisterComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(OwnerRegisterComponent);
+    component = fixture.componentInstance;
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

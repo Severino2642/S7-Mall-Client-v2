@@ -1,0 +1,111 @@
+<div class="sidebar d-flex flex-column bg-white border-end vh-100">
+  <!-- Header -->
+  <div class="sidebar-header p-3 border-bottom">
+    <div class="flex justify-center px-4 rounded-1" style="background: var(--primary-color)">
+      <img src="./assets/light-logo.png" alt="Logo" class="w-4/8" width="75" height="75" />
+    </div>
+  </div>
+
+  <!-- Menu Items -->
+  <nav class="sidebar-nav flex-grow-1 overflow-auto py-3">
+    <div *ngFor="let section of menuItems" class="mb-4">
+      <h6 class="text-uppercase text-muted px-3 mb-2 fw-semibold" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+        {{ section.label }}
+      </h6>
+      <ul class="list-unstyled mb-0">
+        <li *ngFor="let item of section.children" class="mb-1">
+          <!-- Menu item sans sous-menu -->
+          <a
+            *ngIf="!item.children"
+            href="javascript:void(0)"
+            class="d-flex align-items-center px-3 py-2 text-decoration-none text-dark menu-link"
+            (click)="navigateTo(item.route)">
+            <span class="me-3 fs-5 text-muted"><i class="{{item.icon}}"></i></span>
+            <span>{{ item.label }}</span>
+          </a>
+
+          <!-- Menu item avec sous-menu -->
+          <div *ngIf="item.children">
+            <a
+              href="javascript:void(0)"
+              class="d-flex align-items-center justify-content-between px-3 py-2 text-decoration-none text-dark menu-link"
+              [class.menu-expanded]="item.expanded"
+              (click)="toggleSubmenu(item)">
+              <div class="d-flex align-items-center">
+                <span class="me-3 fs-5 text-muted"><i class="{{ item.icon }}"></i></span>
+                <span>{{ item.label }}</span>
+              </div>
+              <i class="bi bi-chevron-right submenu-arrow" [class.rotate-90]="item.expanded"></i>
+            </a>
+
+            <!-- Sous-menu avec Bootstrap Collapse -->
+            <div class="collapse" [class.show]="item.expanded">
+              <ul class="list-unstyled ms-5 bg-light rounded mx-2">
+                <li *ngFor="let child of item.children">
+                  <a
+                    href="javascript:void(0)"
+                    class="d-block px-3 py-2 text-decoration-none text-muted submenu-link"
+                    (click)="navigateTo(child.route)">
+                    {{ child.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- User Footer -->
+  <div class="sidebar-footer border-top p-3 position-relative">
+    <div
+      class="d-flex align-items-center gap-3 p-2 border rounded user-info-wrapper cursor-pointer"
+      (click)="toggleUserMenu()">
+      <div class="user-avatar rounded-circle overflow-hidden flex-shrink-0">
+        <img
+          *ngIf="userInfo.avatar"
+          [src]="userInfo.avatar"
+          [alt]="userInfo.name"
+          class="w-100 h-100 object-fit-cover">
+        <div
+          *ngIf="!userInfo.avatar"
+          class="w-100 h-100 bg-secondary text-primary d-flex align-items-center justify-content-center fw-semibold">
+          {{ getInitials(userInfo.name) }}
+        </div>
+      </div>
+      <div class="flex-grow-1 text-truncate">
+        <div class="fw-medium text-dark text-truncate">{{ userInfo.name }}</div>
+        <small class="text-muted text-truncate d-block">{{ userInfo.email }}</small>
+      </div>
+      <i class="bi bi-chevron-right text-muted dropdown-arrow"></i>
+    </div>
+
+    <!-- User Menu Popup - Bootstrap Card -->
+    <div
+      *ngIf="showUserMenu"
+      class="card position-absolute bottom-100 start-0 end-0 mx-3 mb-2 shadow-sm border-0"
+      style="z-index: 1050;">
+      <div class="list-group list-group-flush">
+        <a
+          *ngFor="let menuItem of userMenuItems; let last = last"
+          href="javascript:void(0)"
+          class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+          [class.border-bottom-0]="last"
+          (click)="handleUserMenuAction(menuItem.action)">
+<!--          <span class="fs-5"><i class="{{ menuItem.icon }}"></i></span>-->
+          <span><i class="fa-solid {{menuItem.icon}}"></i> {{ menuItem.label }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap Modal Backdrop -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="showUserMenu"
+  *ngIf="showUserMenu"
+  (click)="toggleUserMenu()"
+  style="z-index: 1040;">
+</div>
