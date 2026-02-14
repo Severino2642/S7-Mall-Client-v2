@@ -9,7 +9,10 @@
   <main *ngIf="!loading" class="flex-1 overflow-y-auto">
     <app-header></app-header>
     <div class="main-page">
-      <div>
+      <div class="d-flex align-items-center gap-2">
+        <span>
+          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
+        </span>
         <h4 class="text-3xl fw-bold" style="color: #101828;">Details d'une boxe</h4>
       </div>
       <!-- Header Section avec Image et Détails -->
@@ -29,6 +32,13 @@
               </div>
 
               <div class="row g-3 mb-2">
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Nom</div>
+                    <div class="stat-value">{{ item?.nom }}</div>
+                  </div>
+                </div>
+
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Longueur</div>
@@ -62,13 +72,30 @@
 
           </div>
         </div>
-        <div class="card-footer d-flex gap-2 justify-content-end">
-            <button
-              class="btn btn-warning"
-              (click)="editBoxe()">
-              <i class="fa fa-edit me-2"></i>
-              Modifier
-            </button>
+        <div class="card-footer d-flex gap-2 justify-content-between">
+          <div>
+            <a
+              class="btn bg-primary text-white"
+              [routerLink]="['/fichier/create', item?._id]"
+              [queryParams]="{ backlink: '/admin/boxe/details' }">
+              <i class="fa fa-file-image me-2"></i>
+              Ajouter des images
+            </a>
+          </div>
+          <div class="d-flex gap-2">
+              <button
+                class="btn btn-warning"
+                (click)="editBoxe()">
+                <i class="fa fa-edit me-2"></i>
+                Modifier
+              </button>
+              <button
+                class="btn btn-danger"
+                (click)="deleteItem()">
+                <i class="fa fa-trash me-2"></i>
+                Supprimer
+              </button>
+            </div>
         </div>
       </div>
 
@@ -81,19 +108,19 @@
             <li class="nav-item">
               <a
                 class="nav-link"
-                [class.active]="activeTab === 'ventes'"
+                [class.active]="activeTab === 'tab1'"
                 href="javascript:void(0)"
-                (click)="changeTab('ventes')">
-                Ventes & Locations
+                (click)="changeTab('tab1')">
+                Offres de location
               </a>
             </li>
-            <li class="nav-item">
+            <li>
               <a
                 class="nav-link"
-                [class.active]="activeTab === 'historique'"
+                [class.active]="activeTab === 'tab2'"
                 href="javascript:void(0)"
-                (click)="changeTab('historique')">
-                Mouvement de stock / Historique
+                (click)="changeTab('tab2')">
+                Fichiers rattachés
               </a>
             </li>
           </ul>
@@ -103,111 +130,12 @@
         <div class="card-body p-4">
 
           <!-- Tab: Ventes & Locations -->
-          <div *ngIf="activeTab === 'ventes'">
-
-            <!-- Table des contrats -->
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead class="bg-light">
-                <tr>
-                  <th class="border-0 text-uppercase text-muted" style="font-size: 0.7rem; font-weight: 600;">
-                    Client / Locataire
-                  </th>
-                  <th class="border-0 text-uppercase text-muted" style="font-size: 0.7rem; font-weight: 600;">
-                    Période
-                  </th>
-                  <th class="border-0 text-uppercase text-muted" style="font-size: 0.7rem; font-weight: 600;">
-                    Type de Contrat
-                  </th>
-                  <th class="border-0 text-uppercase text-muted" style="font-size: 0.7rem; font-weight: 600;">
-                    Loyer Mensuel
-                  </th>
-                  <th class="border-0 text-uppercase text-muted" style="font-size: 0.7rem; font-weight: 600;">
-                    Statut
-                  </th>
-                  <th class="border-0 text-uppercase text-muted text-end" style="font-size: 0.7rem; font-weight: 600;">
-                    Actions
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let contrat of contrats">
-                  <!-- Client -->
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="client-avatar rounded-circle text-white d-flex align-items-center justify-content-center"
-                           style="width: 36px; height: 36px; background-color: #1A4A54;">
-                        {{ contrat.client.nom.substring(0, 2).toUpperCase() }}
-                      </div>
-                      <div>
-                        <div class="fw-semibold">{{ contrat.client.nom }}</div>
-                        <small class="text-muted">ID: {{ contrat.client.id }}</small>
-                      </div>
-                    </div>
-                  </td>
-
-                  <!-- Période -->
-                  <td>
-                    <div>{{ contrat.periode.debut }} - {{ contrat.periode.fin }}</div>
-                    <small class="text-muted">36 mois</small>
-                  </td>
-
-                  <!-- Type de contrat -->
-                  <td>
-                    <div>{{ contrat.typeContrat }}</div>
-                    <small class="text-muted">3/6/9</small>
-                  </td>
-
-                  <!-- Loyer -->
-                  <td class="fw-semibold">
-                    {{ formatAmount(contrat.loyerMensuel) }}
-                  </td>
-
-                  <!-- Statut -->
-                  <td>
-                    <span
-                      class="badge"
-                      [ngClass]="getStatusClass(contrat.statut)">
-                      {{ getStatusLabel(contrat.statut) }}
-                    </span>
-                  </td>
-
-                  <!-- Actions -->
-                  <td class="text-end">
-                    <button
-                      class="btn btn-sm btn-link text-primary p-1"
-                      (click)="viewContrat(contrat)"
-                      title="Voir détails">
-                      <i class="fa fa-eye"></i>
-                    </button>
-                  </td>
-                </tr>
-
-                <!-- Empty State -->
-                <tr *ngIf="contrats.length === 0">
-                  <td colspan="6" class="text-center text-muted py-5">
-                    <i class="fa fa-file-contract fa-3x mb-3 d-block opacity-25"></i>
-                    <p class="mb-0">Aucun contrat pour ce boxe</p>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-
+          <div *ngIf="activeTab === 'tab1'">
+            <app-offre-location-onglet [idMere]="item?._id" />
           </div>
-
-          <!-- Tab: Mouvement de stock / Historique -->
-          <div *ngIf="activeTab === 'historique'">
-            <div class="text-center py-5 text-muted">
-              <i class="fa fa-history fa-3x mb-3 d-block opacity-25"></i>
-              <h5>Mouvement de stock / Historique</h5>
-              <p>Le contenu de cet onglet sera ajouté ici</p>
-              <small class="text-muted">
-                Ce contenu sera remplacé par un component inclus
-              </small>
-            </div>
+          <div *ngIf="activeTab === 'tab2'">
+            <app-fichier-liste-onglet [idMere]="item?._id" />
           </div>
-
         </div>
       </div>
 

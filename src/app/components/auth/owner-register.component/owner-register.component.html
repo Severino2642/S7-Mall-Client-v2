@@ -50,9 +50,9 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="contact" class="block text-sm font-medium text-gray-700 mb-2">Contact</label>
-            <input id="contact" type="text" formControlName="contact" class="block w-full px-3 py-3 border rounded-lg focus:ring-2" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !contact?.invalid || !contact?.touched, 'border-red-500': contact?.invalid && contact?.touched}" placeholder="Téléphone" />
-            @if (contact?.invalid && contact?.touched) { <p class="mt-1 text-sm text-red-600">Requis</p> }
+            <label for="telephone" class="block text-sm font-medium text-gray-700 mb-2">Contact</label>
+            <input id="telephone" type="text" formControlName="telephone" class="block w-full px-3 py-3 border rounded-lg focus:ring-2" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !telephone?.invalid || !telephone?.touched, 'border-red-500': telephone?.invalid && telephone?.touched}" placeholder="Téléphone" />
+            @if (telephone?.invalid && telephone?.touched) { <p class="mt-1 text-sm text-red-600">Requis</p> }
           </div>
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
@@ -89,8 +89,8 @@
 
       <div class="mt-6 text-center text-sm">
         <p class="text-gray-600">
-          <a href="/login" class="font-medium" style="color: #1A4A54;">Se connecter</a> | 
-          <a href="/register/client" class="font-medium" style="color: #1A4A54;">Client</a> | 
+          <a href="/login" class="font-medium" style="color: #1A4A54;">Se connecter</a> |
+          <a href="/register/client" class="font-medium" style="color: #1A4A54;">Client</a> |
           <a href="/register/mall" class="font-medium" style="color: #1A4A54;">Centre Commercial</a>
         </p>
       </div>

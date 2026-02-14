@@ -1,0 +1,214 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div>
+        <h4 class="text-3xl font-bold" style="color: #101828;">Liste des offres de location</h4>
+        <p class="mt-2 text-sm text-gray-600">Regardez les offres qui peuvent vous interesser</p>
+      </div>
+      <div class="product-filters">
+        <div class="container-fluid">
+          <div class="filters-wrapper d-flex align-items-center justify-content-between flex-wrap gap-3">
+
+            <!-- Filtres à gauche -->
+            <div class="filters-left d-flex align-items-center gap-3">
+
+              <div class="filter-group col-12 col-md-3">
+                <label class="form-label filter-label">
+                  Centre Commercial
+                </label>
+                <input
+                  type="text"
+                  class="form-control filter-dropdown"
+                  placeholder="..."
+                  [(ngModel)]="filters.centre_commercial"
+                  (change)="applyFilters()">
+              </div>
+              <!-- Filtre 2: Living Area -->
+              <div class="filter-group">
+                <label class="filter-label">Surface (M²)</label>
+                <div class="dropdown">
+                  <button
+                    class="btn filter-dropdown dropdown-toggle"
+                    type="button"
+                    id="livingAreaDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    {{getSelectedLabel(livingAreaFilter)}}
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="livingAreaDropdown">
+                    <li class="dropdown-item"
+                        [class.active]="livingArea.value === livingAreaFilter.selected"
+                        *ngFor="let livingArea of livingAreaFilter.options"
+                    (click)="changeLivingArea(livingArea.value)">
+                      {{livingArea.label}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="filter-group col-12 col-md-3">
+                <label class="form-label filter-label">
+                  Montant Loyer min
+                </label>
+                <input
+                  type="number"
+                  class="form-control filter-dropdown"
+                  placeholder="0.0"
+                  [(ngModel)]="filters.montantLoyer_min"
+                (change)="applyFilters()">
+              </div>
+
+              <div class="filter-group col-12 col-md-3">
+                <label class="form-label filter-label">
+                  Montant Loyer max
+                </label>
+                <input
+                  type="number"
+                  class="form-control filter-dropdown"
+                  placeholder="0.0"
+                  [(ngModel)]="filters.montantLoyer_max"
+                (change)="applyFilters()">
+              </div>
+            </div>
+
+            <!-- Bouton de tri à droite -->
+            <div class="filters-right">
+              <div class="dropdown">
+                <button
+                  class="btn btn-sort dropdown-toggle"
+                  type="button"
+                  id="sortDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="fa fa-sliders-h me-2"></i>
+                  {{getSelectedSortLabel()}}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+                  <li>
+                    <h6 class="dropdown-header">Trier par prix</h6>
+                  </li>
+                  <li class="dropdown-item" *ngFor="let sortOption of getSortOptionsByCategory('Prix')" [class.active]="selectedSort===sortOption.value">
+                    <i class="fa {{sortOption.icon}} me-2"></i>
+                    {{sortOption.label}}
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <h6 class="dropdown-header">Trier par surface</h6>
+                  </li>
+                  <li class="dropdown-item" *ngFor="let sortOption of getSortOptionsByCategory('Surface')" [class.active]="selectedSort===sortOption.value">
+                    <i class="fa {{sortOption.icon}} me-2"></i>
+                    {{sortOption.label}}
+                  </li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <h6 class="dropdown-header">Trier par date</h6>
+                  </li>
+                  <li class="dropdown-item" *ngFor="let sortOption of getSortOptionsByCategory('Date')" [class.active]="selectedSort===sortOption.value">
+                    <i class="fa {{sortOption.icon}} me-2"></i>
+                    {{sortOption.label}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="products-gallery bg-white">
+        <div class="container-fluid p-2">
+
+          <!-- Grid des produits -->
+          <div class="row g-4">
+
+            <div class="col-12 col-md-3 col-lg-3" *ngFor="let item of getPaginatedItems()">
+              <div class="product-card card border shadow-sm h-100">
+                <!-- Image -->
+                <div class="product-image">
+                  <img src="assets/unity.png" alt="Symphonie 3 83" class="w-100">
+                  <button class="btn btn-primary btn-discover" (click)="viewDetails(item)">
+                    JE DÉCOUVRE
+                  </button>
+                </div>
+
+                <!-- Contenu -->
+                <div class="card-body p-4">
+                  <!-- Titre -->
+                  <div class="d-flex justify-between align-items-center">
+                    <div>
+                      <h5 class="product-title mb-1">{{item.nomBoxe}}</h5>
+                      <p class="product-subtitle text-muted mb-2"><i class="fa fa-building"></i> {{item.nomCentreCommercial}}</p>
+                    </div>
+                    <div class="product-price">
+                      <h3 class="price-value mb-0">{{item.montantLoyer}} <small>Ar</small></h3>
+                    </div>
+                  </div>
+                  <!-- Caractéristiques -->
+                  <div class="product-features d-flex gap-3 mb-0 justify-between">
+                    <div class="feature d-flex align-items-center gap-1">
+                      <i class="fa fa-ruler-combined text-warning"></i>
+                      <span class="text-muted">{{calculateSurface(item)}} m²</span>
+                    </div>
+                    <div class="feature d-flex align-items-center gap-1">
+                      <i class="far fa-clock text-warning"></i>
+                      <span class="text-muted">{{item.date| date:'dd-MM-YYYY'}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="getPaginatedItems().length === 0" style="min-height: 50vh" class="d-flex align-items-center justify-content-center">
+              <div class="text-center text-muted py-4">
+                <i class="fa fa-inbox fa-2x mb-2"></i>
+                <div>Aucune offres disponible</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Navigation des produits" class="mt-5">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a
+                   class="page-link"
+                   tabindex="-1"
+                   (click)="previousPage()"
+                   href="javascript:void(0)">
+                  <i class="fa fa-chevron-left"></i>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                [class.active]="currentPage === i + 1">
+                <a
+                  class="page-link"
+                  href="javascript:void(0)"
+                  (click)="goToPage(i + 1)">
+                  {{ i + 1 }}
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link"
+                   href="javascript:void(0)"
+                   (click)="nextPage()">
+                  <i class="fa fa-chevron-right"></i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+

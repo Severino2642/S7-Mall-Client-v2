@@ -9,12 +9,14 @@ export interface MenuItem {
   route?: string;
   children?: MenuItem[];
   expanded?: boolean;
+  role?: string;
 }
 
 export interface UserInfo {
   name: string;
   email: string;
   avatar?: string;
+  role?: string;
 }
 
 @Component({
@@ -31,13 +33,15 @@ export class NavbarComponent implements OnInit{
   userInfo: UserInfo = {
     name: 'Wrath Neon',
     email: 'Johns@gmail.com',
-    avatar: 'assets/avatar.jpg' // Remplacer par le chemin de votre image
+    avatar: undefined, // Remplacer par le chemin de votre image
+    role: 'Centre Commercial' // ou 'Proprietaire'
   };
 
   menuItems: MenuItem[] = [
     {
       label: 'MENU',
       icon: '',
+      role:'Centre Commercial',
       children: [
         { label: 'Tableau de bord', icon: 'fa fa-area-chart', route: '/home' },
         {
@@ -47,6 +51,15 @@ export class NavbarComponent implements OnInit{
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/boxe/create' },
             { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' }
+          ]
+        },
+        {
+          label: 'Offres de location',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
           ]
         }
       ]
@@ -61,12 +74,21 @@ export class NavbarComponent implements OnInit{
   constructor(
     private router : Router
   ) {}
+
   ngOnInit(): void {
     var user = StorageUtil.getFromStorage<any>("auth");
-    var mall = StorageUtil.getFromStorage<any>("mall");
     console.log("User from storage:", user);
     if (user) {
-      this.userInfo.name = mall.nom;
+      this.userInfo.role = user.role.val;
+      if (user.role.val === "Centre Commercial") {
+        var mall = StorageUtil.getFromStorage<any>("mall");
+        this.userInfo.name = mall.nom;
+      }
+      if (user.role.val === "Proprietaire") {
+        var owner = StorageUtil.getFromStorage<any>("owner");
+        this.userInfo.name = owner?.nom+" "+owner?.prenom;
+        this.userInfo.avatar = owner.pdp;
+      }
       this.userInfo.email = user.identifiant;
     }
   }
@@ -91,7 +113,8 @@ export class NavbarComponent implements OnInit{
         break;
       case 'logout':
         console.log('Logout');
-        // Ajouter votre logique de déconnexion
+        StorageUtil.clear();
+        this.router.navigate(['/login']);
         break;
     }
   }
@@ -109,5 +132,9 @@ export class NavbarComponent implements OnInit{
       .map(n => n[0])
       .join('')
       .toUpperCase();
+  }
+
+  get filteredMenuItems() {
+    return this.menuItems.filter(section => section.role === this.userInfo.role);
   }
 }

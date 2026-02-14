@@ -7,12 +7,16 @@
   --primary-color: #1A4A54;
   --secondary-color: #DDC9A4;
   --success-color: #28a745;
-  --warning-color: #ffc107;
+  --warning-color: #fbbf24;
   --danger-color: #dc3545;
   --hover-color: #ecf0f4;
   --header-height: 60px;
   --header-bg: #ffffff;
   --header-border: #e5e7eb;
+  --border-color: #e5e7eb;
+  --text-muted: #6b7280;
+  --bg-light: #f9fafb;
+  --text-primary: #111827;
 }
 
 

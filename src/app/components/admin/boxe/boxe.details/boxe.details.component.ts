@@ -1,69 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {NavbarComponent} from "../../navbar.component/navbar.component";
 import {HeaderComponent} from "../../header.component/header.component";
 import {Boxe, BoxeModel} from "../../../../models/boxe.model";
 import {BoxeService} from "../../../../services/boxe.service/boxe.service";
-
-export interface ContratModel {
-  _id?: string;
-  client: {
-    nom: string;
-    id: string;
-  };
-  periode: {
-    debut: string;
-    fin: string;
-  };
-  typeContrat: string;
-  loyerMensuel: number;
-  statut: 'PAYE' | 'ARCHIVE' | 'EN_COURS';
-}
+import {OffreLocationOngletComponent} from "../onglet/offre-location.onglet/offre-location.onglet.component";
+import {
+  FichierListeOngletComponent
+} from "../../../fichier_rattacher/fichier-liste-onglet/fichier-liste-onglet.component";
 
 @Component({
   selector: 'app-boxe-details',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, HeaderComponent],
+  imports: [CommonModule, NavbarComponent, HeaderComponent, OffreLocationOngletComponent, RouterLink, FichierListeOngletComponent],
   templateUrl: './boxe.details.component.html',
   styleUrls: ['./boxe.details.component.css']
 })
 export class BoxeDetailsComponent implements OnInit {
   item?: BoxeModel | null;
   loading = false;
-  activeTab: 'ventes' | 'historique' = 'ventes';
-
-  // Données factices pour la démo (à remplacer par vos vraies données)
-  contrats: ContratModel[] = [
-    {
-      _id: '1',
-      client: {
-        nom: 'Logistique Royale SARL',
-        id: 'LR-82829'
-      },
-      periode: {
-        debut: '01 Jan 2023',
-        fin: '31 Dec 2025'
-      },
-      typeContrat: 'Bail Commercial',
-      loyerMensuel: 1250.00,
-      statut: 'PAYE'
-    },
-    {
-      _id: '2',
-      client: {
-        nom: 'Design Studio Lyon',
-        id: 'DS-02892'
-      },
-      periode: {
-        debut: '01 Oct 2021',
-        fin: '31 Oct 2022'
-      },
-      typeContrat: 'Bail de Courte Durée',
-      loyerMensuel: 1100.00,
-      statut: 'ARCHIVE'
-    }
-  ];
+  activeTab: 'tab1' | 'tab2' = 'tab1';
 
   constructor(
     private route: ActivatedRoute,
@@ -85,7 +42,7 @@ export class BoxeDetailsComponent implements OnInit {
   }
 
   // Changer d'onglet
-  changeTab(tab: 'ventes' | 'historique'): void {
+  changeTab(tab: 'tab1' | 'tab2'): void {
     this.activeTab = tab;
   }
 
@@ -95,41 +52,6 @@ export class BoxeDetailsComponent implements OnInit {
     return (this.item.longueur || 0) * (this.item.largeur || 0);
   }
 
-  // Obtenir la classe CSS du badge de statut
-  getStatusClass(statut: string): string {
-    switch (statut) {
-      case 'PAYE':
-        return 'badge-paye';
-      case 'ARCHIVE':
-        return 'badge-archive';
-      case 'EN_COURS':
-        return 'badge-en-cours';
-      default:
-        return 'badge-secondary';
-    }
-  }
-
-  // Obtenir le label du statut
-  getStatusLabel(statut: string): string {
-    switch (statut) {
-      case 'PAYE':
-        return 'Payé';
-      case 'ARCHIVE':
-        return 'Archivé';
-      case 'EN_COURS':
-        return 'En cours';
-      default:
-        return statut;
-    }
-  }
-
-  // Voir les détails d'un contrat
-  viewContrat(contrat: ContratModel): void {
-    console.log('Voir contrat:', contrat);
-    // Navigation vers les détails du contrat
-    // this.router.navigate(['admin/contrat', contrat._id]);
-  }
-
   // Modifier le boxe
   editBoxe(): void {
     if (this.item?._id) {
@@ -137,6 +59,12 @@ export class BoxeDetailsComponent implements OnInit {
     }
   }
 
+  async deleteItem(): Promise<void> {
+    if (this.item?._id) {
+      await this.boxeService.delete(this.item._id);
+      this.router.navigate(['admin/boxe/']);
+    }
+  }
   // Retour à la liste
   goBack(): void {
     this.router.navigate(['admin/boxe']);

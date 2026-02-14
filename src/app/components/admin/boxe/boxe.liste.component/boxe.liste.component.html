@@ -220,7 +220,7 @@
         <!-- Pagination -->
         <div class="pagination-box card-footer border-top d-flex justify-content-between align-items-center">
           <div class="text-muted" style="font-size: 0.875rem;">
-            Affichage de {{ (currentPage - 1) * itemsPerPage + 1 }} sur {{ filteredItems.length }} résultats
+            Affichage de {{ getPaginatedItems().length }} sur {{ filteredItems.length }} résultats
           </div>
 
           <nav>

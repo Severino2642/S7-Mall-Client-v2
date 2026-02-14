@@ -56,11 +56,10 @@ export class ClientRegisterComponent {
     if (this.registerForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
-      
+
       setTimeout(() => {
         this.isLoading = false;
         console.log('Client registration data:', this.registerForm.value);
-        // TODO: Implémenter la logique d'inscription avec le backend
       }, 1500);
     } else {
       this.markFormGroupTouched(this.registerForm);

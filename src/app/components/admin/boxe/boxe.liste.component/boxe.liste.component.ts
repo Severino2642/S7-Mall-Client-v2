@@ -66,6 +66,7 @@ export class BoxeListeComponent implements OnInit{
     this.applyFilters();
     this.loadStats();
     this.updateTabCounts();
+    this.updatePagination();
   }
 
 
@@ -164,10 +165,10 @@ export class BoxeListeComponent implements OnInit{
     this.router.navigate(['admin/boxe/update', item._id]);
   }
 
-  // Supprimer une facture
-  deleteItem(item:any): void {
-    console.log('Delete invoice:', item.id);
-    // Implémenter la logique de suppression
+  async deleteItem(item:any): Promise<void> {
+    console.log('Delete invoice:', item._id);
+    await this.boxeService.delete(item._id);
+    this.router.navigate(['admin/boxe/']);
   }
 
   formatAmount(amount: number): string {

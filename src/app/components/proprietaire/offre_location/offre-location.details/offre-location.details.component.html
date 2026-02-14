@@ -1,0 +1,227 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="product-detail-page" *ngIf="product" (keydown)="handleKeyboard($event)" tabindex="0">
+        <div class="container-fluid p-0">
+
+          <!-- Breadcrumb et titre -->
+          <div class="mb-2">
+            <h1 class="product-title m-0">
+              Modèle <span class="text-primary">{{ product.name }}</span>
+            </h1>
+          </div>
+
+          <!-- Contenu principal -->
+          <div class="d-flex gap-2">
+
+            <!-- COLONNE GAUCHE - Galerie d'images -->
+            <div class="col-12 col-lg-7">
+              <div class="gallery-section h-100">
+
+                <!-- Image principale -->
+                <div class="main-image-container">
+                  <img
+                    [src]="getCurrentImage()?.url"
+                    [alt]="getCurrentImage()?.alt"
+                    class="main-image"
+                    (click)="openLightbox(currentImageIndex)">
+
+                  <!-- Badge type d'image -->
+                  <span class="image-type-badge" *ngIf="getCurrentImage()?.type === 'plan'">
+                    <i class="fa fa-ruler-combined me-1"></i>
+                    Plan
+                  </span>
+                  <span class="image-type-badge" *ngIf="getCurrentImage()?.type === '3d'">
+                    <i class="fa fa-cube me-1"></i>
+                    3D
+                  </span>
+
+                  <!-- Bouton zoom -->
+                  <button class="btn-zoom" (click)="openLightbox(currentImageIndex)">
+                    <i class="fa fa-search-plus"></i>
+                  </button>
+                </div>
+
+                <!-- Carousel de thumbnails -->
+                <div class="thumbnails-wrapper">
+                  <!-- Bouton précédent -->
+                  <button
+                    class="carousel-nav carousel-nav-left"
+                    (click)="scrollCarousel('left')">
+                    <i class="fa fa-chevron-left"></i>
+                  </button>
+
+                  <!-- Carousel -->
+                  <div class="thumbnails-carousel">
+                    <div
+                      *ngFor="let image of product.images; let i = index"
+                      class="thumbnail-item"
+                      [class.active]="i === currentImageIndex"
+                      (click)="selectImage(i)">
+                      <img [src]="image.url" [alt]="image.alt">
+
+                      <!-- Badge pour plans et 3D -->
+                      <div class="thumbnail-badge" *ngIf="image.type === 'plan'">
+                        <i class="fa fa-ruler-combined"></i>
+                      </div>
+                      <div class="thumbnail-badge" *ngIf="image.type === '3d'">
+                        <i class="fa fa-cube"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bouton suivant -->
+                  <button
+                    class="carousel-nav carousel-nav-right"
+                    (click)="scrollCarousel('right')">
+                    <i class="fa fa-chevron-right"></i>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- COLONNE DROITE - Détails du produit -->
+            <div class="col-12 col-lg-5">
+              <div class="product-info card border-0 shadow-sm h-100">
+                <div class="card-body p-4 d-flex flex-column">
+
+                  <!-- Nom du modèle -->
+                  <h2 class="model-name mb-3">{{ product.name }}</h2>
+                  <div class="main-details">
+                    <div class="main-features mb-4">
+                      <div class="row g-3 justify-content-around">
+                        <div class="col-4">
+                          <div class="feature-box text-center">
+                            <i class="fa fa-ruler-combined fa-2x text-warning mb-2"></i>
+                            <div class="feature-value">{{ product.surface }} m²</div>
+                            <div class="feature-label">Surface</div>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="feature-box text-center">
+                            <i class="fa fa-building fa-2x text-warning mb-2"></i>
+                            <div class="feature-value">Olympia</div>
+                            <div class="feature-label">Centre Commercial</div>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="feature-box text-center">
+                            <i class="fa fa-clock fa-2x text-warning mb-2"></i>
+                            <div class="feature-value">14/10/2005</div>
+                            <div class="feature-label">Date</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Description -->
+                    <div class="description mb-4">
+                      <h6 class="section-title">Description</h6>
+                      <p class="text-muted">{{ product.description }}</p>
+                    </div>
+                  </div>
+
+
+                  <!-- Points forts -->
+<!--                  <div class="features-list mb-4">-->
+<!--                    <h6 class="section-title">Points forts</h6>-->
+<!--                    <ul class="list-unstyled">-->
+<!--                      <li *ngFor="let feature of product.features" class="feature-item">-->
+<!--                        <i class="fa fa-check-circle text-success me-2"></i>-->
+<!--                        {{ feature }}-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </div>-->
+                  <div class="flex-grow-1"></div>
+                  <!-- Prix -->
+                  <div class="price-section mb-4">
+                    <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                      <div>
+                        <small class="text-muted d-block">À partir de</small>
+                        <h3 class="price-value mb-0">{{ formatPrice(product.price) }}</h3>
+                      </div>
+                      <div class="text-end">
+                        <small class="text-muted">TTC</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Boutons d'action -->
+                  <div class="actions-buttons">
+                    <button class="btn btn-primary btn-lg w-100 mb-3" (click)="buyProduct()">
+                      <i class="fa fa-shopping-cart me-2"></i>
+                      Je commande
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- LIGHTBOX / POPUP -->
+      <div class="lightbox-overlay" *ngIf="showLightbox" (click)="closeLightbox()">
+        <div class="lightbox-container">
+
+          <!-- Bouton fermer -->
+          <button class="lightbox-close" (click)="closeLightbox()">
+            <i class="fa fa-times"></i>
+          </button>
+
+          <!-- Image principale -->
+          <div class="lightbox-image-wrapper" (click)="$event.stopPropagation()">
+            <ng-container *ngIf="product && product.images && product.images.length > lightboxImageIndex">
+              <img
+                [src]="product.images[lightboxImageIndex].url"
+                [alt]="product.images[lightboxImageIndex].alt"
+                class="lightbox-image">
+            </ng-container>
+
+          </div>
+
+          <!-- Navigation -->
+          <button
+            class="lightbox-nav lightbox-nav-left"
+            (click)="previousImage(); $event.stopPropagation()">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+
+          <button
+            class="lightbox-nav lightbox-nav-right"
+            (click)="nextImage(); $event.stopPropagation()">
+            <i class="fa fa-chevron-right"></i>
+          </button>
+
+          <!-- Compteur -->
+          <div class="lightbox-counter">
+            {{ lightboxImageIndex + 1 }} / {{ product?.images?.length }}
+          </div>
+
+          <!-- Thumbnails en bas -->
+          <div class="lightbox-thumbnails" (click)="$event.stopPropagation()">
+            <div
+              *ngFor="let image of product?.images; let i = index"
+              class="lightbox-thumbnail"
+              [class.active]="i === lightboxImageIndex"
+              (click)="lightboxImageIndex = i">
+              <img [src]="image.url" [alt]="image.alt">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

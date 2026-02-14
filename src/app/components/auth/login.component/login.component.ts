@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import {AuthService} from '../../../services/auth.service/auth.service';
 import {MallService} from '../../../services/mall.service/mall.service';
 import {firstValueFrom} from 'rxjs';
+import {ProprietaireService} from "../../../services/proprietaire.service/proprietaire.service";
 
 @Component({
   selector: 'app-login.component',
@@ -23,7 +24,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private mallService: MallService
+    private mallService: MallService,
+    private proprietaireService: ProprietaireService
   ) {
     this.loginForm = this.fb.group({
       identifiant: ['', [Validators.required, Validators.email]],
@@ -63,6 +65,12 @@ export class LoginComponent {
         const mall = await this.mallService.getById(res.idUser);
         console.log("User is a mall:", mall);
         localStorage.setItem('mall', JSON.stringify(mall));
+      }
+
+      if (res.role?.val === "Proprietaire") {
+        const mall = await this.proprietaireService.getById(res.idUser);
+        console.log("User is a owner:", mall);
+        localStorage.setItem('owner', JSON.stringify(mall));
       }
 
       // navigation
