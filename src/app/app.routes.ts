@@ -40,6 +40,7 @@ import {ProduitFormComponent} from "./components/proprietaire/boutique/produit/p
 import { ProduitListeComponent } from './components/client/produit/produit.cmponent/produit-liste.component';
 import { ProduitDetailsComponent } from './components/client/produit/details.component/produit-details.component';
 import { PannierComponent } from './components/client/pannier.component/pannier.component';
+import { CentreCommercialComponent } from './components/client/centre-commercial.component/centre-commercial.component';
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -79,6 +80,7 @@ export const routes: Routes = [
     { path: 'client/produit', component: ProduitListeComponent},
     { path: 'client/produit/:id', component: ProduitDetailsComponent},
     { path: 'client/panier', component: PannierComponent},
+    { path: 'client/centre', component: CentreCommercialComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},
