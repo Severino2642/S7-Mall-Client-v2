@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {HeaderComponent} from "../../../../admin/header.component/header.component";
 import {NavbarComponent} from "../../../../admin/navbar.component/navbar.component";
-import {NgIf} from "@angular/common";
+import {CommonModule, NgIf} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {OffreDeLocationModel} from "../../../../../models/offre_location.model";
 import {BoxeModel} from "../../../../../models/boxe.model";
@@ -11,6 +11,11 @@ import {
 import {BoxeService} from "../../../../../services/boxe.service/boxe.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StorageUtil} from "../../../../../utils/storage.util";
+import {ProduitModel} from "../../../../../models/produit.model";
+import {CategorieModel} from "../../../../../models/categorie.model";
+import {ProduitService} from "../../../../../services/produit.service/produit.service";
+import {CategorieService} from "../../../../../services/categorie.service/categorie.service";
+import {FilleModel} from "../../../../fichier_rattacher/fichier-saisie-multiple/fichier-saisie-multiple.component";
 
 @Component({
   selector: 'app-produit-form',
@@ -18,34 +23,35 @@ import {StorageUtil} from "../../../../../utils/storage.util";
   imports: [
     HeaderComponent,
     NavbarComponent,
-    NgIf,
+    CommonModule,
     ReactiveFormsModule
   ],
   templateUrl: './produit-form.component.html',
   styleUrl: './produit-form.component.css'
 })
 export class ProduitFormComponent {
-  @Input() item?: OffreDeLocationModel | null; // Données à modifier (null pour création)
-  @Output() onSubmit = new EventEmitter<OffreDeLocationModel>();
+  @Input() item?: ProduitModel | null;
+  @Input() itemFilles: Produit[] = [];
+  @Output() onSubmit = new EventEmitter<ProduitModel>();
   @Output() onCancel = new EventEmitter<void>();
 
   boxeForm!: FormGroup;
   isEditMode = false;
   id = null;
   loading = false;
-  listBoxe: BoxeModel[] = [];
+  listCategorie: CategorieModel[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private itemService:OffreLocationServiceService,
-    private boxeService: BoxeService,
+    private itemService:ProduitService,
+    private categorieService: CategorieService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
-    await this.loadListeBoxe();
+    await this.loadListeCategorie();
     if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
@@ -57,13 +63,11 @@ export class ProduitFormComponent {
     }
   }
 
-  async loadListeBoxe(): Promise<void> {
+  async loadListeCategorie(): Promise<void> {
     this.loading = true;
-    var auth = StorageUtil.getFromStorage<any>("auth");
-    var res = await this.boxeService.getByIdCentreCommercial(auth?.idUser);
+    var res = await this.categorieService.getAll();
     if (res!=null){
-      this.listBoxe = res;
-      console.log("Liste des boxe du centre commercial:", this.listBoxe);
+      this.listCategorie = res;
     }
     this.loading = false;
   }
@@ -71,9 +75,10 @@ export class ProduitFormComponent {
   // Initialiser le formulaire
   initForm(): void {
     this.boxeForm = this.fb.group({
-      idBoxe: [this.item?.idBoxe || '', [Validators.required]],
+      nom: [this.item?.nom || '', [Validators.required]],
+      idCategorie: [this.item?.idCategorie || '', [Validators.required]],
       description: [this.item?.description || ''],
-      montantLoyer: [this.item?.montantLoyer || '',[Validators.min(1),Validators.required]],
+      prix: [this.item?.prix || '',[Validators.min(1),Validators.required]],
     });
   }
 
@@ -136,15 +141,15 @@ export class ProduitFormComponent {
 
   async createItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
-    var res = await this.itemService.create(formData);
-    this.router.navigate([`admin/offreLocation/details/${res._id}`]);
+    var res = await this.itemService.createMereFille(formData);
+    this.router.navigate([`boutique/produit/details/${res._id}`]);
     this.loading = false;
   }
 
   async updateItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
-    await this.itemService.update(this.id!, formData);
-    this.router.navigate([`admin/offreLocation/details/${this.id}`]);
+    await this.itemService.updateMereFille(this.id!, formData);
+    this.router.navigate([`boutique/produit/details/${this.id}`]);
     this.loading = false;
   }
 
