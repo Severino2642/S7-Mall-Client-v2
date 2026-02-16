@@ -1,5 +1,5 @@
-export interface FileTypeModel {
-  _id?: string;
-  val?: string;
-  desce?: string;
+import {AnnexeModel} from "./annexe.model";
+
+export interface FileTypeModel extends AnnexeModel{
+
 }

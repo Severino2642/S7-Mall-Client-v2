@@ -26,6 +26,17 @@ import {
 import {
   FichierSaisieMultipleComponent
 } from "./components/fichier_rattacher/fichier-saisie-multiple/fichier-saisie-multiple.component";
+import {
+  DemandeLocationListeComponent
+} from "./components/proprietaire/demande_location/demande-location.liste/demande-location.liste.component";
+import {
+  BoutiqueListeComponent
+} from "./components/proprietaire/boutique/boutique/boutique.liste/boutique.liste.component";
+import {
+  BoutiqueDetailsComponent
+} from "./components/proprietaire/boutique/boutique/boutique.details/boutique.details.component";
+import {BoutiqueFormComponent} from "./components/proprietaire/boutique/boutique/boutique-form/boutique-form.component";
+import {ProduitFormComponent} from "./components/proprietaire/boutique/produit/produit-form/produit-form.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -43,11 +54,23 @@ export const routes: Routes = [
     { path: 'admin/offreLocation/details/:id', component:  OffreLocationDetailsComponent},
     { path: 'admin/offreLocation/create', component:  OffreLocationFormComponent},
     { path: 'admin/offreLocation/update/:id', component:  OffreLocationFormComponent},
-    // fichier rattacher
-    { path: 'fichier/create/:idProprietaire', component:  FichierSaisieMultipleComponent},
 
     { path: 'owner/offreLocation/liste', component:  OffreLocationListeComponentFrontOffice},
     { path: 'owner/offreLocation/details/:id', component:  OffreLocationDetailsFrontOfficeComponent},
+
+    // Demande de location
+    { path: 'owner/demandeLocation', component:  DemandeLocationListeComponent},
+
+    // Boutique
+    { path: 'owner/boutique', component:  BoutiqueListeComponent},
+    { path: 'owner/boutique/details/:id', component:  BoutiqueDetailsComponent},
+    { path: 'owner/boutique/update/:id', component:  BoutiqueFormComponent},
+
+    // Produit de boutique
+    { path: 'boutique/produit/create', component:  ProduitFormComponent},
+
+    // fichier rattacher
+    { path: 'fichier/create/:idProprietaire', component:  FichierSaisieMultipleComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},

@@ -104,8 +104,12 @@ export class OffreLocationListeComponentFrontOffice {
   async ngOnInit(): Promise<void> {
     await this.loadItems();
     this.applyFilters();
+    this.updatePagination();
   }
 
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
+  }
 
   async loadItems(): Promise<void> {
     this.loading = true;

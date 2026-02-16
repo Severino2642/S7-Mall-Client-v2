@@ -61,9 +61,56 @@ export class NavbarComponent implements OnInit{
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
             { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
           ]
-        }
+        },
+        { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
+        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' }
+      ]
+    },
+    {
+      label: 'MENU',
+      icon: '',
+      role:'Proprietaire',
+      children: [
+        { label: 'Offres de location', icon: 'fa fa-area-chart', route: '/owner/offreLocation/liste' },
+        { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
+        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' }
+      ]
+    },
+    {
+      label: 'GESTION DE BOUTIQUE',
+      icon: '',
+      role:'Boutique',
+      children: [
+        {
+          label: 'Produits',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+          ]
+        },
+        {
+          label: 'Mouvements de stock',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+          ]
+        },
+        {
+          label: 'Vente',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+          ]
+        },
       ]
     }
+
   ];
 
   userMenuItems = [
@@ -76,20 +123,28 @@ export class NavbarComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    var user = StorageUtil.getFromStorage<any>("auth");
-    console.log("User from storage:", user);
-    if (user) {
-      this.userInfo.role = user.role.val;
-      if (user.role.val === "Centre Commercial") {
-        var mall = StorageUtil.getFromStorage<any>("mall");
-        this.userInfo.name = mall.nom;
+    var boutique = StorageUtil.getFromStorage<any>("boutique");
+    if (!boutique){
+      var user = StorageUtil.getFromStorage<any>("auth");
+      console.log("User from storage:", user);
+      if (user) {
+        this.userInfo.role = user.role.val;
+        if (user.role.val === "Centre Commercial") {
+          var mall = StorageUtil.getFromStorage<any>("mall");
+          this.userInfo.name = mall.nom;
+        }
+        if (user.role.val === "Proprietaire") {
+          var owner = StorageUtil.getFromStorage<any>("owner");
+          this.userInfo.name = owner?.nom+" "+owner?.prenom;
+          this.userInfo.avatar = owner.pdp;
+        }
+        this.userInfo.email = user.identifiant;
       }
-      if (user.role.val === "Proprietaire") {
-        var owner = StorageUtil.getFromStorage<any>("owner");
-        this.userInfo.name = owner?.nom+" "+owner?.prenom;
-        this.userInfo.avatar = owner.pdp;
-      }
-      this.userInfo.email = user.identifiant;
+    }
+    else {
+      this.userInfo.role = "Boutique";
+      this.userInfo.name = boutique.nom;
+      this.userInfo.email = boutique.email;
     }
   }
 
@@ -112,6 +167,12 @@ export class NavbarComponent implements OnInit{
         // Ajouter votre logique pour éditer le profil
         break;
       case 'logout':
+        if (this.userInfo.role === "Boutique") {
+          console.log('Logout boutique');
+          StorageUtil.remove("boutique");
+          this.router.navigate(['/login']);
+          return;
+        }
         console.log('Logout');
         StorageUtil.clear();
         this.router.navigate(['/login']);

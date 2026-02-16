@@ -1,3 +1,5 @@
+import {FileModel} from "./file.model";
+
 export interface OffreDeLocationModel {
   _id?: string;
   idBoxe?:string;
@@ -18,7 +20,9 @@ export interface OffreDeLocationCPLModel {
   longueurBoxe?: number,
   largeurBoxe?: number,
   idCentreCommercial?: string,
-  nomCentreCommercial?: string
+  nomCentreCommercial?: string,
+  photoBoxe?: FileModel;
+  autrePhoto?:FileModel[];
 }
 
 export class OffreDeLocation {

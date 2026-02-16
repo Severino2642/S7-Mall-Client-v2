@@ -102,7 +102,7 @@
                 [class.active]="activeTab === 'tab1'"
                 href="javascript:void(0)"
                 (click)="changeTab('tab1')">
-                Ventes & Locations
+                Demandes de locations
               </a>
             </li>
           </ul>
@@ -112,14 +112,7 @@
         <div class="card-body p-4">
 
           <div *ngIf="activeTab === 'tab1'">
-            <div class="text-center py-5 text-muted">
-              <i class="fa fa-history fa-3x mb-3 d-block opacity-25"></i>
-              <h5>Mouvement de stock / Historique</h5>
-              <p>Le contenu de cet onglet sera ajouté ici</p>
-              <small class="text-muted">
-                Ce contenu sera remplacé par un component inclus
-              </small>
-            </div>
+            <app-demande-location-liste-onglet [idMere]="item?._id"></app-demande-location-liste-onglet>
           </div>
 
         </div>
