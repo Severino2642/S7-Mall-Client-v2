@@ -1,0 +1,261 @@
+<!-- Header -->
+<app-header></app-header>
+
+<div *ngIf="loading" class="text-center py-5 position-fixed top-50 start-50 translate-middle">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-2">Chargement...</div>
+</div>
+
+<main *ngIf="!loading" class="bg-light min-vh-100">
+  <div class="product-detail-page" *ngIf="product" (keydown)="handleKeyboard($event)" tabindex="0">
+    <div class="container py-4">
+
+      <!-- Breadcrumb et titre -->
+      <div class="d-flex align-items-center gap-2 mb-4">
+        <span class="cursor-pointer" (click)="goBack()">
+          <span class="material-icons text-muted">arrow_back</span>
+        </span>
+        <h4 class="product-title m-0">
+          {{ product.nom }}
+        </h4>
+      </div>
+
+      <!-- Contenu principal -->
+      <div class="row g-4">
+
+        <!-- COLONNE GAUCHE - Galerie d'images -->
+        <div class="col-12 col-lg-7">
+          <div class="gallery-section h-100">
+
+            <!-- Image principale -->
+            <div class="main-image-container">
+              <img
+                [src]="getCurrentImage()?.url"
+                [alt]="getCurrentImage()?.nom"
+                class="main-image"
+                (click)="openLightbox(currentImageIndex)">
+
+              <!-- Badges -->
+              <div class="badges-container" *ngIf="product.badges && product.badges.length > 0">
+                <span *ngFor="let badge of product.badges" class="badge" 
+                      [class.badge-new]="badge === 'Nouveau'"
+                      [class.badge-promo]="badge === 'Promo'">
+                  {{ badge }}
+                </span>
+              </div>
+
+              <!-- Bouton zoom -->
+              <button class="btn-zoom" (click)="openLightbox(currentImageIndex)">
+                <span class="material-icons">zoom_in</span>
+              </button>
+            </div>
+
+            <!-- Carousel de thumbnails -->
+            <div class="thumbnails-wrapper">
+              <!-- Bouton précédent -->
+              <button
+                class="carousel-nav carousel-nav-left"
+                (click)="scrollCarousel('left')">
+                <span class="material-icons">chevron_left</span>
+              </button>
+
+              <!-- Carousel -->
+              <div class="thumbnails-carousel">
+                <div
+                  *ngFor="let image of product.images; let i = index"
+                  class="thumbnail-item"
+                  [class.active]="i === currentImageIndex"
+                  (click)="selectImage(i)">
+                  <img [src]="image.url" [alt]="image.nom">
+                </div>
+              </div>
+
+              <!-- Bouton suivant -->
+              <button
+                class="carousel-nav carousel-nav-right"
+                (click)="scrollCarousel('right')">
+                <span class="material-icons">chevron_right</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- COLONNE DROITE - Détails du produit -->
+        <div class="col-12 col-lg-5">
+          <div class="product-info card border-0 shadow-sm h-100">
+            <div class="card-body p-4 d-flex flex-column">
+
+              <!-- Nom du produit -->
+              <h2 class="product-name mb-2">{{ product.nom }}</h2>
+
+              <!-- Rating et avis -->
+              <div class="rating-section mb-3 d-flex align-items-center gap-2">
+                <div class="stars">
+                  <span *ngFor="let star of getStars()" class="material-icons star-icon">
+                    {{ star }}
+                  </span>
+                </div>
+                <span class="rating-value">{{ product.rating }}</span>
+                <span class="text-muted">•</span>
+                <span class="reviews-count text-muted">{{ product.reviews }} avis</span>
+              </div>
+
+              <!-- Informations principales -->
+              <div class="main-details mb-4">
+                <div class="info-row mb-2">
+                  <span class="info-label">
+                    <span class="material-icons info-icon">category</span>
+                    Catégorie:
+                  </span>
+                  <span class="info-value">{{ product.categorie }}</span>
+                </div>
+                <div class="info-row mb-2">
+                  <span class="info-label">
+                    <span class="material-icons info-icon">store</span>
+                    Boutique:
+                  </span>
+                  <span class="info-value">{{ product.boutique }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">
+                    <span class="material-icons info-icon">inventory_2</span>
+                    Stock:
+                  </span>
+                  <span class="info-value" [class.text-danger]="product.quantite < 5">
+                    {{ product.quantite }} {{ product.quantite > 1 ? 'unités' : 'unité' }} disponible{{ product.quantite > 1 ? 's' : '' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="description mb-4">
+                <h6 class="section-title">Description</h6>
+                <p class="text-muted">{{ product.description }}</p>
+              </div>
+
+              <div class="flex-grow-1"></div>
+
+              <!-- Prix -->
+              <div class="price-section mb-4">
+                <div class="p-3 bg-light rounded">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="d-flex align-items-center gap-2">
+                        <h3 class="price-value mb-0">{{ product.prix.toFixed(2) }} <small>Ar</small></h3>
+                        <span *ngIf="product.prixOriginal" class="price-original text-muted text-decoration-line-through">
+                          {{ product.prixOriginal.toFixed(2) }} Ar
+                        </span>
+                      </div>
+                      <small class="text-muted" *ngIf="product.prixOriginal">
+                        Économisez {{ getDiscountPercentage() }}%
+                      </small>
+                    </div>
+                    <div class="text-end">
+                      <span class="badge bg-success" *ngIf="product.prixOriginal">-{{ getDiscountPercentage() }}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quantité et bouton d'action -->
+              <div class="actions-section">
+                <div class="mb-3">
+                  <label class="form-label fw-semibold">Quantité</label>
+                  <div class="quantity-selector d-flex align-items-center gap-2">
+                    <button 
+                      class="btn btn-outline-secondary" 
+                      (click)="quantiteAchat = quantiteAchat > 1 ? quantiteAchat - 1 : 1"
+                      [disabled]="quantiteAchat <= 1">
+                      <span class="material-icons">remove</span>
+                    </button>
+                    <input 
+                      type="number" 
+                      class="form-control text-center" 
+                      [(ngModel)]="quantiteAchat" 
+                      [max]="product.quantite"
+                      [min]="1"
+                      style="width: 80px;"
+                      disabled>
+                    <button 
+                      class="btn btn-outline-secondary" 
+                      (click)="quantiteAchat = quantiteAchat < product.quantite ? quantiteAchat + 1 : product.quantite"
+                      [disabled]="quantiteAchat >= product.quantite">
+                      <span class="material-icons">add</span>
+                    </button>
+                  </div>
+                </div>
+
+                <button 
+                  class="btn btn-primary btn-lg w-100" 
+                  (click)="ajouterAuPanier()"
+                  [disabled]="product.quantite === 0">
+                  <span class="material-icons me-2">shopping_cart</span>
+                  {{ product.quantite > 0 ? 'Ajouter au panier' : 'Rupture de stock' }}
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LIGHTBOX / POPUP -->
+  <div class="lightbox-overlay" *ngIf="showLightbox" (click)="closeLightbox()">
+    <div class="lightbox-container">
+
+      <!-- Bouton fermer -->
+      <button class="lightbox-close" (click)="closeLightbox()">
+        <span class="material-icons">close</span>
+      </button>
+
+      <!-- Image principale -->
+      <div class="lightbox-image-wrapper" (click)="$event.stopPropagation()">
+        <ng-container *ngIf="product && product.images && product.images.length > lightboxImageIndex">
+          <img
+            [src]="product.images[lightboxImageIndex].url"
+            [alt]="product.images[lightboxImageIndex].nom"
+            class="lightbox-image">
+        </ng-container>
+      </div>
+
+      <!-- Navigation -->
+      <button
+        class="lightbox-nav lightbox-nav-left"
+        (click)="previousImage(); $event.stopPropagation()">
+        <span class="material-icons">chevron_left</span>
+      </button>
+
+      <button
+        class="lightbox-nav lightbox-nav-right"
+        (click)="nextImage(); $event.stopPropagation()">
+        <span class="material-icons">chevron_right</span>
+      </button>
+
+      <!-- Compteur -->
+      <div class="lightbox-counter">
+        {{ lightboxImageIndex + 1 }} / {{ product?.images?.length }}
+      </div>
+
+      <!-- Thumbnails en bas -->
+      <div class="lightbox-thumbnails" (click)="$event.stopPropagation()">
+        <div
+          *ngFor="let image of product?.images; let i = index"
+          class="lightbox-thumbnail"
+          [class.active]="i === lightboxImageIndex"
+          (click)="lightboxImageIndex = i">
+          <img [src]="image.url" [alt]="image.nom">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

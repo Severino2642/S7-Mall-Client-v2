@@ -38,6 +38,7 @@ import {
 import {BoutiqueFormComponent} from "./components/proprietaire/boutique/boutique/boutique-form/boutique-form.component";
 import {ProduitFormComponent} from "./components/proprietaire/boutique/produit/produit-form/produit-form.component";
 import { ProduitListeComponent } from './components/client/produit/produit.cmponent/produit-liste.component';
+import { ProduitDetailsComponent } from './components/client/produit/details.component/produit-details.component';
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -75,7 +76,7 @@ export const routes: Routes = [
 
     // Client
     { path: 'client/produit', component: ProduitListeComponent},
-    // { path: 'client/produit/:id', component: ProductDetailsComponent},
+    { path: 'client/produit/:id', component: ProduitDetailsComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},
