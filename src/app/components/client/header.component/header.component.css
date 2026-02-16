@@ -1,0 +1,86 @@
+/* Header Component avec Bootstrap */
+.header-component {
+  z-index: 1000;
+}
+
+/* Logo Icon */
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-color);
+  border-radius: 0.25rem;
+}
+
+.logo-icon .material-icons {
+  font-size: 1.25rem;
+}
+
+/* Logo Text avec couleur personnalisée */
+.text-primary-custom {
+  color: var(--primary-color);
+}
+
+/* Navigation Links */
+.nav-link-custom {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.nav-link-custom:hover {
+  color: var(--primary-color);
+}
+
+.nav-link-custom.active {
+  color: var(--primary-color);
+}
+
+/* Search Icon Position */
+.search-icon-pos {
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.125rem;
+  pointer-events: none;
+}
+
+/* Search Input avec focus personnalisé */
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(26, 74, 84, 0.15);
+}
+
+/* Icon Button */
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.btn-icon .material-icons {
+  font-size: 1.25rem;
+}
+
+/* Avatar */
+.avatar-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(26, 74, 84, 0.1);
+  border: 1px solid rgba(26, 74, 84, 0.3);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-wrapper img {
+  object-fit: cover;
+}

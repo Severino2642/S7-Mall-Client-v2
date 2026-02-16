@@ -31,7 +31,7 @@ import {FilleModel} from "../../../../fichier_rattacher/fichier-saisie-multiple/
 })
 export class ProduitFormComponent {
   @Input() item?: ProduitModel | null;
-  @Input() itemFilles: Produit[] = [];
+  // @Input() itemFilles: Produit[] = [];
   @Output() onSubmit = new EventEmitter<ProduitModel>();
   @Output() onCancel = new EventEmitter<void>();
 
@@ -84,7 +84,7 @@ export class ProduitFormComponent {
 
   async loadItem(id: string): Promise<void> {
     this.loading = true;
-    this.item = await this.itemService.getById(id);
+    // this.item = await this.itemService.getById(id);
     this.initForm(); // Le formulaire se remplit automatiquement
     this.loading = false;
   }

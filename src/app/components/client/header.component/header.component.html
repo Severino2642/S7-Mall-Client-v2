@@ -1,0 +1,56 @@
+<!-- Header -->
+<header class="header-component bg-white border-bottom sticky-top">
+  <div class="container-fluid">
+    <div class="row align-items-center py-2">
+      <!-- Left section: Logo and Navigation -->
+      <div class="col-md-8 col-lg-7">
+        <div class="d-flex align-items-center gap-4">
+          <!-- Logo -->
+          <div class="d-flex align-items-center gap-2">
+            <div class="logo-icon d-flex align-items-center justify-content-center">
+              <span class="material-icons text-white">shopping_bag</span>
+            </div>
+            <span class="fs-5 fw-bold">MALL<span class="text-primary-custom">SCOUT</span></span>
+          </div>
+          
+          <!-- Navigation Menu -->
+          <nav class="d-none d-md-flex align-items-center gap-3">
+            <a *ngFor="let link of navigationLinks" 
+               class="nav-link-custom" 
+               [class.active]="link.active"
+               (click)="navigateTo(link.route)" 
+               href="javascript:void(0)">
+              {{ link.label }}
+            </a>
+          </nav>
+        </div>
+      </div>
+      
+      <!-- Right section: Search, Notifications, Avatar -->
+      <div class="col-md-4 col-lg-5">
+        <div class="d-flex align-items-center justify-content-end gap-3">
+          <!-- Search Bar -->
+          <div class="position-relative d-none d-lg-block flex-grow-1" style="max-width: 300px;">
+            <span class="material-icons position-absolute search-icon-pos text-muted">search</span>
+            <input
+              class="form-control ps-5"
+              placeholder="Search brands or malls..."
+              type="text"
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="onSearch()" />
+          </div>
+          
+          <!-- Notifications Button -->
+          <button class="btn btn-light rounded-circle p-2 btn-icon" type="button">
+            <span class="material-icons text-muted">notifications</span>
+          </button>
+          
+          <!-- User Avatar -->
+          <div class="avatar-wrapper">
+            <img class="rounded-circle" [src]="userInfo.avatar" alt="User profile" width="32" height="32" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

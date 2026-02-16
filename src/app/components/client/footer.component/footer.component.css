@@ -1,0 +1,32 @@
+/* Footer Component avec Bootstrap */
+.footer-component {
+  margin-top: auto;
+}
+
+.footer-component .border-top {
+  border-color: var(--border-color) !important;
+}
+
+/* Social Links */
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.social-link:hover {
+  color: var(--primary-color) !important;
+}
+
+.social-link .material-icons {
+  font-size: 1.25rem;
+}
+
+/* Copyright text */
+.footer-component .small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

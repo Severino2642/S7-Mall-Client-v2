@@ -1,0 +1,27 @@
+<!-- Footer -->
+<footer class="footer-component bg-white border-top pt-5 pb-3">
+  <div class="container">
+    <div class="row border-top pt-4">
+      <div class="col-12">
+        <!-- Footer Content -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+          <!-- Copyright Text -->
+          <p class="text-muted small mb-0">
+            {{ copyrightText }}
+          </p>
+          
+          <!-- Social Links -->
+          <div class="d-flex gap-3">
+            <a *ngFor="let social of socialLinks" 
+               [href]="social.url" 
+               class="social-link text-muted"
+               [title]="social.name"
+               (click)="$event.preventDefault(); navigateToSocial(social.url)">
+              <span class="material-icons">{{ social.icon }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
