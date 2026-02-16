@@ -1,0 +1,198 @@
+<!-- Header -->
+<app-header></app-header>
+
+<!-- Main Content -->
+<main class="bg-light min-vh-100 py-5">
+  <div class="container">
+    <!-- Page Title -->
+    <div class="mb-5">
+      <h1 class="h2 fw-bold">Pannier</h1>
+      <p class="text-muted">{{ getTotalItems() }} produit{{ getTotalItems() > 1 ? 's' : '' }} dans votre panier</p>
+    </div>
+
+    <!-- Empty Cart Message -->
+    <div *ngIf="cartItems.length === 0" class="text-center py-5">
+      <span class="material-icons" style="font-size: 80px; color: var(--text-muted);">shopping_cart</span>
+      <h3 class="mt-3">Votre panier est vide</h3>
+      <p class="text-muted">Ajoutez des produits pour commencer!</p>
+      <button class="btn btn-primary mt-3" (click)="continueShopping()">
+        <span class="material-icons me-2">shopping_bag</span>
+        Continuer vos achats
+      </button>
+    </div>
+
+    <!-- Cart Content -->
+    <div *ngIf="cartItems.length > 0" class="row g-4">
+      <!-- Cart Items Section -->
+      <div class="col-lg-8">
+        <div class="cart-items-section">
+          <!-- Store Group -->
+          <div *ngFor="let group of boutiqueGroups" class="store-group mb-4">
+            <div class="card border-0 shadow-sm">
+              <!-- Store Header -->
+              <div class="card-header bg-light border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="material-icons text-primary">store</span>
+                    <span class="fw-semibold">{{ group.boutique }}</span>
+                  </div>
+                  <span class="badge bg-secondary text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                    {{ group.etage }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Store Items -->
+              <div class="card-body p-0">
+                <div *ngFor="let item of group.items; let last = last" 
+                     class="cart-item p-4" 
+                     [class.border-bottom]="!last">
+                  <div class="row g-3">
+                    <!-- Product Image -->
+                    <div class="col-auto">
+                      <div class="product-image-container">
+                        <img [src]="item.image" [alt]="item.nom" class="product-image">
+                      </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="col">
+                      <div class="d-flex flex-column h-100">
+                        <!-- Product Info -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                          <div>
+                            <h5 class="product-name mb-1">{{ item.nom }}</h5>
+                            <p class="text-muted small mb-0" *ngIf="item.details">{{ item.details }}</p>
+                          </div>
+                          <span class="product-price">Ar {{ formatAmount(item.prix) }}</span>
+                        </div>
+
+                        <!-- Quantity and Actions -->
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                          <!-- Quantity Selector -->
+                          <div class="quantity-selector">
+                            <button class="btn btn-sm btn-outline-secondary" 
+                                    (click)="updateQuantity(item, -1)">
+                              <span class="material-icons" style="font-size: 16px;">remove</span>
+                            </button>
+                            <input type="text" 
+                                   class="form-control form-control-sm text-center" 
+                                   [value]="item.quantite" 
+                                   readonly>
+                            <button class="btn btn-sm btn-outline-secondary" 
+                                    (click)="updateQuantity(item, 1)">
+                              <span class="material-icons" style="font-size: 16px;">add</span>
+                            </button>
+                          </div>
+
+                          <!-- Remove Button -->
+                          <button class="btn btn-link btn-sm text-danger p-0" 
+                                  (click)="removeItem(item)">
+                            <span class="material-icons me-1" style="font-size: 18px;">delete_outline</span>
+                            Supprimer
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="col-lg-4">
+        <div class="order-summary-sticky">
+          <!-- Order Summary Card -->
+          <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+              <h4 class="fw-bold mb-4">Résumé de la commande</h4>
+
+              <!-- Summary Items -->
+              <div class="summary-items mb-4 pb-4 border-bottom">
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted">Total produits({{ getTotalItems() }} produits)</span>
+                  <span class="fw-semibold">Ar {{ formatAmount(subtotal) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted">Frais d'expédition estimés</span>
+                  <span class="fw-semibold" [class.text-success]="shippingCost === 0">
+                    {{ shippingCost === 0 ? 'Gratuit' : 'Ar ' + formatAmount(shippingCost) }}
+                  </span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span class="text-muted">Taxes</span>
+                  <span class="fw-semibold">Ar {{ formatAmount(taxAmount) }}</span>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="fw-bold">Total</span>
+                <span class="h4 fw-bold mb-0" style="color: var(--primary-color);">
+                  Ar {{ formatAmount(totalAmount) }}
+                </span>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-grid gap-2 mb-4">
+                <button class="btn btn-primary btn-lg d-flex align-items-center justify-content-center gap-2" 
+                        (click)="proceedToCheckout()">
+                  Proceder au paiement
+                  <span class="material-icons">arrow_forward</span>
+                </button>
+                <button class="btn btn-outline-secondary" 
+                        (click)="continueShopping()">
+                  Continuer vos achats
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Support Card -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+              <!-- Payment Methods -->
+              <div class="payment-methods mb-4 d-flex flex-wrap justify-content-center gap-3 opacity-75">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" 
+                     alt="Visa" 
+                     class="payment-logo"
+                     style="height: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                     alt="Mastercard" 
+                     class="payment-logo"
+                     style="height: 25px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" 
+                     alt="PayPal" 
+                     class="payment-logo"
+                     style="height: 22px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" 
+                     alt="Apple Pay" 
+                     class="payment-logo"
+                     style="height: 22px;">
+              </div>
+
+              <!-- Security Badge -->
+              <div class="d-flex align-items-start gap-3">
+                <span class="material-icons text-success">verified_user</span>
+                <div>
+                  <h6 class="text-uppercase fw-bold mb-1" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                    Paiement sécurisé
+                  </h6>
+                  <p class="text-muted mb-0" style="font-size: 0.75rem; line-height: 1.5;">
+                    Vos informations de paiement sont sécurisées et cryptées.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

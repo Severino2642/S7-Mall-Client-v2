@@ -37,12 +37,12 @@
                     <div class="price-range-container">
                         <div class="row g-2 mb-2">
                             <div class="col-6">
-                                <label class="form-label small mb-1">Min: ${{ filters.priceMin }}</label>
+                                <label class="form-label small mb-1">Min: Ar {{ filters.priceMin }}</label>
                                 <input type="range" class="form-range" min="0" max="850" step="10"
                                     [(ngModel)]="filters.priceMin" (input)="applyFilters()">
                             </div>
                             <div class="col-6">
-                                <label class="form-label small mb-1">Max: ${{ filters.priceMax }}</label>
+                                <label class="form-label small mb-1">Max: Ar {{ filters.priceMax }}</label>
                                 <input type="range" class="form-range" min="0" max="850" step="10"
                                     [(ngModel)]="filters.priceMax" (input)="applyFilters()">
                             </div>
@@ -119,8 +119,8 @@
                             <!-- Price & Cart -->
                             <div class="product-footer">
                                 <div>
-                                    <span class="product-price">${{ product.prix.toFixed(2) }}</span>
-                                    <span *ngIf="product.prixOriginal" class="product-price-original">${{
+                                    <span class="product-price">Ar {{ product.prix.toFixed(2) }}</span>
+                                    <span *ngIf="product.prixOriginal" class="product-price-original">Ar {{
                                         product.prixOriginal.toFixed(2) }}</span>
                                 </div>
                                 <button class="cart-btn" (click)="goToDetails(product)">
