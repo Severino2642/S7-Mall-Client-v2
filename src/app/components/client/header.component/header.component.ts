@@ -20,22 +20,22 @@ export interface NavLink {
 export class HeaderComponent {
   userInfo = {
     name: 'User',
+    email: 'user@example.com',
     avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB4lwo2d4iLZi5Js-1BQeraxxX7ePmnVBsg5XTcsdbdBjRF2ODrdpscdmBGzTHpD9CmLUiilhqmheGGhwR8zZYjDVotEx_jzS-t_L51vIMQtW8dibaVmKvJOFhwCTezvUL4eAPLHc00BKnnNW92gwg9wCPyiU6pgSq_YXui-dMKLr4tVSMWnWxJmXuM3-wiZMc577pyEIEH0GoA_x5ncEMczDlUMSuYeSJQoOD_VXux6abowbV_9xfgucorfsDhHTGNAji1NtctouI'
   };
 
   navigationLinks: NavLink[] = [
-    { label: 'Home', route: '/', active: true },
-    { label: 'Malls', route: '/malls', active: false },
-    { label: 'Deals', route: '/deals', active: false },
-    { label: 'Events', route: '/events', active: false }
+    { label: 'Produits', route: '/client/produit', active: true },
+    { label: 'Panier', route: '/client/panier', active: false },
+    { label: 'Centre Commercial', route: '/client/centre', active: false },
   ];
 
   searchQuery: string = '';
+  showUserMenu: boolean = false;
 
   constructor(private router: Router) {}
 
   navigateTo(route: string) {
-    // Met à jour le lien actif
     this.navigationLinks.forEach(link => {
       link.active = link.route === route;
     });
@@ -44,5 +44,23 @@ export class HeaderComponent {
 
   onSearch() {
     console.log('Searching for:', this.searchQuery);
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  closeUserMenu() {
+    this.showUserMenu = false;
+  }
+
+  logout() {    
+    // Close menu
+    this.closeUserMenu();
+    
+    // Navigate to login page
+    this.router.navigate(['/login']);
+    
+    console.log('User logged out');
   }
 }

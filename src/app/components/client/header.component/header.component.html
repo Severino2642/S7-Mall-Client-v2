@@ -10,7 +10,7 @@
             <div class="logo-icon d-flex align-items-center justify-content-center">
               <span class="material-icons text-white">shopping_bag</span>
             </div>
-            <span class="fs-5 fw-bold">MALL<span class="text-primary-custom">SCOUT</span></span>
+            <span class="fs-5 fw-bold">OLYMPIA</span>
           </div>
           
           <!-- Navigation Menu -->
@@ -29,28 +29,41 @@
       <!-- Right section: Search, Notifications, Avatar -->
       <div class="col-md-4 col-lg-5">
         <div class="d-flex align-items-center justify-content-end gap-3">
-          <!-- Search Bar -->
-          <div class="position-relative d-none d-lg-block flex-grow-1" style="max-width: 300px;">
-            <span class="material-icons position-absolute search-icon-pos text-muted">search</span>
-            <input
-              class="form-control ps-5"
-              placeholder="Search brands or malls..."
-              type="text"
-              [(ngModel)]="searchQuery"
-              (keyup.enter)="onSearch()" />
-          </div>
           
           <!-- Notifications Button -->
           <button class="btn btn-light rounded-circle p-2 btn-icon" type="button">
             <span class="material-icons text-muted">notifications</span>
           </button>
           
-          <!-- User Avatar -->
-          <div class="avatar-wrapper">
-            <img class="rounded-circle" [src]="userInfo.avatar" alt="User profile" width="32" height="32" />
+          <!-- User Avatar with Dropdown -->
+          <div class="position-relative">
+            <div class="avatar-wrapper" (click)="toggleUserMenu()" style="cursor: pointer;">
+              <img class="rounded-circle" [src]="userInfo.avatar" alt="User profile" width="32" height="32" />
+            </div>
+            
+            <!-- User Dropdown Menu -->
+            <div *ngIf="showUserMenu" class="user-dropdown">
+              <div class="user-dropdown-header">
+                <div class="d-flex align-items-center gap-2">
+                  <img class="rounded-circle" [src]="userInfo.avatar" alt="User profile" width="40" height="40" />
+                  <div>
+                    <div class="fw-semibold">{{ userInfo.name }}</div>
+                    <div class="small text-muted">{{ userInfo.email }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item d-flex align-items-center gap-2" (click)="logout()">
+                <span class="material-icons" style="font-size: 18px;">logout</span>
+                <span>Déconnexion</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </header>
+
+<!-- Overlay to close menu when clicking outside -->
+<div *ngIf="showUserMenu" class="user-menu-overlay" (click)="closeUserMenu()"></div>

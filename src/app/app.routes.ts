@@ -37,6 +37,7 @@ import {
 } from "./components/proprietaire/boutique/boutique/boutique.details/boutique.details.component";
 import {BoutiqueFormComponent} from "./components/proprietaire/boutique/boutique/boutique-form/boutique-form.component";
 import {ProduitFormComponent} from "./components/proprietaire/boutique/produit/produit-form/produit-form.component";
+import { ProduitListeComponent } from './components/client/produit/produit.cmponent/produit-liste.component';
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -71,6 +72,10 @@ export const routes: Routes = [
 
     // fichier rattacher
     { path: 'fichier/create/:idProprietaire', component:  FichierSaisieMultipleComponent},
+
+    // Client
+    { path: 'client/produit', component: ProduitListeComponent},
+    // { path: 'client/produit/:id', component: ProductDetailsComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},

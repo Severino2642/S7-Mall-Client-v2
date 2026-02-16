@@ -1,86 +1,181 @@
 /* Header Component avec Bootstrap */
 .header-component {
-  z-index: 1000;
+    z-index: 1100;
 }
 
 /* Logo Icon */
 .logo-icon {
-  width: 32px;
-  height: 32px;
-  background-color: var(--primary-color);
-  border-radius: 0.25rem;
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary-color);
+    border-radius: 0.25rem;
 }
 
 .logo-icon .material-icons {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
 
 /* Logo Text avec couleur personnalisée */
 .text-primary-custom {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 /* Navigation Links */
 .nav-link-custom {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: color 0.2s;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
 }
 
 .nav-link-custom:hover {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 .nav-link-custom.active {
-  color: var(--primary-color);
+    color: var(--primary-color);
 }
 
 /* Search Icon Position */
 .search-icon-pos {
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.125rem;
-  pointer-events: none;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.125rem;
+    pointer-events: none;
 }
 
 /* Search Input avec focus personnalisé */
 .form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(26, 74, 84, 0.15);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 74, 84, 0.15);
 }
 
 /* Icon Button */
 .btn-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 !important;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
 }
 
 .btn-icon .material-icons {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
 
 /* Avatar */
 .avatar-wrapper {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: rgba(26, 74, 84, 0.1);
-  border: 1px solid rgba(26, 74, 84, 0.3);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(26, 74, 84, 0.1);
+    border: 1px solid rgba(26, 74, 84, 0.3);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.avatar-wrapper:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(26, 74, 84, 0.2);
 }
 
 .avatar-wrapper img {
-  object-fit: cover;
+    object-fit: cover;
+}
+
+/* User Dropdown Menu */
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 250px;
+    z-index: 1060;
+    animation: fadeInDown 0.2s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-dropdown-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-dropdown-header .avatar-wrapper {
+    width: 40px;
+    height: 40px;
+}
+
+.user-info h6 {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.user-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.dropdown-item {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    z-index: 9999;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(26, 74, 84, 0.05);
+}
+
+.dropdown-item .material-icons {
+    font-size: 1.125rem;
+    color: var(--primary-color);
+}
+
+/* User Menu Overlay */
+.user-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 1040;
 }
