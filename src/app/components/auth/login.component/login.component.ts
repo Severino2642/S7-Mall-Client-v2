@@ -71,6 +71,7 @@ export class LoginComponent {
         const mall = await this.proprietaireService.getById(res.idUser);
         console.log("User is a owner:", mall);
         localStorage.setItem('owner', JSON.stringify(mall));
+        redirection = '/owner/offreLocation/liste';
       }
 
       // navigation
