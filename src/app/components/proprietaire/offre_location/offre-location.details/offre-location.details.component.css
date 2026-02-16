@@ -278,6 +278,13 @@
   border-radius: 8px;
   transition: all 0.2s ease;
 }
+.actions-buttons input {
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 1.5rem;
+}
 
 .btn-primary {
   background-color: var(--primary-color);

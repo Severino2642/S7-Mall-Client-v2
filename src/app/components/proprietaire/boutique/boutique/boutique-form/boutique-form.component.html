@@ -32,46 +32,82 @@
 
                 <div class="col-12 col-md-3">
                   <label class="form-label fw-medium">
-                    Boxe <span class="text-danger">*</span>
+                    Nom
                   </label>
-                  <select
-                    class="form-select"
-                    [class.is-invalid]="isFieldInvalid('idBoxe')"
-                    formControlName="idBoxe">
-                    <option value="" disabled>Selectionner une boxe</option>
-                    <option *ngFor="let item of listBoxe" [value]="item._id">
-                      {{ item.nom }}
-                    </option>
-                  </select>
-                  <div class="invalid-feedback" *ngIf="isFieldInvalid('idBoxe')">
-                    {{ getFieldError('idBoxe') }}
+                  <input
+                    type="text"
+                    [class.is-invalid]="isFieldInvalid('nom')"
+                    class="form-control"
+                    formControlName="nom"
+                    placeholder="Nom de la boutique">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('nom')">
+                    {{ getFieldError('nom') }}
                   </div>
-                  <small class="text-muted d-block mt-1">Unique product identifier</small>
                 </div>
-
                 <div class="col-12 col-md-3">
-                  <!-- Description (comme Category) -->
                   <label class="form-label fw-medium">
                     Description
                   </label>
                   <textarea class="form-control" formControlName="description" placeholder="Description de la boutique">
                   </textarea>
                 </div>
-
                 <div class="col-12 col-md-3">
                   <label class="form-label fw-medium">
-                    Montant du loyer <span class="text-danger">*</span>
+                    E-mail
                   </label>
                   <input
-                    type="number"
+                    type="email"
                     class="form-control"
-                    [class.is-invalid]="isFieldInvalid('montantLoyer')"
-                    formControlName="montantLoyer"
-                    placeholder="0">
-                  <div class="invalid-feedback" *ngIf="isFieldInvalid('montantLoyer')">
-                    {{ getFieldError('montantLoyer') }}
+                    formControlName="email"
+                    [class.is-invalid]="isFieldInvalid('email')"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                    {{ getFieldError('email') }}
                   </div>
                 </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Contact
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="contact"
+                    [class.is-invalid]="isFieldInvalid('contact')"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('contact')">
+                    {{ getFieldError('contact') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Heure d'ouverture
+                  </label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    formControlName="heure_ouverture"
+                    [class.is-invalid]="isFieldInvalid('heure_ouverture')"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('heure_ouverture')">
+                    {{ getFieldError('heure_ouverture') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Heure de fermeture
+                  </label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    formControlName="heure_fermeture"
+                    [class.is-invalid]="isFieldInvalid('heure_fermeture')"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('heure_fermeture')">
+                    {{ getFieldError('heure_fermeture') }}
+                  </div>
+                </div>
+
               </div>
 
             </div>

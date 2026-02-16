@@ -1,3 +1,5 @@
+import {OffreDeLocationCPLModel} from "../models/offre_location.model";
+
 export class UtilitaireUtil {
   static dateToDMY_HM (date: Date | undefined): string {
     if (!date) return 'JJ/MM/AAAA HH:MM';
@@ -37,5 +39,14 @@ export class UtilitaireUtil {
   static isBetween(date: Date, start: Date, end: Date): boolean {
     return date.getTime() >= start.getTime() &&
       date.getTime() <= end.getTime();
+  }
+
+  static calculateSurface(longueur:any,largeur:any): number {
+    return longueur*largeur;
+  }
+
+  static compareMotCle(phrase: string|undefined, motCle: string|undefined): boolean {
+    if (!phrase || !motCle) return false;
+    return phrase.toLowerCase().trim().includes(motCle.trim().toLowerCase());
   }
 }

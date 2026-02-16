@@ -68,6 +68,7 @@ export class LoginComponent {
       }
 
       if (res.role?.val === "Proprietaire") {
+        redirection = "/owner/offreLocation/liste";
         const mall = await this.proprietaireService.getById(res.idUser);
         console.log("User is a owner:", mall);
         localStorage.setItem('owner', JSON.stringify(mall));

@@ -6,6 +6,9 @@ import {HeaderComponent} from "../../header.component/header.component";
 import {NavbarComponent} from "../../navbar.component/navbar.component";
 import {CommonModule, NgForOf, NgIf} from "@angular/common";
 import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
+import {
+  DemandeLocationListeOngletComponent
+} from "../onglet/demande-location.liste.onglet/demande-location.liste.onglet.component";
 
 @Component({
   selector: 'app-offre-location.details',
@@ -14,7 +17,8 @@ import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
     HeaderComponent,
     NavbarComponent,
     CommonModule,
-    RouterLink
+    RouterLink,
+    DemandeLocationListeOngletComponent
   ],
   templateUrl: './offre-location.details.component.html',
   styleUrl: './offre-location.details.component.css'

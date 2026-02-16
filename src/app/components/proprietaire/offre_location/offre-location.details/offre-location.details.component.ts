@@ -1,90 +1,64 @@
 import { Component } from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NavbarComponent} from "../../../admin/navbar.component/navbar.component";
 import {HeaderComponent} from "../../../admin/header.component/header.component";
-
-export interface ProductImage {
-  id: number;
-  url: string;
-  alt: string;
-  type: 'photo' | 'plan' | '3d';
-}
-
-export interface ProductDetails {
-  id: string;
-  name: string;
-  model: string;
-  description: string;
-  features: string[];
-  surface: number;
-  bedrooms: number;
-  rooms: number;
-  price: number;
-  images: ProductImage[];
-}
+import {OffreDeLocationCPLModel} from "../../../../models/offre_location.model";
+import {OffreLocationServiceService} from "../../../../services/offre_location.service/offre-location.service.service";
+import {FileModel} from "../../../../models/file.model";
+import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
+import {FormsModule} from "@angular/forms";
+import {DemandeLocationService} from "../../../../services/demande_location.service/demande-location.service";
+import {StorageUtil} from "../../../../utils/storage.util";
 
 @Component({
   selector: 'app-offre-location.details',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, HeaderComponent],
+  imports: [CommonModule, NavbarComponent, HeaderComponent, FormsModule],
   templateUrl: './offre-location.details.component.html',
   styleUrl: './offre-location.details.component.css'
 })
 export class OffreLocationDetailsFrontOfficeComponent {
-  product?: ProductDetails;
+  item?: OffreDeLocationCPLModel | null;
   loading = false;
+
   // Galerie d'images
   currentImageIndex = 0;
   showLightbox = false;
   lightboxImageIndex = 0;
+  propositionLoyer = 0;
 
   // Exemple de données (à remplacer par votre API)
-  mockProduct: ProductDetails = {
-    id: '1',
-    name: 'SYMPHONIE 383',
-    model: 'Modèle',
-    description: 'Cette maison de plain-pied offre un espace de vie harmonieux avec une conception moderne et fonctionnelle. Les grandes baies vitrées inondent l\'intérieur de lumière naturelle, créant une atmosphère chaleureuse et accueillante.',
-    features: [
-      'Architecture moderne',
-      'Grandes baies vitrées',
-      'Jardin aménageable',
-      'Garage double',
-      'Cuisine ouverte',
-      'Terrasse'
-    ],
-    surface: 100,
-    bedrooms: 3,
-    rooms: 5,
-    price: 185000,
-    images: [
-      { id: 1, url: 'assets/unity.png', alt: 'Vue principale', type: 'photo' },
-      { id: 2, url: 'assets/unity.png', alt: 'Vue arrière', type: 'photo' },
-      { id: 3, url: 'assets/unity.png', alt: 'Vue latérale', type: 'photo' },
-      { id: 4, url: 'assets/unity.png', alt: 'Plan', type: 'plan' },
-      { id: 5, url: 'assets/unity.png', alt: 'Vue 3D', type: '3d' },
-      { id: 6, url: 'assets/unity.png', alt: 'Intérieur', type: 'photo' },
-      { id: 7, url: 'assets/unity.png', alt: 'Cuisine', type: 'photo' },
-      { id: 8, url: 'assets/unity.png', alt: 'Chambre', type: 'photo' }
-    ]
-  };
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private itemService: OffreLocationServiceService,
+    private demandeService:DemandeLocationService
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
-    this.loadProduct(id);
+    if (id) {
+      await this.loadItem(id);
+    }
   }
 
-  loadProduct(id: string): void {
-    // Simuler le chargement depuis API
-    // Dans une vraie app : this.productService.getById(id).subscribe(...)
-    this.product = this.mockProduct;
+  async loadItem(id: string): Promise<void> {
+    this.loading = true;
+    this.item = await this.itemService.getCPLById(id);
+    this.propositionLoyer = this.item?.montantLoyer || 0;
+    console.log("Détails de l'offre de location:", this.item);
+    this.loading = false;
+  }
+
+  goBack(): void {
+    this.router.navigate(['owner/offreLocation/liste']);
   }
 
   // Obtenir l'image principale actuelle
-  getCurrentImage(): ProductImage | undefined {
-    return this.product?.images[this.currentImageIndex];
+  getCurrentImage(): FileModel | undefined {
+    return this.item?.autrePhoto?.[this.currentImageIndex];
   }
 
   // Changer l'image principale
@@ -107,16 +81,16 @@ export class OffreLocationDetailsFrontOfficeComponent {
 
   // Image suivante dans la lightbox
   nextImage(): void {
-    if (this.product) {
-      this.lightboxImageIndex = (this.lightboxImageIndex + 1) % this.product.images.length;
+    if (this.item && this.item.autrePhoto) {
+      this.lightboxImageIndex = (this.lightboxImageIndex + 1) % this.item.autrePhoto.length;
     }
   }
 
   // Image précédente dans la lightbox
   previousImage(): void {
-    if (this.product) {
+    if (this.item && this.item.autrePhoto) {
       this.lightboxImageIndex = this.lightboxImageIndex === 0
-        ? this.product.images.length - 1
+        ? this.item.autrePhoto.length - 1
         : this.lightboxImageIndex - 1;
     }
   }
@@ -147,32 +121,22 @@ export class OffreLocationDetailsFrontOfficeComponent {
     }
   }
 
-  // Formater le prix
-  formatPrice(price: number): string {
-    return price.toLocaleString('fr-FR') + ' €';
-  }
-
-  // Acheter le produit
-  buyProduct(): void {
-    console.log('Achat du produit:', this.product?.name);
-    // Logique d'achat
-    alert('Fonctionnalité d\'achat à implémenter');
-  }
-
-  // Télécharger le PDF
-  downloadPDF(): void {
-    console.log('Téléchargement PDF');
-    // Logique de téléchargement
-    alert('Téléchargement du PDF');
-  }
-
-  // Comparer le produit
-  compareProduct(): void {
-    console.log('Comparer le produit');
-    alert('Fonctionnalité de comparaison à implémenter');
-  }
-
   ngOnDestroy(): void {
     document.body.style.overflow = 'auto';
   }
+
+  async envoyerDemande():Promise<void>{
+    this.loading = true;
+    const auth = StorageUtil.getFromStorage<any>("auth");
+    const data = {
+      idProprietaire:auth.idUser,
+      idOffreLocation:this.item?._id,
+      montantLoyer:this.propositionLoyer
+    }
+    await this.demandeService.create(data);
+    alert("Demande envoyer");
+    this.loading = false;
+  }
+
+  protected readonly UtilitaireUtil = UtilitaireUtil;
 }
