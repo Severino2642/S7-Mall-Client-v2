@@ -41,6 +41,7 @@ import { ProduitListeComponent } from './components/client/produit/produit.cmpon
 import { ProduitDetailsComponent } from './components/client/produit/details.component/produit-details.component';
 import { PannierComponent } from './components/client/pannier.component/pannier.component';
 import { CentreCommercialComponent } from './components/client/centre-commercial.component/centre-commercial.component';
+import { BoutiqueComponent } from './components/client/boutique.component/boutique.component';
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -81,6 +82,7 @@ export const routes: Routes = [
     { path: 'client/produit/:id', component: ProduitDetailsComponent},
     { path: 'client/panier', component: PannierComponent},
     { path: 'client/centre', component: CentreCommercialComponent},
+    { path: 'client/boutique', component: BoutiqueComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},

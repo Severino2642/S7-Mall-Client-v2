@@ -311,9 +311,8 @@ export class CentreCommercialComponent implements OnInit, AfterViewInit {
     return time;
   }
 
-  // Naviguer vers les produits du centre
+  // Naviguer vers les boutiques du centre
   viewProducts(centre: CentreCommercial): void {
-    // TODO: Implémenter le filtrage par centre commercial
-    this.router.navigate(['/client/produit'], { queryParams: { centre: centre.id } });
+    this.router.navigate(['/client/boutique'], { queryParams: { centre: centre.id } });
   }
 }
