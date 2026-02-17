@@ -46,7 +46,7 @@ export class OffreDeLocation {
       case 2:
         return 'EN ATTENTE';
       case 3:
-        return 'ANNULER';
+        return 'OCCUPÉE';
       default:
         return "DISPONIBLE";
     }

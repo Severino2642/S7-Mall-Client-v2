@@ -1,0 +1,101 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="d-flex align-items-center gap-2">
+        <span>
+          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
+        </span>
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Details d'un mouvement de caisse</h4>
+      </div>
+      <!-- Header Section avec Image et Détails -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Informations Principales -->
+            <div class="col-12">
+              <!-- Titre et Badge -->
+              <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-1">
+                <div>
+                  <p class="text-muted mb-0 fw-semibold">
+                    <small>ID : {{ item?._id }}</small>
+                  </p>
+                </div>
+                <span class="badge px-3 py-2" [ngClass]="MouvementCaisse.getStatusClass(item?.status)">{{MouvementCaisse.getStatusLabel(item?.status)}}</span>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Designation</div>
+                    <div class="stat-value">{{ item?.designation }}</div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Caisse</div>
+                    <div class="stat-value-muted">
+                      <a [routerLink]="['/caisse/details/',item?.idCaisse]">{{ item?.caisse?.nom }}</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Date</div>
+                    <div class="stat-value-muted">{{ item?.date | date:'dd/MM/YYYY' }}</div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">D&eacute;bit</div>
+                    <div class="stat-value text-success">{{ UtilitaireUtil.formatAmount(item?.debit) }} <small class="text-muted">Ar</small> </div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Cr&eacute;dit</div>
+                    <div class="stat-value text-danger">{{ UtilitaireUtil.formatAmount(item?.credit) }} <small class="text-muted">Ar</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer d-flex gap-2 justify-content-end" *ngIf="item?.status === ConstanteUtil.ETAT_DISPONIBLE">
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-success"
+              (click)="setStatus()">
+              <i class="fa fa-check me-2"></i>
+              Valider
+            </button>
+            <button
+              class="btn btn-warning"
+              (click)="editItem()">
+              <i class="fa fa-edit me-2"></i>
+              Modifier
+            </button>
+            <button
+              class="btn btn-danger"
+              (click)="deleteItem()">
+              <i class="fa fa-trash me-2"></i>
+              Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

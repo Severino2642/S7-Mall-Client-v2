@@ -9,6 +9,7 @@ import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
 import {
   DemandeLocationListeOngletComponent
 } from "../onglet/demande-location.liste.onglet/demande-location.liste.onglet.component";
+import {ConstanteUtil} from "../../../../utils/constante.util";
 
 @Component({
   selector: 'app-offre-location.details',
@@ -81,4 +82,5 @@ export class OffreLocationDetailsComponent implements OnInit{
 
   protected readonly OffreDeLocation = OffreDeLocation;
   protected readonly UtilitaireUtil = UtilitaireUtil;
+  protected readonly ConstanteUtil = ConstanteUtil;
 }

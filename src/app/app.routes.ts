@@ -37,11 +37,28 @@ import {
 } from "./components/proprietaire/boutique/boutique/boutique.details/boutique.details.component";
 import {BoutiqueFormComponent} from "./components/proprietaire/boutique/boutique/boutique-form/boutique-form.component";
 import {ProduitFormComponent} from "./components/proprietaire/boutique/produit/produit-form/produit-form.component";
-import { ProduitListeComponent } from './components/client/produit/produit.cmponent/produit-liste.component';
-import { ProduitDetailsComponent } from './components/client/produit/details.component/produit-details.component';
-import { PannierComponent } from './components/client/pannier.component/pannier.component';
-import { CentreCommercialComponent } from './components/client/centre-commercial.component/centre-commercial.component';
-import { BoutiqueComponent } from './components/client/boutique.component/boutique.component';
+import {
+  ProduitDetailsComponent
+} from "./components/proprietaire/boutique/produit/produit-details/produit-details.component";
+import {ProduitListeComponent} from "./components/proprietaire/boutique/produit/produit-liste/produit-liste.component";
+import {StockFormComponent} from "./components/proprietaire/boutique/stock/stock-form/stock-form.component";
+import {StockDetailsComponent} from "./components/proprietaire/boutique/stock/stock-details/stock-details.component";
+import {StockListeComponent} from "./components/proprietaire/boutique/stock/stock-liste/stock-liste.component";
+import {VenteFormComponent} from "./components/proprietaire/boutique/vente/vente-form/vente-form.component";
+import {VenteDetailsComponent} from "./components/proprietaire/boutique/vente/vente-details/vente-details.component";
+import {VenteListeComponent} from "./components/proprietaire/boutique/vente/vente-liste/vente-liste.component";
+import {CaisseFormComponent} from "./components/caisse/caisse/caisse-form/caisse-form.component";
+import {CaisseDetailsComponent} from "./components/caisse/caisse/caisse-details/caisse-details.component";
+import {CaisseListeComponent} from "./components/caisse/caisse/caisse-liste/caisse-liste.component";
+import {
+  MouvementCaisseFormComponent
+} from "./components/caisse/mouvement-caisse/mouvement-caisse-form/mouvement-caisse-form.component";
+import {
+  MouvementCaisseDetailsComponent
+} from "./components/caisse/mouvement-caisse/mouvement-caisse-details/mouvement-caisse-details.component";
+import {
+  MouvementCaisseListeComponent
+} from "./components/caisse/mouvement-caisse/mouvement-caisse-liste/mouvement-caisse-liste.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -73,16 +90,35 @@ export const routes: Routes = [
 
     // Produit de boutique
     { path: 'boutique/produit/create', component:  ProduitFormComponent},
+    { path: 'boutique/produit/update/:id', component:  ProduitFormComponent},
+    { path: 'boutique/produit/details/:id', component:  ProduitDetailsComponent},
+    { path: 'boutique/produit', component:  ProduitListeComponent},
 
+    // Stock de boutique
+    { path: 'boutique/stock/create', component:  StockFormComponent},
+    { path: 'boutique/stock/update/:id', component:  StockFormComponent},
+    { path: 'boutique/stock/details/:id', component:  StockDetailsComponent},
+    { path: 'boutique/stock', component:  StockListeComponent},
+
+    // Vente de boutique
+    { path: 'boutique/vente/create', component:  VenteFormComponent},
+    { path: 'boutique/vente/update/:id', component:  VenteFormComponent},
+    { path: 'boutique/vente/details/:id', component:  VenteDetailsComponent},
+    { path: 'boutique/vente', component:  VenteListeComponent},
+
+    // Caisse
+    { path: 'caisse/create', component:  CaisseFormComponent},
+    { path: 'caisse/update/:id', component:  CaisseFormComponent},
+    { path: 'caisse/details/:id', component:  CaisseDetailsComponent},
+    { path: 'caisse', component:  CaisseListeComponent},
+
+    // Caisse
+    { path: 'caisse/mouvement/create', component:  MouvementCaisseFormComponent},
+    { path: 'caisse/mouvement/update/:id', component:  MouvementCaisseFormComponent},
+    { path: 'caisse/mouvement/details/:id', component:  MouvementCaisseDetailsComponent},
+    { path: 'caisse/mouvement', component:  MouvementCaisseListeComponent},
     // fichier rattacher
     { path: 'fichier/create/:idProprietaire', component:  FichierSaisieMultipleComponent},
-
-    // Client
-    { path: 'client/produit', component: ProduitListeComponent},
-    { path: 'client/produit/:id', component: ProduitDetailsComponent},
-    { path: 'client/panier', component: PannierComponent},
-    { path: 'client/centre', component: CentreCommercialComponent},
-    { path: 'client/boutique', component: BoutiqueComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},

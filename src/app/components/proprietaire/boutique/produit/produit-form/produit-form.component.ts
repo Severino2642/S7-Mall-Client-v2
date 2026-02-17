@@ -2,20 +2,20 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {HeaderComponent} from "../../../../admin/header.component/header.component";
 import {NavbarComponent} from "../../../../admin/navbar.component/navbar.component";
 import {CommonModule, NgIf} from "@angular/common";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {OffreDeLocationModel} from "../../../../../models/offre_location.model";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {BoxeModel} from "../../../../../models/boxe.model";
-import {
-  OffreLocationServiceService
-} from "../../../../../services/offre_location.service/offre-location.service.service";
-import {BoxeService} from "../../../../../services/boxe.service/boxe.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {StorageUtil} from "../../../../../utils/storage.util";
 import {ProduitModel} from "../../../../../models/produit.model";
 import {CategorieModel} from "../../../../../models/categorie.model";
 import {ProduitService} from "../../../../../services/produit.service/produit.service";
 import {CategorieService} from "../../../../../services/categorie.service/categorie.service";
-import {FilleModel} from "../../../../fichier_rattacher/fichier-saisie-multiple/fichier-saisie-multiple.component";
+import {ProduitVarianteModel} from "../../../../../models/produit-variante.model";
+import {FileModel} from "../../../../../models/file.model";
+import {StorageUtil} from "../../../../../utils/storage.util";
+
+export interface FilleModel extends ProduitVarianteModel {
+  selected?: boolean;
+}
 
 @Component({
   selector: 'app-produit-form',
@@ -24,12 +24,14 @@ import {FilleModel} from "../../../../fichier_rattacher/fichier-saisie-multiple/
     HeaderComponent,
     NavbarComponent,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './produit-form.component.html',
   styleUrl: './produit-form.component.css'
 })
 export class ProduitFormComponent {
+  // Mere
   @Input() item?: ProduitModel | null;
   // @Input() itemFilles: Produit[] = [];
   @Output() onSubmit = new EventEmitter<ProduitModel>();
@@ -40,6 +42,11 @@ export class ProduitFormComponent {
   id = null;
   loading = false;
   listCategorie: CategorieModel[] = [];
+
+  // Filles
+  @Input() initialFilles: ProduitVarianteModel[] = [];
+  filles: FilleModel[] = [];
+  selectAll = false;
 
   constructor(
     private fb: FormBuilder,
@@ -54,14 +61,20 @@ export class ProduitFormComponent {
     await this.loadListeCategorie();
     if (this.id!=null && this.id!="") {
       // Mode modification
-      this.loadItem(this.id);
+      await this.loadItem(this.id);
       this.isEditMode = true;
     } else {
       // Mode création
       this.isEditMode = false;
       this.initForm();
     }
+    if (this.initialFilles && this.initialFilles.length > 0) {
+      this.filles = this.initialFilles.map(f => ({ ...f, selected: true }));
+    } else {
+      this.addRow();
+    }
   }
+
 
   async loadListeCategorie(): Promise<void> {
     this.loading = true;
@@ -85,6 +98,11 @@ export class ProduitFormComponent {
   async loadItem(id: string): Promise<void> {
     this.loading = true;
     // this.item = await this.itemService.getById(id);
+    const res = await this.itemService.getCPLById(id);
+    this.item = res;
+    if (res?.variantes){
+      this.initialFilles = res?.variantes;
+    }
     this.initForm(); // Le formulaire se remplit automatiquement
     this.loading = false;
   }
@@ -116,18 +134,22 @@ export class ProduitFormComponent {
 
   // Soumettre le formulaire
   submitForm(): void {
-    if (this.boxeForm.valid) {
-      const formData: BoxeModel = {
-        ...this.boxeForm.value
+    if (this.boxeForm.valid && this.validateFormFille()) {
+      const boutique = StorageUtil.getFromStorage<any>("boutique");
+      const formData: ProduitModel = {
+        ...this.boxeForm.value,
+        idBoutique:boutique._id
       };
-
+      const cleanedFilles = this.filles
+        .filter(fille => fille.selected)
+        .map(({ selected, ...cleanFile }) => ({ ...cleanFile }));
       if (this.isEditMode && this.id) {
         formData._id = this.id;
-        this.updateItem(formData);
+        this.updateItem(formData, cleanedFilles);
       }
       else {
         // MODE CRÉATION
-        this.createItem(formData);
+        this.createItem(formData, cleanedFilles);
       }
 
       this.onSubmit.emit(formData);
@@ -139,16 +161,24 @@ export class ProduitFormComponent {
     }
   }
 
-  async createItem(formData: BoxeModel): Promise<void> {
+  async createItem(formData: any,filles:any): Promise<void> {
     this.loading = true;
-    var res = await this.itemService.createMereFille(formData);
+    const bigData = {
+      mere: formData,
+      filles: filles
+    }
+    var res = await this.itemService.createMereFille(bigData);
     this.router.navigate([`boutique/produit/details/${res._id}`]);
     this.loading = false;
   }
 
-  async updateItem(formData: BoxeModel): Promise<void> {
+  async updateItem(formData: any,filles:any): Promise<void> {
     this.loading = true;
-    await this.itemService.updateMereFille(this.id!, formData);
+    const bigData = {
+      mere: formData,
+      filles: filles
+    }
+    await this.itemService.updateMereFille(this.id!, bigData);
     this.router.navigate([`boutique/produit/details/${this.id}`]);
     this.loading = false;
   }
@@ -168,6 +198,95 @@ export class ProduitFormComponent {
   }
 
   getTitre(): string {
-    return this.isEditMode ? "Modification d'une offre de location" : "Créer une nouvelle offre de location";
+    return this.isEditMode ? "Modification d'une produit" : "Créer une nouvelle produit";
+  }
+
+
+  addRow(): void {
+    const newFile: FilleModel = {
+      _id: undefined,
+      val: '',
+      desce: '',
+      selected: false
+    };
+    this.filles.push(newFile);
+  }
+
+  // Supprimer une ligne spécifique
+  deleteRow(index: number): void {
+    this.filles.splice(index, 1);
+    this.updateSelectAll();
+
+    // Ajouter une ligne vide si le tableau est vide
+    if (this.filles.length === 0) {
+      this.addRow();
+    }
+  }
+
+  // Supprimer les lignes sélectionnées
+  deleteSelected(): void {
+    const selectedCount = this.getSelectedCount();
+
+    if (selectedCount === 0) {
+      alert('Aucune ligne sélectionnée');
+      return;
+    }
+
+    if (confirm(`Êtes-vous sûr de vouloir supprimer ${selectedCount} ligne(s) ?`)) {
+      this.filles = this.filles.filter(fille => !fille.selected);
+      this.selectAll = false;
+
+      // Ajouter une ligne vide si le tableau est vide
+      if (this.filles.length === 0) {
+        this.addRow();
+      }
+    }
+  }
+
+  // Toggle sélection globale
+  toggleSelectAll(): void {
+    this.filles.forEach(fille => fille.selected = this.selectAll);
+  }
+
+  // Mettre à jour la sélection globale
+  updateSelectAll(): void {
+    this.selectAll = this.filles.length > 0 &&
+      this.filles.every(fille => fille.selected);
+  }
+
+  private generateTempId(): string {
+    return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+  // Compter les lignes sélectionnées
+  getSelectedCount(): number {
+    return this.filles.filter(fille => fille.selected).length;
+  }
+
+  hasSelection(): boolean {
+    return this.getSelectedCount() > 0;
+  }
+
+  validateFormFille(): boolean {
+    // Vérifier que toutes les lignes ont au moins un nom et une URL
+    for (let i = 0; i < this.filles.length; i++) {
+      const file = this.filles[i];
+
+      if (!file.val || file.val.trim() === '') {
+        alert(`Veuillez remplir le nom de la variante à la ligne ${i + 1}`);
+        return false;
+      }
+
+      if (!file.desce || file.desce.trim() === '') {
+        alert(`Veuillez remplir la description de la variante à la ligne ${i + 1}`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  trackByFn(index: number, item: FilleModel): any {
+    return item._id || index;
   }
 }

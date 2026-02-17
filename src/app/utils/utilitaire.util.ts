@@ -49,4 +49,47 @@ export class UtilitaireUtil {
     if (!phrase || !motCle) return false;
     return phrase.toLowerCase().trim().includes(motCle.trim().toLowerCase());
   }
+
+  static getFormattedDate(dateInput: any): string {
+    if (!dateInput) return '';
+
+    let date: Date;
+
+    // Si c'est déjà une Date
+    if (dateInput instanceof Date) {
+      date = dateInput;
+    }
+    // Si c'est un timestamp (nombre)
+    else if (typeof dateInput === 'number') {
+      date = new Date(dateInput);
+    }
+    // Si c'est une string
+    else if (typeof dateInput === 'string') {
+      // Essayer de parser différents formats
+      date = new Date(dateInput);
+
+      // Si la date est invalide, essayer de parser format DD/MM/YYYY
+      if (isNaN(date.getTime()) && dateInput.includes('/')) {
+        const [day, month, year] = dateInput.split('/');
+        date = new Date(`${year}-${month}-${day}`);
+      }
+    }
+    // Si c'est un objet MongoDB avec propriétés
+    else if (dateInput?.toDate) {
+      date = dateInput.toDate(); // Pour les ObjectId ou Dates MongoDB
+    }
+    else {
+      return '';
+    }
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) return '';
+
+    // Formater pour input date
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 }

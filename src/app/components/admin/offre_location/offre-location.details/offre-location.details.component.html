@@ -74,7 +74,7 @@
 
           </div>
         </div>
-        <div class="card-footer d-flex gap-2 justify-content-end">
+        <div class="card-footer d-flex gap-2 justify-content-end" *ngIf="item?.status !== ConstanteUtil.ETAT_OCCUPEE">
           <button
             class="btn btn-warning"
             (click)="editItem()">

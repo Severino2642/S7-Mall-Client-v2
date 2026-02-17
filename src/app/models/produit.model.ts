@@ -10,6 +10,7 @@ export interface ProduitModel {
   description?: string;
   prix?: number;
   quantite?: number;
+  status?:number;
 }
 
 export interface ProduitCPLModel extends ProduitModel {
@@ -17,4 +18,28 @@ export interface ProduitCPLModel extends ProduitModel {
   variantes?: ProduitVarianteModel[];
   photo?:FileModel;
   autrePhoto?:FileModel[];
+}
+
+export class Produit {
+  static getStatusClass(status: number | undefined): string {
+    switch (status) {
+      case 1:
+        return 'badge-success';
+      case 3:
+        return 'badge-danger';
+      default:
+        return 'badge-secondary';
+    }
+  }
+
+  static getStatusLabel(status: number | undefined):string {
+    switch (status) {
+      case 1:
+        return 'DISPONIBLE';
+      case 3:
+        return 'INDISPONIBLE';
+      default:
+        return "FERMER";
+    }
+  }
 }

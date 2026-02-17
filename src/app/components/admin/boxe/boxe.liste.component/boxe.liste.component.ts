@@ -102,11 +102,9 @@ export class BoxeListeComponent implements OnInit{
   applyFilters():void{
     this.filteredItems = this.items.filter(item => {
       if (this.filters.nom !== "" && item.nom !== this.filters.nom) {
-        console.log("diso nom");
         return false;
       }
       if (this.filters.status != 0 && item.status != this.filters.status) {
-        console.log("diso status ",item.status,this.filters.status);
         return false;
       }
       return true;

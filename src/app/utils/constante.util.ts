@@ -9,4 +9,10 @@ export class ConstanteUtil {
   static ETAT_VALIDER = 11;
   static ETAT_ANNULER = 21;
   static ETAT_REJETER = 31;
+
+  static sexe = {
+    "Homme":"Masculin",
+    "Femme":"Feminin",
+    "Autre":"Autre"
+  }
 }

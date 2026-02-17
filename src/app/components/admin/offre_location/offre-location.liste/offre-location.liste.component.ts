@@ -86,14 +86,14 @@ export class OffreLocationListeComponent {
           return false;
         }
       }
-      // if (item.date != undefined) {
-      //   if (this.filters.date_min != undefined && new Date(item.date).getTime() < new Date(this.filters.date_min).getTime()) {
-      //     return false;
-      //   }
-      //   if (this.filters.date_max != undefined && new Date(item.date).getTime() > new Date(this.filters.date_max).getTime()) {
-      //     return false;
-      //   }
-      // }
+      if (item.date != undefined) {
+        if (this.filters.date_min != undefined && new Date(item.date).getTime() < new Date(this.filters.date_min).getTime()) {
+          return false;
+        }
+        if (this.filters.date_max != undefined && new Date(item.date).getTime() > new Date(this.filters.date_max).getTime()) {
+          return false;
+        }
+      }
       return true;
     });
 

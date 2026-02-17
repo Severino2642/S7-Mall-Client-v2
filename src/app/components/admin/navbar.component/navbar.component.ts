@@ -86,17 +86,17 @@ export class NavbarComponent implements OnInit{
           icon: 'fa fa-shop',
           route: '',
           children: [
-            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
-            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'boutique/produit/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'boutique/produit/' }
           ]
         },
         {
-          label: 'Mouvements de stock',
+          label: 'Stock',
           icon: 'fa fa-shop',
           route: '',
           children: [
-            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
-            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'boutique/stock/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'boutique/stock/' }
           ]
         },
         {
@@ -104,8 +104,26 @@ export class NavbarComponent implements OnInit{
           icon: 'fa fa-shop',
           route: '',
           children: [
-            { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
-            { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'boutique/vente/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'boutique/vente/' }
+          ]
+        },
+        {
+          label: 'Caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse' }
+          ]
+        },
+        {
+          label: 'Mouvement de caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/mouvement/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse/mouvement' }
           ]
         },
       ]

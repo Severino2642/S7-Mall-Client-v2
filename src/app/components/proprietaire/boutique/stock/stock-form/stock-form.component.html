@@ -1,0 +1,239 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <!-- Contenu principal -->
+  <main class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div>
+        <h4 class="text-3xl font-bold" style="color: #101828;">{{getTitre()}}</h4>
+      </div>
+      <div class="boxe-form-container">
+        <form [formGroup]="boxeForm" (ngSubmit)="submitForm()">
+
+          <!-- General Information Section -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+              <!-- Section Header -->
+              <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center">
+                  <i class="fa fa-info-circle text-white"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-semibold">Information General</h6>
+                  <small class="text-muted">Details de l'objet</small>
+                </div>
+              </div>
+
+              <!-- Form Fields -->
+              <div class="row g-3">
+
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Designation
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('designation')"
+                    formControlName="designation"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('designation')">
+                    {{ getFieldError('designation') }}
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Type de mouvement de stock <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('idTypeMvtStock')"
+                    formControlName="idTypeMvtStock"
+                    (change)="onChangeTypeStock()">
+                    <option value="" disabled>Selectionner</option>
+                    <option *ngFor="let item of listTypeStock" [value]="item">
+                      {{ item }}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('idTypeMvtStock')">
+                    {{ getFieldError('idTypeMvtStock') }}
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Date <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('date')"
+                    formControlName="date">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('date')">
+                    {{ getFieldError('date') }}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="card-footer form-actions d-flex gap-2 justify-content-end">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetForm()">
+                <i class="fa fa-times"></i>
+                R&eacute;initialiser
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="boxeForm.invalid">
+                <i class="fa fa-check"></i>
+                {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+              </button>
+            </div>
+          </div>
+
+        </form>
+        <div class="multi-file-form-container mt-4">
+
+          <!-- En-tête avec actions -->
+          <div class="form-header d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="mb-1">Details du mouvement de stock</h5>
+              <small class="text-muted">{{ filles.length }} ligne(s) - {{ getSelectedCount() }} sélectionnée(s)</small>
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                class="btn btn-sm btn-outline-danger"
+                [disabled]="!hasSelection()"
+                (click)="deleteSelected()">
+                <i class="fa fa-trash me-1"></i>
+                Supprimer sélection
+              </button>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="addRow()">
+                <i class="fa fa-plus me-1"></i>
+                Ajouter une ligne
+              </button>
+            </div>
+          </div>
+
+          <!-- Tableau avec formulaire -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+              <thead class="table-light">
+              <tr>
+                <!-- Checkbox select all -->
+                <th style="width: 50px;" class="text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [(ngModel)]="selectAll"
+                    (change)="toggleSelectAll()">
+                </th>
+
+                <!-- Colonnes -->
+                <th style="width: 40px;">#</th>
+                <th>Produit <span class="text-danger">*</span></th>
+                <th>Remarque</th>
+                <th>Entrer</th>
+                <th>Sortie</th>
+                <th style="width: 80px;" class="text-center">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let file of filles; let i = index; trackBy: trackByFn">
+
+                <!-- Checkbox -->
+                <td class="text-center">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [(ngModel)]="file.selected"
+                    (change)="updateSelectAll()">
+                </td>
+
+                <!-- Numéro de ligne -->
+                <td class="text-center text-muted">
+                  {{ i + 1 }}
+                </td>
+                <td>
+                  <select
+                    class="form-select form-select-sm"
+                    [(ngModel)]="file.idProduit"
+                    (change)="file.selected=true">
+                    <option value="" disabled>Selectionner un produit</option>
+                    <option *ngFor="let type of listProduit" [value]="type._id">
+                      {{ type.nom+" - "+type.quantite }}
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="file.remarque"
+                    placeholder=""
+                    (input)="file.selected=true"
+                    required>
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="file.entree"
+                    placeholder="0"
+                    (input)="file.selected=true"
+                    [readonly]="idTypeMvtStock === 'Sortie'"
+                    >
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    class="form-control form-control-sm"
+                    [(ngModel)]="file.sortie"
+                    placeholder="0"
+                    (input)="file.selected = true"
+                    [readonly]="idTypeMvtStock == 'Entrer'"
+                    >
+                </td>
+                <!-- Actions -->
+                <td class="text-center">
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteRow(i)"
+                    title="Supprimer cette ligne">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Ligne vide si aucune donnée -->
+              <tr *ngIf="filles.length === 0">
+                <td colspan="6" class="text-center text-muted py-4">
+                  <i class="fa fa-inbox fa-2x mb-2 d-block opacity-25"></i>
+                  <p class="mb-0">Aucune ligne. Cliquez sur "Ajouter une ligne" pour commencer.</p>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Actions du formulaire -->
+          <div class="form-actions d-flex justify-content-end gap-2 mt-3">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+

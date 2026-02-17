@@ -171,7 +171,7 @@ export class FichierSaisieMultipleComponent {
 
     try {
       // 1. Filtrer les fichiers à uploader (avec selectedFile)
-      const filesToUpload = this.files.filter(file => file.selectedFile);
+      const filesToUpload = this.files.filter(file => file.selectedFile && file.selected);
 
       // 2. Upload en parallèle (BEAUCOUP PLUS RAPIDE)
       if (filesToUpload.length > 0) {
@@ -203,7 +203,7 @@ export class FichierSaisieMultipleComponent {
       }
 
       // 3. Préparer les données pour l'insertion multiple
-      const cleanedFiles = this.files.map(file => {
+      const cleanedFiles = this.files.filter(file=>file.selected).map(file => {
         const { _id,date,selectedFile, selected, ...cleanFile } = file;
         return {
           ...cleanFile,
