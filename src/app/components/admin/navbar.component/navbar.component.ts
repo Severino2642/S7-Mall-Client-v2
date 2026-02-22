@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {StorageUtil} from '../../../utils/storage.util';
 import {Router} from "@angular/router";
+import {ConstanteUtil} from "../../../utils/constante.util";
 
 export interface MenuItem {
   label: string;
@@ -189,7 +190,7 @@ export class NavbarComponent implements OnInit{
   ];
 
   userMenuItems = [
-    { label: 'Edit', icon: 'fa-edit', action: 'edit' },
+    { label: 'Profil', icon: 'fa-user', action: 'profil' },
     { label: 'Déconnexion', icon: 'fa-door-open', action: 'logout' }
   ];
 
@@ -206,10 +207,12 @@ export class NavbarComponent implements OnInit{
         this.userInfo.role = user.role.val;
         if (user.role.val === "Centre Commercial") {
           var mall = StorageUtil.getFromStorage<any>("mall");
+          this.userInfo.id = mall._id;
           this.userInfo.name = mall.nom;
         }
         if (user.role.val === "Proprietaire") {
           var owner = StorageUtil.getFromStorage<any>("owner");
+          this.userInfo.id = owner._id;
           this.userInfo.name = owner?.nom+" "+owner?.prenom;
           this.userInfo.avatar = owner.pdp;
         }
@@ -238,9 +241,11 @@ export class NavbarComponent implements OnInit{
     this.showUserMenu = false;
 
     switch (action) {
-      case 'edit':
-        console.log('Edit profile');
-        // Ajouter votre logique pour éditer le profil
+      case 'profil':
+        if (this.userInfo.role === ConstanteUtil.role_centre_commercial) {
+          this.router.navigate(['admin/centre_commercial/details', this.userInfo.id]);
+          return;
+        }
         break;
       case 'logout':
         if (this.userInfo.role === "Boutique") {

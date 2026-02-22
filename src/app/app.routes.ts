@@ -94,6 +94,21 @@ import {
 import {
   PaymentLoyerFormComponent
 } from "./components/proprietaire/payment_loyer/payment-loyer-form/payment-loyer-form.component";
+import {
+  CentreCommercialDetailsComponent
+} from "./components/admin/centre_commercial/centre-commercial-details/centre-commercial-details.component";
+import {
+  CentreCommercialFormComponent
+} from "./components/admin/centre_commercial/centre-commercial-form/centre-commercial-form.component";
+import {
+  CentreCommercialDetailsForProprietaireComponent
+} from "./components/admin/centre_commercial/centre-commercial-details-for-proprietaire/centre-commercial-details-for-proprietaire.component";
+import {
+  CentreCommercialDetailsForClientComponent
+} from "./components/admin/centre_commercial/centre-commercial-details-for-client/centre-commercial-details-for-client.component";
+import {
+  BoutiqueDetailsForClientComponent
+} from "./components/proprietaire/boutique/boutique/boutique-details-for-client/boutique-details-for-client.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -101,6 +116,14 @@ export const routes: Routes = [
     { path: 'register/owner', component:  OwnerRegisterComponent},
     { path: 'register/mall', component:  MallRegisterComponent},
     { path: 'admin/home', component:  HomeComponent},
+
+    // Centre commercial
+    { path: 'admin/centre_commercial/details/:id', component:  CentreCommercialDetailsComponent},
+    { path: 'admin/centre_commercial/create', component:  CentreCommercialFormComponent},
+    { path: 'admin/centre_commercial/update/:id', component:  CentreCommercialFormComponent},
+    { path: 'owner/centre_commercial/details/:id', component:  CentreCommercialDetailsForProprietaireComponent},
+    { path: 'client/centre_commercial/details/:id', component:  CentreCommercialDetailsForClientComponent},
+
     // Boxe
     { path: 'admin/boxe', component:  BoxeListeComponent},
     { path: 'admin/boxe/details/:id', component:  BoxeDetailsComponent},
@@ -122,6 +145,7 @@ export const routes: Routes = [
     { path: 'owner/boutique', component:  BoutiqueListeComponent},
     { path: 'owner/boutique/details/:id', component:  BoutiqueDetailsComponent},
     { path: 'owner/boutique/update/:id', component:  BoutiqueFormComponent},
+    { path: 'client/boutique/details/:id', component:  BoutiqueDetailsForClientComponent},
 
     // Manager
     { path: 'owner/manager', component:  ManagerListeComponent},

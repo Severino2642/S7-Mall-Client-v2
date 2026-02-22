@@ -216,7 +216,7 @@
                   <a [routerLink]="['/owner/details', item.idProprietaire]">{{ item.proprietaire?.nom +" "+item.proprietaire?.prenom }}</a>
                 </td>
                 <td *ngIf="userRole===ConstanteUtil.role_proprietaire" style="color: #1A4A54;">
-                  <a [routerLink]="['/admin/details', item.centreCommercial?._id]">{{ item.centreCommercial?.nom}}</a>
+                  <a [routerLink]="['/owner/centre_commercial/details', item.centreCommercial?._id]">{{ item.centreCommercial?.nom}}</a>
                 </td>
                 <td style="color: #1A4A54;">
                   <a *ngIf="userRole===ConstanteUtil.role_centre_commercial" [routerLink]="['/admin/boxe/details', item.boxe?._id]">{{ item.boxe?.nom}}</a>

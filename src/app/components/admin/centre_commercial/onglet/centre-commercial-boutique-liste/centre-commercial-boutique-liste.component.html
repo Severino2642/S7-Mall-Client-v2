@@ -1,0 +1,148 @@
+<div class="stores-list-page">
+
+  <!-- En-tête et filtres -->
+  <div class="page-header">
+    <div class="container-fluid">
+
+      <div class="header-top mb-4">
+        <div>
+          <h4>D&eacute;couvrer nos boutiques</h4>
+          <p class="page-subtitle">{{ filteredStores.length }} boutiques trouver</p>
+        </div>
+      </div>
+
+      <!-- Barre de recherche et filtres -->
+      <div class="filters-section">
+
+        <!-- Recherche -->
+        <div class="search-box">
+          <i class="fa fa-search search-icon"></i>
+          <input
+            type="text"
+            class="search-input"
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
+            placeholder="Search stores...">
+        </div>
+
+        <!-- Filtres rapides -->
+        <div class="quick-filters">
+          <label class="filter-checkbox">
+            <input
+              type="checkbox"
+              [(ngModel)]="showOnlyOpen"
+              (change)="applyFilters()">
+            <span>Open now</span>
+          </label>
+        </div>
+
+        <!-- Tri -->
+        <div class="sort-select">
+          <select
+            class="form-select"
+            [(ngModel)]="sortBy"
+            (change)="applyFilters()">
+            <option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Liste des magasins -->
+  <div class="stores-grid-section">
+    <div class="container-fluid">
+
+      <!-- Grille de cartes -->
+      <div class="stores-grid">
+
+        <div
+          *ngFor="let store of filteredStores"
+          class="store-card">
+
+          <!-- Bannière -->
+          <div class="store-banner" (click)="viewStore(store._id)">
+            <img [src]="store.pdc?.url" [alt]="store.pdc?.nom">
+          </div>
+
+          <!-- Logo -->
+          <div class="store-logo">
+            <img [src]="store.pdp?.url" [alt]="store.pdp?.nom">
+          </div>
+
+          <!-- Contenu -->
+          <div class="store-content">
+
+            <!-- Nom et statut -->
+            <div class="store-header">
+              <div>
+                <h3 class="store-name text-truncate mb-1" (click)="viewStore(store._id)">
+                  {{ store.nom }}
+                </h3>
+                <span class="text-muted" style="font-size: 14px">
+                  <i class="fa fa-users"></i>
+                  {{UtilitaireUtil.formatNumberToMetric(store.followers?.length||0)}} followers
+                </span>
+              </div>
+              <div class="store-status" [class.open]="store.status===ConstanteUtil.ETAT_DISPONIBLE">
+                <i class="fa fa-circle"></i>
+                <span *ngIf="store.status===ConstanteUtil.ETAT_DISPONIBLE">Ouvert</span>
+                <span *ngIf="store.status!==ConstanteUtil.ETAT_DISPONIBLE">Fermer</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="store-description text-truncate-3">{{ store.description }}{{ store.description }}{{ store.description }}{{ store.description }}</p>
+
+            <!-- Localisation et horaires -->
+            <div class="store-info">
+              <div class="info-item" *ngIf="store.status===ConstanteUtil.ETAT_DISPONIBLE">
+                <i class="fa fa-clock"></i>
+                <span>Ouvert jusqu'&agrave; {{ store.heure_fermeture }}</span>
+              </div>
+              <div class="info-item" *ngIf="store.status!==ConstanteUtil.ETAT_DISPONIBLE">
+                <i class="fa fa-clock"></i>
+                <span>Ouvert &agrave; {{ store.heure_ouverture }}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Actions -->
+          <div class="store-actions" *ngIf="userRole!==ConstanteUtil.role_proprietaire">
+<!--            <button-->
+<!--              class="btn btn-outline"-->
+<!--              [class.following]="store.isFollowing"-->
+<!--              (click)="toggleFollow(store)">-->
+<!--              <i class="fa" [class.fa-plus]="!store.isFollowing" [class.fa-check]="store.isFollowing"></i>-->
+<!--              {{ store.isFollowing ? 'Following' : 'Follow' }}-->
+<!--            </button>-->
+
+            <button class="btn btn-primary" (click)="viewStore(store._id)">
+              Visiter
+              <i class="fa fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="filteredStores.length === 0">
+        <i class="fa fa-store fa-4x mb-3"></i>
+        <h3>No stores found</h3>
+        <p>Try adjusting your filters or search query</p>
+        <button class="m-auto btn btn-primary" (click)="searchQuery = ''; applyFilters()">
+          Clear Filters
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

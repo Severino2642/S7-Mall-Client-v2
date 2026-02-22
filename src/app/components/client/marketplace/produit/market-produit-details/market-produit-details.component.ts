@@ -202,4 +202,15 @@ export class MarketProduitDetailsComponent {
   getQuantityOptions(): number[] {
     return Array.from({ length: this.item?.quantite || 0 }, (_, i) => i + 1);
   }
+
+  goToMall(): void {
+    if (!this.item || !this.item.centreCommercial) return;
+    this.router.navigate(['/client/centre_commercial/details', this.item.centreCommercial?._id])
+  }
+
+  goToBoutique(idBoutique: string|undefined): void {
+    if (idBoutique){
+      this.router.navigate(['/client/boutique/details', idBoutique]);
+    }
+  }
 }

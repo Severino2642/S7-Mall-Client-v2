@@ -99,14 +99,14 @@
                       <span class="action-separator">|</span>
 
                       <!-- Sauvegarder -->
-                      <button class="btn-action" (click)="saveForLater(item)">
+                      <button class="btn-action" (click)="goToBoutique(item.produit?.idBoutique||'')">
                         {{item.produit?.boutique?.nom}}
                       </button>
 
                       <span class="action-separator">|</span>
 
                       <!-- Comparer -->
-                      <button class="btn-action" (click)="compareWithSimilar(item)">
+                      <button class="btn-action" (click)="goToMall(item.produit?.centreCommercial?._id||'')">
                         {{item.produit?.centreCommercial?.nom}}
                       </button>
                     </div>

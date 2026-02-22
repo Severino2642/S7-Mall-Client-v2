@@ -126,15 +126,14 @@ export class MarketPanierListeComponent {
     this.loading = false;
   }
 
-  // Sauvegarder pour plus tard
-  saveForLater(item: CartItem): void {
-    console.log('Sauvegarder pour plus tard:', item);
+  goToBoutique(idBoutique: string|undefined): void {
+    if (idBoutique){
+      this.router.navigate(['/client/boutique/details', idBoutique]);
+    }
   }
-
   // Comparer avec des articles similaires
-  compareWithSimilar(item: CartItem): void {
-    console.log('Comparer:', item);
-    alert('Fonctionnalité de comparaison à implémenter');
+  goToMall(id:string): void {
+    this.router.navigate(['/client/centre_commercial/details', id])
   }
 
   // Partager
@@ -168,4 +167,6 @@ export class MarketPanierListeComponent {
   }
 
   protected readonly UtilitaireUtil = UtilitaireUtil;
+
+
 }

@@ -2,6 +2,7 @@ import {ProprietaireModel} from "./proprietaire.model";
 import {BoxeModel} from "./boxe.model";
 import {CentreCommercialModel} from "./mall.model";
 import {FileModel} from "./file.model";
+import {FollowerModel} from "./follower.model";
 
 export interface BoutiqueModel {
   _id?: string;
@@ -24,6 +25,7 @@ export interface BoutiqueCPLModel extends BoutiqueModel{
   centreCommercial?: CentreCommercialModel;
   pdp?:FileModel;
   pdc?:FileModel;
+  followers?:FollowerModel[];
 }
 
 export class Boutique {

@@ -10,10 +10,10 @@
     <app-header></app-header>
     <div class="main-page">
       <div class="d-flex align-items-center gap-2">
-        <span>
-          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
-        </span>
-        <h4 class="text-3xl fw-bold" style="color: #101828;">Details d'une boutique</h4>
+<!--        <span>-->
+<!--          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>-->
+<!--        </span>-->
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Information profil</h4>
       </div>
 
       <div class="card border-0 shadow-sm mb-4">
@@ -28,7 +28,7 @@
                     <small>ID : {{ item?._id }}</small>
                   </p>
                 </div>
-                <span class="badge px-3 py-2" [ngClass]="Boutique.getStatusClass(item?.status)">{{Boutique.getStatusLabel(item?.status)}}</span>
+                <span class="badge px-3 py-2" [ngClass]="CentreCommercial.getStatusClass(item?.isOuvert)">{{CentreCommercial.getStatusLabel(item?.isOuvert)}}</span>
               </div>
 
               <div class="row g-3 mb-2">
@@ -42,33 +42,18 @@
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">Boxe</div>
+                    <div class="stat-label text-uppercase text-muted">Adresse</div>
                     <div class="stat-value">
-                      {{ item?.boxe?.nom }}
+                      {{ item?.adresse }}
                     </div>
                   </div>
                 </div>
+
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">Centre Commercial</div>
+                    <div class="stat-label text-uppercase text-muted">Date de cr&eacute;ation</div>
                     <div class="stat-value">
-                      <a [routerLink]="['/owner/centre_commercial/details', item?.centreCommercial?._id]">{{ item?.centreCommercial?.nom }}</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 col-md-3">
-                  <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">Contact</div>
-                    <div class="stat-value">
-                      {{ item?.contact }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 col-md-3">
-                  <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">E-Mail</div>
-                    <div class="stat-value">
-                      {{ item?.email }}
+                      {{ item?.date_creation|date:'dd/MM/yyyy' }}
                     </div>
                   </div>
                 </div>
@@ -88,20 +73,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-6 col-md-3">
-                  <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">Surface De La Boxe</div>
-                    <div class="stat-value">{{ UtilitaireUtil.calculateSurface(item?.boxe?.longueur,item?.boxe?.largeur) }} <small class="text-muted">m²</small></div>
-                  </div>
-                </div>
-              </div>
-              <div class="row g-3 mb-2">
-                <div class="col-6 col-md-3">
-                  <div class="stat-box">
-                    <div class="stat-label text-uppercase text-muted">Description</div>
-                    <div>{{ item?.description }}</div>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -112,28 +83,23 @@
             <a
               class="btn bg-primary text-white"
               [routerLink]="['/fichier/create', item?._id]"
-              [queryParams]="{ backlink: '/owner/boutique/details' }">
+              [queryParams]="{ backlink: '/admin/centre_commercial/details' }">
               <i class="fa fa-file-image me-2"></i>
               Ajouter des images
             </a>
             <button
-              *ngIf="item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              *ngIf="item?.isOuvert"
               class="btn btn-success"
-              (click)="fermerBoutique()">
+              (click)="fermer()">
               <i class="fa fa-door-open me-2"></i>
               Ouvert
             </button>
             <button
-              *ngIf="item?.status===ConstanteUtil.ETAT_OCCUPEE"
+              *ngIf="item?.isOuvert===false"
               class="btn btn-danger"
-              (click)="ouvrirBoutique()">
+              (click)="ouvrir()">
               <i class="fa fa-door-closed me-2"></i>
               Fermer
-            </button>
-            <button
-              class="btn bg-primary text-white"
-              (click)="connectToBoutique()">
-              Se connecter
             </button>
           </div>
           <div class="d-flex gap-2 align-items-center">
@@ -159,25 +125,7 @@
                 [class.active]="activeTab === 'tab1'"
                 href="javascript:void(0)"
                 (click)="changeTab('tab1')">
-                Managers
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class.active]="activeTab === 'tab2'"
-                href="javascript:void(0)"
-                (click)="changeTab('tab2')">
-                Payments Loyer
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class.active]="activeTab === 'tab3'"
-                href="javascript:void(0)"
-                (click)="changeTab('tab3')">
-                Fichiers rattachés
+                Fichier rattachés
               </a>
             </li>
           </ul>
@@ -185,14 +133,7 @@
 
         <!-- Tabs Content -->
         <div class="card-body p-4">
-
           <div *ngIf="activeTab === 'tab1'">
-            <app-manager-onglet-liste [idMere]="item?._id"></app-manager-onglet-liste>
-          </div>
-          <div *ngIf="activeTab === 'tab2'">
-            <app-payment-loyer-onglet-liste [idMere]="item?._id"></app-payment-loyer-onglet-liste>
-          </div>
-          <div *ngIf="activeTab === 'tab3'">
             <app-fichier-liste-onglet [idMere]="item?._id" />
           </div>
         </div>

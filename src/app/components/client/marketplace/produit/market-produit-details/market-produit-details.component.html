@@ -88,11 +88,11 @@
                 <span class="rating-value">4</span>
                 <a href="#reviews" class="reviews-count">(4 ratings)</a>
                 <span class="separator">|</span>
-                <a href="#" class="search-page">Visiter la boutique {{item.boutique?.nom}}</a>
+                <a href="javascript:void(0)" class="search-page" (click)="goToBoutique(item.idBoutique)">Visiter la boutique {{item.boutique?.nom}}</a>
               </div>
 
               <!-- Badge achat -->
-              <div class="bought-badge">
+              <div class="bought-badge" (click)="goToMall()">
                 <i class="fa fa-map-location-dot"></i> {{item.centreCommercial?.nom}}
               </div>
 
@@ -257,7 +257,7 @@
               <div class="seller-info">
                 <div class="info-row">
                   <span class="label">Provenance</span>
-                  <span class="value">{{ item.centreCommercial?.nom }}</span>
+                  <span class="value" (click)="goToMall()" >{{ item.centreCommercial?.nom }}</span>
                 </div>
                 <div class="info-row">
                   <span class="label">Vendu par</span>

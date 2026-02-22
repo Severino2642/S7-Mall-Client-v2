@@ -1,40 +1,36 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {CategorieModel} from "../../../../../models/categorie.model";
 import {ProduitCPLModel} from "../../../../../models/produit.model";
+import {CentreCommercialModel} from "../../../../../models/mall.model";
+import {BoutiqueModel} from "../../../../../models/boutique.model";
 import {ProduitService} from "../../../../../services/produit.service/produit.service";
 import {CategorieService} from "../../../../../services/categorie.service/categorie.service";
-import {Router} from "@angular/router";
-import {StorageUtil} from "../../../../../utils/storage.util";
-import {BoutiqueModel} from "../../../../../models/boutique.model";
-import {ConstanteUtil} from "../../../../../utils/constante.util";
-import {CommonModule} from "@angular/common";
-import {UtilitaireUtil} from "../../../../../utils/utilitaire.util";
-import {HeaderComponent} from "../../../header.component/header.component";
-import {CentreCommercialModel} from "../../../../../models/mall.model";
 import {MallService} from "../../../../../services/mall.service/mall.service";
 import {BoutiqueService} from "../../../../../services/boutique.service/boutique.service";
-import {FormsModule} from "@angular/forms";
-import {FooterComponent} from "../../../footer.component/footer.component";
-import {filter} from "rxjs/operators";
 import {PanierService} from "../../../../../services/panier.service/panier.service";
+import {Router} from "@angular/router";
+import {StorageUtil} from "../../../../../utils/storage.util";
 import {PanierModel} from "../../../../../models/panier.model";
+import {CommonModule} from "@angular/common";
+import { UtilitaireUtil } from '../../../../../utils/utilitaire.util';
+import {FormsModule} from "@angular/forms";
+import {ConstanteUtil} from "../../../../../utils/constante.util";
 
 @Component({
-  selector: 'app-market-produit-liste',
+  selector: 'app-centre-commercial-produit-liste',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FormsModule, FooterComponent],
-  templateUrl: './market-produit-liste.component.html',
-  styleUrl: './market-produit-liste.component.css'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './centre-commercial-produit-liste.component.html',
+  styleUrl: './centre-commercial-produit-liste.component.css'
 })
-export class MarketProduitListeComponent {
+export class CentreCommercialProduitListeComponent {
+  @Input() idCentreCommercial: string = '';
   loading = false;
   errorMessage = '';
   // filtres
   filters = {
     nom: "",
     categorie: "",
-    centre_commercial: "",
-    boutique: "",
     prix_min: undefined,
     prix_max: undefined
   };
@@ -49,24 +45,6 @@ export class MarketProduitListeComponent {
   currentPage = 1;
   itemsPerPage = 10;
   totalPages = 1;
-
-  formRechercheCentre = {
-    "title":"Centre commercial",
-    "recherche": "",
-    "results" : [] as CentreCommercialModel[],
-    "isLoading": false,
-    "limit": 5,
-    "voirPlus": false
-  };
-
-  formRechercheBoutique = {
-    "title":"Boutique",
-    "recherche": "",
-    "results" : [] as BoutiqueModel[],
-    "isLoading": false,
-    "limit": 5,
-    "voirPlus": false
-  };
 
   idClient = "";
 
@@ -87,8 +65,6 @@ export class MarketProduitListeComponent {
     }
     await this.loadItems();
     await this.loadCategories();
-    await this.loadCentreCommercial();
-    await this.loadBoutique();
     this.applyFilters();
     this.updatePagination();
   }
@@ -100,23 +76,9 @@ export class MarketProduitListeComponent {
     }
   }
 
-  async loadCentreCommercial(): Promise<void> {
-    var res = await this.centreCommercialService.getAll();
-    if (res!=null){
-      this.formRechercheCentre.results = res;
-    }
-  }
-
-  async loadBoutique(): Promise<void> {
-    var res = await this.boutiqueService.getAll();
-    if (res!=null){
-      this.formRechercheBoutique.results = res;
-    }
-  }
-
   async loadItems(): Promise<void> {
     this.loading = true;
-    var res = await this.itemService.getAllForClient();
+    var res = await this.itemService.getCPLByIdCentreCommercial(this.idCentreCommercial,ConstanteUtil.ETAT_DISPONIBLE);
     if (res!=null){
       this.items = res;
     }
@@ -128,13 +90,6 @@ export class MarketProduitListeComponent {
 
     this.filteredItems = this.items.filter(item => {
       if (this.filters.nom !== "" && !UtilitaireUtil.compareMotCle(item.nom, this.filters.nom)) {
-        return false;
-      }
-      console.log("item.idCemtreCommercial", item.idCentreCommercial);
-      if (this.filters.centre_commercial !== "" && !UtilitaireUtil.compareMotCle(item.idCentreCommercial, this.filters.centre_commercial)) {
-        return false;
-      }
-      if (this.filters.boutique !== "" && item.boutique?._id !== this.filters.boutique) {
         return false;
       }
       if (this.filters.categorie !== "" && item.idCategorie !== this.filters.categorie) {
@@ -157,8 +112,6 @@ export class MarketProduitListeComponent {
     this.filters = {
       nom: "",
       categorie: "",
-      centre_commercial: "",
-      boutique: "",
       prix_min: undefined,
       prix_max: undefined
     };
@@ -229,28 +182,6 @@ export class MarketProduitListeComponent {
   // Vérifier si une catégorie est active
   isActive(categoryId: string): boolean {
     return this.activeCategory === categoryId;
-  }
-
-  getResultForRechercheCentre(): CentreCommercialModel[] {
-    let filteredResults = this.formRechercheCentre.results;
-    if (this.formRechercheCentre.recherche != "") {
-      filteredResults = this.formRechercheCentre.results.filter(c => UtilitaireUtil.compareMotCle(c.nom||"", this.formRechercheCentre.recherche));
-    }
-    if (!this.formRechercheCentre.voirPlus) {
-      filteredResults = filteredResults.slice(0, this.formRechercheCentre.limit);
-    }
-    return filteredResults;
-  }
-
-  getResultForRechercheBoutique(): BoutiqueModel[] {
-    let filteredResults = this.formRechercheBoutique.results;
-    if (this.formRechercheBoutique.recherche != "") {
-      filteredResults = this.formRechercheBoutique.results.filter(c => UtilitaireUtil.compareMotCle(c.nom||"", this.formRechercheBoutique.recherche));
-    }
-    if (!this.formRechercheBoutique.voirPlus) {
-      filteredResults = filteredResults.slice(0, this.formRechercheBoutique.limit);
-    }
-    return filteredResults;
   }
 
   changeBoolean(boolItem:boolean){

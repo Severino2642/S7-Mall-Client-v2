@@ -93,4 +93,15 @@ export class OffreLocationServiceService {
       return null;
     }
   }
+
+  async getOffreDisponibleByIdCentreCommercial(id:string): Promise<OffreDeLocationCPLModel[] | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<OffreDeLocationCPLModel[]>(`${this.apiUrl}/centre/status/disponible/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
 }
