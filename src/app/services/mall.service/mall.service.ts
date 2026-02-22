@@ -34,4 +34,15 @@ export class MallService {
       return null;
     }
   }
+
+  async getAll(): Promise<CentreCommercialModel[] | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<CentreCommercialModel[]>(`${this.apiUrl}/`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
 }

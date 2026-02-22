@@ -72,82 +72,72 @@
             title="Notifications">
             <i class="fa fa-bell text-muted"></i>
             <span
-              *ngIf="unreadCount > 0"
+              *ngIf="getUnreadCount() > 0"
               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
-              {{ unreadCount }}
+              {{ getUnreadCount() }}
             </span>
           </button>
 
           <!-- Notifications Dropdown -->
           <div
-            class="notifications-dropdown card border-0 shadow-lg"
-            [class.show]="showNotifications"
-            *ngIf="showNotifications">
+            class="notifications-dropdown"
+            *ngIf="showNotifications"
+            (click)="$event.stopPropagation()">
 
             <!-- Header -->
-            <div class="notifications-header d-flex align-items-center justify-content-between p-3 border-bottom">
-              <h6 class="mb-0 fw-semibold">Notifications</h6>
+            <div class="notifications-header">
+              <h6 class="mb-0">Notifications</h6>
               <button
-                class="btn btn-link btn-sm text-primary p-0"
-                (click)="markAllAsRead()">
+                class="btn-mark-all-read"
+                (click)="markAllAsRead()"
+                *ngIf="getUnreadCount() > 0">
                 Tout marquer comme lu
               </button>
             </div>
 
-            <!-- List -->
+            <!-- Liste des notifications -->
             <div class="notifications-list">
               <div
                 *ngFor="let notification of notifications"
-                class="notification-item d-flex gap-3 p-3 border-bottom"
-                [class.unread]="!notification.read"
+                class="notification-item"
+                [class.unread]="!notification.lu"
                 (click)="markAsRead(notification)">
 
-                <!-- Icon -->
-                <div class="notification-icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                     [ngClass]="'notification-icon-' + notification.type">
-                  <i class="fa"
-                     [ngClass]="{
-                       'fa-info-circle': notification.type === 'info',
-                       'fa-exclamation-triangle': notification.type === 'warning',
-                       'fa-check-circle': notification.type === 'success',
-                       'fa-times-circle': notification.type === 'danger'
-                     }"></i>
+                <!-- Icône selon le type -->
+                <div [innerHTML]="getSafeBadge(notification.badge||'')"></div>
+
+                <!-- Contenu -->
+                <div class="notification-content">
+                  <div class="notification-title">{{ notification.title }}</div>
+                  <div class="notification-message">{{ notification.message }}</div>
+                  <div class="notification-time">{{ UtilitaireUtil.formatRelativeTime(notification.date||null) }}</div>
                 </div>
 
-                <!-- Content -->
-                <div class="notification-content flex-grow-1">
-                  <div class="d-flex justify-content-between align-items-start mb-1">
-                    <h6 class="notification-title mb-0">{{ notification.title }}</h6>
-                    <button
-                      class="btn btn-link btn-sm p-0 text-muted"
-                      (click)="deleteNotification(notification); $event.stopPropagation()"
-                      title="Supprimer">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </div>
-                  <p class="notification-message text-muted mb-1">{{ notification.message }}</p>
-                  <small class="notification-time text-muted">{{ notification.time }}</small>
-                </div>
+                <!-- Indicateur non lu -->
+                <div class="notification-dot" *ngIf="!notification.lu"></div>
 
-                <!-- Unread indicator -->
-                <div *ngIf="!notification.read" class="unread-dot rounded-circle bg-primary"></div>
+                <!-- Bouton supprimer -->
+                <button
+                  class="btn-delete-notification"
+                  (click)="deleteNotification(''); $event.stopPropagation()"
+                  title="Supprimer">
+                  <i class="fa fa-times"></i>
+                </button>
               </div>
 
-              <!-- Empty State -->
-              <div
-                *ngIf="notifications.length === 0"
-                class="text-center py-5 text-muted">
-                <i class="fa fa-bell-slash fa-2x mb-3 d-block opacity-25"></i>
-                <p class="mb-0">Aucune notification</p>
+              <!-- Empty state -->
+              <div *ngIf="notifications.length === 0" class="notifications-empty">
+                <i class="fa fa-bell-slash fa-2x mb-2"></i>
+                <p>Aucune notification</p>
               </div>
             </div>
 
-            <!-- Footer -->
-            <div class="notifications-footer p-3 border-top text-center">
-              <a href="javascript:void(0)" class="text-primary text-decoration-none fw-medium">
-                Voir toutes les notifications
-              </a>
-            </div>
+            <!--              &lt;!&ndash; Footer &ndash;&gt;-->
+            <!--              <div class="notifications-footer">-->
+            <!--                <a href="/notifications" class="view-all-link">-->
+            <!--                  Voir toutes les notifications-->
+            <!--                </a>-->
+            <!--              </div>-->
           </div>
         </div>
       </div>

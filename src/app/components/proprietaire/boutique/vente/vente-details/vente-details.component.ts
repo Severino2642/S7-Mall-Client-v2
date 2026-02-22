@@ -11,6 +11,8 @@ import {NavbarComponent} from "../../../../admin/navbar.component/navbar.compone
 import {StockFillesListeComponent} from "../../stock/onglet/stock-filles-liste/stock-filles-liste.component";
 import {VenteFillesListeComponent} from "../onglet/vente-filles-liste/vente-filles-liste.component";
 import {StockListeComponent} from "../onglet/stock-liste/stock-liste.component";
+import {UtilitaireUtil} from "../../../../../utils/utilitaire.util";
+import {PayementListeComponent} from "../onglet/payement-liste/payement-liste.component";
 
 @Component({
   selector: 'app-vente-details',
@@ -23,7 +25,8 @@ import {StockListeComponent} from "../onglet/stock-liste/stock-liste.component";
     StockFillesListeComponent,
     RouterLink,
     VenteFillesListeComponent,
-    StockListeComponent
+    StockListeComponent,
+    PayementListeComponent
   ],
   templateUrl: './vente-details.component.html',
   styleUrl: './vente-details.component.css'
@@ -31,7 +34,7 @@ import {StockListeComponent} from "../onglet/stock-liste/stock-liste.component";
 export class VenteDetailsComponent {
   item?: VenteCPLModel | null;
   loading = false;
-  activeTab: 'tab1' | 'tab2' = 'tab1';
+  activeTab: 'tab1' | 'tab2' | 'tab3' = 'tab1';
 
   constructor(
     private route: ActivatedRoute,
@@ -53,7 +56,7 @@ export class VenteDetailsComponent {
   }
 
   // Changer d'onglet
-  changeTab(tab: 'tab1'|'tab2'): void {
+  changeTab(tab: 'tab1'|'tab2'|'tab3'): void {
     this.activeTab = tab;
   }
 
@@ -83,6 +86,24 @@ export class VenteDetailsComponent {
     }
   }
 
+  goToPayement(): void {
+    if (this.item?._id) {
+      this.router.navigate(
+        ['caisse/mouvement/create'],
+        {
+          queryParams: {
+            type: 'entrer',
+            idSource: this.item._id,
+            designation: `Paiement de la vente ${this.item._id}`,
+            debit: this.item.montantRestant || 0,
+            maxDebit: this.item.montantRestant || 0
+          }
+        }
+      );
+    }
+  }
+
   protected readonly Vente = Vente;
   protected readonly ConstanteUtil = ConstanteUtil;
+  protected readonly UtilitaireUtil = UtilitaireUtil;
 }

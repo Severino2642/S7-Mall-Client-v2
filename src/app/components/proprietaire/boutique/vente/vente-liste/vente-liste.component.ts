@@ -47,7 +47,9 @@ export class VenteListeComponent {
     totalEnAttente:0,
     totalValider:0,
     totalQuantite:0,
-    totalMontant:0
+    totalMontant:0,
+    totalPayer:0,
+    totalReste:0
   };
 
   // Objet Miova2
@@ -88,6 +90,8 @@ export class VenteListeComponent {
     this.statistics.totalValider = 0;
     this.statistics.totalMontant = 0;
     this.statistics.totalQuantite = 0;
+    this.statistics.totalPayer = 0;
+    this.statistics.totalReste = 0;
     this.filteredItems.forEach(item => {
       if (item.status == ConstanteUtil.ETAT_DISPONIBLE){
         this.statistics.totalEnAttente += 1;
@@ -97,6 +101,8 @@ export class VenteListeComponent {
       }
       this.statistics.totalMontant += item.montantTotal || 0;
       this.statistics.totalQuantite += item.quantiteTotal || 0;
+      this.statistics.totalPayer += item.montantPayer || 0;
+      this.statistics.totalReste += item.montantRestant || 0;
     });
   }
 

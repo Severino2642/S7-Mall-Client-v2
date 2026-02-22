@@ -47,6 +47,16 @@
                   </div>
                 </div>
 
+                <div class="col-6 col-md-3" *ngIf="item?.idSource && item?.idSource!=''">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Source</div>
+                    <div class="stat-value-muted">
+                      <a *ngIf="item && item.idSource && item.idSource.startsWith('v_')" [routerLink]="['/boutique/vente/details/', item.idSource]">{{ item.idSource }}</a>
+                      <a *ngIf="item && item.idSource && item.idSource.startsWith('ploy_')" [routerLink]="['/owner/payment_loyer/details/', item.idSource]">{{ item.idSource }}</a>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Date</div>

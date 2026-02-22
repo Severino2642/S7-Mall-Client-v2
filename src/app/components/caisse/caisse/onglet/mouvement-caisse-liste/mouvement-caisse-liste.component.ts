@@ -74,7 +74,6 @@ export class MouvementCaisseListeComponent {
     this.currentPage = page;
   }
 
-  protected readonly DemandeLocation = DemandeLocation;
   protected readonly MouvementCaisse = MouvementCaisse;
   protected readonly UtilitaireUtil = UtilitaireUtil;
 }

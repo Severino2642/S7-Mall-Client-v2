@@ -118,7 +118,7 @@
                   <i class="fa fa-money-bill-wave"></i>
                 </div>
               </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalDebit) }} <small>Ar</small></h3>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalDebit) }} <small class="text-muted">Ar</small></h3>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@
                   <i class="fa fa-money-bill-wave-alt"></i>
                 </div>
               </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalCredit) }} <small>Ar</small></h3>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalCredit) }} <small class="text-muted">Ar</small></h3>
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@
                   <i class="fa fa-bank"></i>
                 </div>
               </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalSolde) }} <small>Ar</small></h3>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalSolde) }} <small class="text-muted">Ar</small></h3>
             </div>
           </div>
         </div>
@@ -196,10 +196,10 @@
                 <td>
                   {{ item.numero_compte }}
                 </td>
-                <td>
+                <td class="fw-semibold">
                   {{ UtilitaireUtil.formatAmount(item.total_debit) }} <small class="text-muted">Ar</small>
                 </td>
-                <td>
+                <td class="fw-semibold">
                   {{ UtilitaireUtil.formatAmount(item.total_credit) }} <small class="text-muted">Ar</small>
                 </td>
                 <td class="fw-semibold">

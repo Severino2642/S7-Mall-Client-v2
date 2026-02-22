@@ -1,6 +1,8 @@
 import {CategorieModel} from "./categorie.model";
 import {ProduitVarianteModel} from "./produit-variante.model";
 import {FileModel} from "./file.model";
+import {BoutiqueModel} from "./boutique.model";
+import {CentreCommercialModel} from "./mall.model";
 
 export interface ProduitModel {
   _id?: string;
@@ -14,6 +16,9 @@ export interface ProduitModel {
 }
 
 export interface ProduitCPLModel extends ProduitModel {
+  idCentreCommercial?: string;
+  centreCommercial?: CentreCommercialModel;
+  boutique?: BoutiqueModel;
   categorie?: CategorieModel;
   variantes?: ProduitVarianteModel[];
   photo?:FileModel;

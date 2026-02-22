@@ -34,16 +34,16 @@
             {{ item.remarque }}
           </td>
           <td class="fw-semibold">
-            {{ item.prixUnitaire }} <small>Ar</small>
+            {{ UtilitaireUtil.formatAmount(item.prixUnitaire) }} <small class="text-muted">Ar</small>
           </td>
           <td class="fw-semibold">
             {{ item.quantite }}
           </td>
           <td class="fw-semibold">
-            {{ item.remise }} <small>Ar</small>
+            {{ UtilitaireUtil.formatAmount(item.remise) }} <small class="text-muted">Ar</small>
           </td>
           <td class="fw-semibold">
-            {{ item.montantTotal }} <small>Ar</small>
+            {{ UtilitaireUtil.formatAmount(item.montantTotal) }} <small class="text-muted">Ar</small>
           </td>
         </tr>
 

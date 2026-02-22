@@ -108,6 +108,15 @@
           </div>
         </div>
         <div class="card-footer d-flex gap-2 justify-content-between align-items-center">
+          <div>
+            <a
+              class="btn bg-primary text-white"
+              [routerLink]="['/fichier/create', item?._id]"
+              [queryParams]="{ backlink: '/owner/boutique/details' }">
+              <i class="fa fa-file-image me-2"></i>
+              Ajouter des images
+            </a>
+          </div>
           <div class="d-flex gap-2 align-items-center">
             <button
               *ngIf="item?.status===ConstanteUtil.ETAT_DISPONIBLE"
@@ -152,7 +161,25 @@
                 [class.active]="activeTab === 'tab1'"
                 href="javascript:void(0)"
                 (click)="changeTab('tab1')">
-                Payements Loyer
+                Managers
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab2'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab2')">
+                Payments Loyer
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab3'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab3')">
+                Fichiers rattachés
               </a>
             </li>
           </ul>
@@ -162,8 +189,14 @@
         <div class="card-body p-4">
 
           <div *ngIf="activeTab === 'tab1'">
+            <app-manager-onglet-liste [idMere]="item?._id"></app-manager-onglet-liste>
           </div>
-
+          <div *ngIf="activeTab === 'tab2'">
+            <app-payment-loyer-onglet-liste [idMere]="item?._id"></app-payment-loyer-onglet-liste>
+          </div>
+          <div *ngIf="activeTab === 'tab3'">
+            <app-fichier-liste-onglet [idMere]="item?._id" />
+          </div>
         </div>
       </div>
 

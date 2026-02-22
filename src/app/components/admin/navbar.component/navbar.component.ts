@@ -13,6 +13,7 @@ export interface MenuItem {
 }
 
 export interface UserInfo {
+  id?:string;
   name: string;
   email: string;
   avatar?: string;
@@ -63,7 +64,26 @@ export class NavbarComponent implements OnInit{
           ]
         },
         { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
-        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' }
+        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' },
+        { label: 'Payment de loyer', icon: 'fa fa-shop', route: '/owner/payment_loyer' },
+        {
+          label: 'Caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse' }
+          ]
+        },
+        {
+          label: 'Mouvement de caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/mouvement/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse/mouvement' }
+          ]
+        },
       ]
     },
     {
@@ -73,7 +93,43 @@ export class NavbarComponent implements OnInit{
       children: [
         { label: 'Offres de location', icon: 'fa fa-area-chart', route: '/owner/offreLocation/liste' },
         { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
-        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' }
+        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' },
+        {
+          label: 'Manager',
+          icon: 'fa fa-users',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'owner/manager/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'owner/manager/' }
+          ]
+        },
+        {
+          label: 'Payment de loyer',
+          icon: 'fa fa-users',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'owner/payment_loyer/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'owner/payment_loyer/' }
+          ]
+        },
+        {
+          label: 'Caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse' }
+          ]
+        },
+        {
+          label: 'Mouvement de caisse',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/mouvement/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: 'caisse/mouvement' }
+          ]
+        },
       ]
     },
     {
@@ -108,6 +164,7 @@ export class NavbarComponent implements OnInit{
             { label: 'Liste', icon: 'fa fa-list', route: 'boutique/vente/' }
           ]
         },
+        { label: 'Bon de commande', icon: 'fa fa-area-chart', route: 'boutique/bon_commande/' },
         {
           label: 'Caisse',
           icon: 'fa fa-shop',
@@ -160,6 +217,7 @@ export class NavbarComponent implements OnInit{
       }
     }
     else {
+      this.userInfo.id = boutique._id;
       this.userInfo.role = "Boutique";
       this.userInfo.name = boutique.nom;
       this.userInfo.email = boutique.email;
@@ -186,9 +244,15 @@ export class NavbarComponent implements OnInit{
         break;
       case 'logout':
         if (this.userInfo.role === "Boutique") {
+          const auth = StorageUtil.getFromStorage<any>("auth");
+          if (auth.role.val=="Manager"){
+            StorageUtil.clear()
+            this.router.navigate(['/login']);
+            return;
+          }
           console.log('Logout boutique');
           StorageUtil.remove("boutique");
-          this.router.navigate(['/login']);
+          this.router.navigate(['owner/boutique/details',this.userInfo.id]);
           return;
         }
         console.log('Logout');

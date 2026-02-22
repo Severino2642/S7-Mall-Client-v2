@@ -65,7 +65,7 @@
                     class="form-select"
                     [class.is-invalid]="isFieldInvalid('idCaisse')"
                     formControlName="idCaisse">
-                    <option value="" disabled>Selectionner une boxe</option>
+                    <option value="" disabled>Selectionner</option>
                     <option *ngFor="let item of listCaisse" [value]="item._id">
                       {{ item.nom }}
                     </option>
@@ -84,7 +84,8 @@
                     class="form-control"
                     [class.is-invalid]="isFieldInvalid('debit')"
                     formControlName="debit"
-                    placeholder="0">
+                    placeholder="0"
+                  [readonly]="typeMouvement==='sortie'">
                   <div class="invalid-feedback" *ngIf="isFieldInvalid('debit')">
                     {{ getFieldError('debit') }}
                   </div>
@@ -98,7 +99,8 @@
                     class="form-control"
                     [class.is-invalid]="isFieldInvalid('credit')"
                     formControlName="credit"
-                    placeholder="0">
+                    placeholder="0"
+                    [readonly]="typeMouvement==='entrer'">
                   <div class="invalid-feedback" *ngIf="isFieldInvalid('credit')">
                     {{ getFieldError('credit') }}
                   </div>

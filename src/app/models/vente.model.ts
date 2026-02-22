@@ -3,6 +3,7 @@ import {ClientModel} from "./client.model";
 
 export interface VenteModel {
   _id?: string;
+  idSource?: string;
   idBoutique?: string;
   idClient?: string;
   designation?: string;
@@ -13,6 +14,8 @@ export interface VenteModel {
 export interface VenteCPLModel extends VenteModel {
   montantTotal?:number;
   quantiteTotal?:number;
+  montantPayer?:number;
+  montantRestant?:number;
   client?: ClientModel;
   filles?: VenteDetailsModel[];
 }

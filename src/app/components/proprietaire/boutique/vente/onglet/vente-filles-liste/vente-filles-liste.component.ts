@@ -5,6 +5,7 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {VenteDetailsCPLModel} from "../../../../../../models/vente-details.model";
 import {CommonModule} from "@angular/common";
 import {VenteService} from "../../../../../../services/vente.service/vente.service";
+import {UtilitaireUtil} from "../../../../../../utils/utilitaire.util";
 
 @Component({
   selector: 'app-vente-filles-liste',
@@ -71,4 +72,6 @@ export class VenteFillesListeComponent {
   goToPage(page: number): void {
     this.currentPage = page;
   }
+
+    protected readonly UtilitaireUtil = UtilitaireUtil;
 }

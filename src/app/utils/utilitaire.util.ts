@@ -17,6 +17,11 @@ export class UtilitaireUtil {
     return amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
+  static formatAmountV2(amount: number| undefined): string {
+    if (!amount) return '0';
+    return amount.toFixed().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   // Comparer uniquement la DATE (sans l'heure)
   static compareDatesOnly(d1: Date, d2: Date): boolean {
     return d1.toDateString() === d2.toDateString();
@@ -91,5 +96,90 @@ export class UtilitaireUtil {
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  static formatRelativeTime(dateInput: string | Date | null): string {
+    if (!dateInput) return '';
+
+    // Convertir en Date JavaScript (fonctionne avec votre format ISO)
+    const date = new Date(dateInput);
+    const now = new Date();
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) {
+      console.error('Date invalide:', dateInput);
+      return 'Date invalide';
+    }
+
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    // Gérer les dates futures (si jamais)
+    if (diffInSeconds < 0) {
+      return this.formatFutureDate(Math.abs(diffInSeconds));
+    }
+
+    // Seuils en secondes
+    const minute = 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30; // Approximation
+    const year = day * 365; // Approximation
+
+    // Moins d'une minute
+    if (diffInSeconds < minute) {
+      return `il y a ${diffInSeconds} sec`;
+    }
+
+    // Moins d'une heure
+    if (diffInSeconds < hour) {
+      const minutes = Math.floor(diffInSeconds / minute);
+      return `il y a ${minutes} min`;
+    }
+
+    // Moins d'un jour
+    if (diffInSeconds < day) {
+      const hours = Math.floor(diffInSeconds / hour);
+      return `il y a ${hours} h`;
+    }
+
+    // Moins d'une semaine
+    if (diffInSeconds < week) {
+      const days = Math.floor(diffInSeconds / day);
+      return `il y a ${days} j`;
+    }
+
+    // Moins d'un mois
+    if (diffInSeconds < month) {
+      const weeks = Math.floor(diffInSeconds / week);
+      return `il y a ${weeks} sem`;
+    }
+
+    // Moins d'un an
+    if (diffInSeconds < year) {
+      const months = Math.floor(diffInSeconds / month);
+      return `il y a ${months} mois`;
+    }
+
+    // Plus d'un an
+    const years = Math.floor(diffInSeconds / year);
+    return `il y a ${years} an${years > 1 ? 's' : ''}`;
+  }
+
+  static formatFutureDate(diffInSeconds: number): string {
+    const minute = 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+    const week = day * 7;
+    const month = day * 30;
+    const year = day * 365;
+
+    if (diffInSeconds < minute) return `dans ${diffInSeconds} sec`;
+    if (diffInSeconds < hour) return `dans ${Math.floor(diffInSeconds / minute)} min`;
+    if (diffInSeconds < day) return `dans ${Math.floor(diffInSeconds / hour)} h`;
+    if (diffInSeconds < week) return `dans ${Math.floor(diffInSeconds / day)} j`;
+    if (diffInSeconds < month) return `dans ${Math.floor(diffInSeconds / week)} sem`;
+    if (diffInSeconds < year) return `dans ${Math.floor(diffInSeconds / month)} mois`;
+    return `dans ${Math.floor(diffInSeconds / year)} an(s)`;
   }
 }

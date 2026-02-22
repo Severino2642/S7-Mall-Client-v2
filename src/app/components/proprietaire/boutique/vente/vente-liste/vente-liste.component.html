@@ -12,7 +12,7 @@
     <div class="main-page">
       <div>
         <h4 class="text-3xl font-bold" style="color: #101828;">Liste des ventes</h4>
-        <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace des ventes</p>
+        <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace de gestion des ventes</p>
       </div>
 
       <!-- Filtres -->
@@ -139,37 +139,37 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-2">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-start justify-content-between mb-2">
-            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
-              Validee
-            </span>
-                <div class="stat-icon bg-success bg-opacity-10 text-success rounded p-2">
-                  <i class="fa fa-check-circle"></i>
-                </div>
-              </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalValider) }}</h3>
-            </div>
-          </div>
-        </div>
+<!--        <div class="col-12 col-md-2">-->
+<!--          <div class="card border-0 shadow-sm h-100">-->
+<!--            <div class="card-body">-->
+<!--              <div class="d-flex align-items-start justify-content-between mb-2">-->
+<!--            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">-->
+<!--              Validee-->
+<!--            </span>-->
+<!--                <div class="stat-icon bg-success bg-opacity-10 text-success rounded p-2">-->
+<!--                  <i class="fa fa-check-circle"></i>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalValider) }}</h3>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div class="col-12 col-md-2">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body">
-              <div class="d-flex align-items-start justify-content-between mb-2">
-            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
-              En attente
-            </span>
-                <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded p-2">
-                  <i class="fa fa-clock"></i>
-                </div>
-              </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalEnAttente) }}</h3>
-            </div>
-          </div>
-        </div>
+<!--        <div class="col-12 col-md-2">-->
+<!--          <div class="card border-0 shadow-sm h-100">-->
+<!--            <div class="card-body">-->
+<!--              <div class="d-flex align-items-start justify-content-between mb-2">-->
+<!--            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">-->
+<!--              En attente-->
+<!--            </span>-->
+<!--                <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded p-2">-->
+<!--                  <i class="fa fa-clock"></i>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalEnAttente) }}</h3>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="col-12 col-md-2">
           <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
@@ -181,7 +181,37 @@
                   <i class="fa fa-money-bill"></i>
                 </div>
               </div>
-              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalMontant) }} <small>Ar</small></h3>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalMontant) }} <small class="text-muted">Ar</small></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-2">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-start justify-content-between mb-2">
+            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+              Montant pay&eacute;
+            </span>
+                <div class="stat-icon bg-success bg-opacity-10 text-success rounded p-2">
+                  <i class="fa fa-money-bill"></i>
+                </div>
+              </div>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalPayer) }} <small class="text-muted">Ar</small></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-2">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-start justify-content-between mb-2">
+            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+              Reste &agrave; pay&eacute;
+            </span>
+                <div class="stat-icon bg-danger bg-opacity-10 text-danger rounded p-2">
+                  <i class="fa fa-money-bill"></i>
+                </div>
+              </div>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalReste) }} <small class="text-muted">Ar</small></h3>
             </div>
           </div>
         </div>
@@ -223,6 +253,12 @@
                   Montant
                 </th>
                 <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+                  Montant Pay&eacute;
+                </th>
+                <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+                  Reste &agrave; pay&eacute;
+                </th>
+                <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
                   Quantite
                 </th>
                 <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
@@ -248,7 +284,13 @@
                   {{ item.client?.nom }} {{ item.client?.prenom }}
                 </td>
                 <td class="fw-semibold">
-                  {{item.montantTotal}} <small>Ar</small>
+                  {{UtilitaireUtil.formatAmount(item.montantTotal)}} <small class="text-muted">Ar</small>
+                </td>
+                <td class="fw-semibold">
+                  {{UtilitaireUtil.formatAmount(item.montantPayer)}} <small class="text-muted">Ar</small>
+                </td>
+                <td class="fw-semibold">
+                  {{UtilitaireUtil.formatAmount(item.montantRestant)}} <small class="text-muted">Ar</small>
                 </td>
                 <td class="fw-semibold">
                   {{item.quantiteTotal}}

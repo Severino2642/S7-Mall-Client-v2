@@ -40,7 +40,7 @@ export class MouvementCaisseFormComponent {
   listCaisse: CaisseModel[] = [];
 
   idProprietaire = "";
-
+  typeMouvement = "";
   constructor(
     private fb: FormBuilder,
     private itemService:MouvementCaisseService,
@@ -74,6 +74,8 @@ export class MouvementCaisseFormComponent {
 
   initDefaultValues(): void {
     if (!this.isEditMode) {
+      this.typeMouvement = this.route.snapshot.queryParams['type']||'';
+
       let idSource = this.route.snapshot.queryParams['idSource'];
       if (idSource) {
         this.boxeForm.patchValue({ idSource: idSource });
@@ -85,6 +87,20 @@ export class MouvementCaisseFormComponent {
       let credit = this.route.snapshot.queryParams['credit'];
       if (credit) {
         this.boxeForm.patchValue({ credit: credit });
+      }
+      let designation = this.route.snapshot.queryParams['designation'];
+      if (designation) {
+        this.boxeForm.patchValue({ designation: designation });
+      }
+      let maxDebit = this.route.snapshot.queryParams['maxDebit'];
+      if (maxDebit) {
+        this.boxeForm.get('debit')?.setValidators([Validators.required, Validators.min(0), Validators.max(Number(maxDebit))]);
+        this.boxeForm.get('debit')?.updateValueAndValidity();
+      }
+      let maxCredit = this.route.snapshot.queryParams['maxCredit'];
+      if (maxCredit) {
+        this.boxeForm.get('credit')?.setValidators([Validators.required, Validators.min(0), Validators.max(Number(maxCredit))]);
+        this.boxeForm.get('credit')?.updateValueAndValidity();
       }
     }
   }
@@ -136,7 +152,11 @@ export class MouvementCaisseFormComponent {
     }
     if (field.hasError('min')){
       const min = field.getError('min');
-      return `La valeur minimum doit etre ${min}`;
+      return `La valeur doit être au moins ${min.min}`;
+    }
+    if (field.hasError('max')){
+      const max = field.getError('max');
+      return `La valeur doit être au plus ${max.max}`;
     }
     return '';
   }

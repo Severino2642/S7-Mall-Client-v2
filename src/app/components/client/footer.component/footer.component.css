@@ -1,6 +1,7 @@
 /* Footer Component avec Bootstrap */
 .footer-component {
-  margin-top: auto;
+  /*margin-top: auto;*/
+  background-color: var(--bg-light) !important;
 }
 
 .footer-component .border-top {

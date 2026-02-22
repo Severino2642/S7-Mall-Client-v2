@@ -15,11 +15,18 @@ import {HeaderComponent} from "../../../../admin/header.component/header.compone
 import {NavbarComponent} from "../../../../admin/navbar.component/navbar.component";
 import {ConstanteUtil} from "../../../../../utils/constante.util";
 import {StorageUtil} from "../../../../../utils/storage.util";
+import {ManagerOngletListeComponent} from "../onglet/manager-onglet-liste/manager-onglet-liste.component";
+import {
+  PaymentLoyerOngletListeComponent
+} from "../onglet/payment-loyer-onglet-liste/payment-loyer-onglet-liste.component";
+import {
+  FichierListeOngletComponent
+} from "../../../../fichier_rattacher/fichier-liste-onglet/fichier-liste-onglet.component";
 
 @Component({
   selector: 'app-boutique.details',
   standalone: true,
-  imports: [CommonModule, DemandeLocationListeOngletComponent, HeaderComponent, NavbarComponent, RouterLink],
+  imports: [CommonModule, DemandeLocationListeOngletComponent, HeaderComponent, NavbarComponent, RouterLink, ManagerOngletListeComponent, PaymentLoyerOngletListeComponent, FichierListeOngletComponent],
   templateUrl: './boutique.details.component.html',
   styleUrl: './boutique.details.component.css'
 })
@@ -27,7 +34,7 @@ export class BoutiqueDetailsComponent {
 
   item?: BoutiqueCPLModel | null;
   loading = false;
-  activeTab: 'tab1' = 'tab1';
+  activeTab: 'tab1'|'tab2'|'tab3' = 'tab1';
 
   constructor(
     private route: ActivatedRoute,
@@ -49,7 +56,7 @@ export class BoutiqueDetailsComponent {
   }
 
   // Changer d'onglet
-  changeTab(tab: 'tab1'): void {
+  changeTab(tab: 'tab1'|'tab2'|'tab3'): void {
     this.activeTab = tab;
   }
 
@@ -80,7 +87,7 @@ export class BoutiqueDetailsComponent {
 
   connectToBoutique(){
     StorageUtil.setToStorage("boutique", this.item);
-    this.router.navigate(['boutique/produit/create']);
+    this.router.navigate(['boutique/produit']);
   }
 
   protected readonly UtilitaireUtil = UtilitaireUtil;

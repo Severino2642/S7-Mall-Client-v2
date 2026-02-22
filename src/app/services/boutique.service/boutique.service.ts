@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {firstValueFrom, Observable} from "rxjs";
 import {DemandeLocationCPLModel, DemandeLocationModel} from "../../models/demande-location.model";
 import {BoutiqueCPLModel, BoutiqueModel} from "../../models/boutique.model";
+import {CentreCommercialModel} from "../../models/mall.model";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,17 @@ export class BoutiqueService {
   async getById(id: string): Promise<BoutiqueModel | null> {
     try {
       const res = await firstValueFrom(this.http.get<BoutiqueModel>(`${this.apiUrl}/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
+
+  async getAll(): Promise<BoutiqueModel[] | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<BoutiqueModel[]>(`${this.apiUrl}/`));
       return res;
     } catch (err: any) {
       console.error(err);

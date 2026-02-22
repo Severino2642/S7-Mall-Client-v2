@@ -47,6 +47,15 @@
                   </div>
                 </div>
 
+                <div class="col-6 col-md-3" *ngIf="item?.idSource && item?.idSource!=''">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Source</div>
+                    <div class="stat-value-muted">
+                      <a *ngIf="item && item.idSource && item.idSource.startsWith('bcmd_')" [routerLink]="['/boutique/bon_commande/details/', item.idSource]">{{ item.idSource }}</a>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Date</div>
@@ -56,7 +65,19 @@
                 <div class="col-6 col-md-3">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Montant total</div>
-                    <div class="stat-value">{{ item?.montantTotal }} <small>Ar</small></div>
+                    <div class="stat-value">{{ UtilitaireUtil.formatAmount(item?.montantTotal) }} <small class="text-muted">Ar</small></div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Montant pay&eacute;</div>
+                    <div class="stat-value">{{ UtilitaireUtil.formatAmount(item?.montantPayer) }} <small class="text-muted">Ar</small></div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Reste &agrave; pay&eacute;</div>
+                    <div class="stat-value">{{ UtilitaireUtil.formatAmount(item?.montantRestant) }} <small class="text-muted">Ar</small></div>
                   </div>
                 </div>
                 <div class="col-6 col-md-3">
@@ -70,26 +91,35 @@
 
           </div>
         </div>
-        <div class="card-footer d-flex gap-2 justify-content-end" *ngIf="item?.status === ConstanteUtil.ETAT_DISPONIBLE">
+        <div class="card-footer d-flex gap-2 justify-content-end" >
           <div class="d-flex gap-2">
-            <button
-              class="btn btn-success"
-              (click)="setStatus()">
-              <i class="fa fa-check me-2"></i>
-              Valider
-            </button>
-            <button
-              class="btn btn-warning"
-              (click)="editBoxe()">
-              <i class="fa fa-edit me-2"></i>
-              Modifier
-            </button>
-            <button
-              class="btn btn-danger"
-              (click)="deleteBoxe()">
-              <i class="fa fa-trash me-2"></i>
-              Modifier
-            </button>
+            @if (item?.status === ConstanteUtil.ETAT_DISPONIBLE){
+              <button
+                class="btn btn-success"
+                (click)="setStatus()">
+                <i class="fa fa-check me-2"></i>
+                Valider
+              </button>
+              <button
+                class="btn btn-warning"
+                (click)="editBoxe()">
+                <i class="fa fa-edit me-2"></i>
+                Modifier
+              </button>
+              <button
+                class="btn btn-danger"
+                (click)="deleteBoxe()">
+                <i class="fa fa-trash me-2"></i>
+                Modifier
+              </button>
+            } @else {
+              <button *ngIf="item && item.montantRestant && item.montantRestant > 0"
+                class="btn btn-primary"
+                (click)="goToPayement()">
+                <i class="fa fa-credit-card me-2"></i>
+                Payement
+              </button>
+            }
           </div>
         </div>
       </div>
@@ -118,6 +148,15 @@
                 Mouvement de stock
               </a>
             </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab3'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab3')">
+                Payements
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -130,6 +169,9 @@
           </div>
           <div *ngIf="activeTab === 'tab2'">
             <app-stock-liste [idMere]="item?._id" />
+          </div>
+          <div *ngIf="activeTab === 'tab3'">
+            <app-payement-liste [idMere]="item?._id" />
           </div>
         </div>
       </div>

@@ -135,4 +135,27 @@ export class ProduitService {
       return null;
     }
   }
+
+  async getAllForClient(): Promise<ProduitCPLModel[] | null> {
+    try {
+      let url = `${this.apiUrl}/client`;
+      const res = await firstValueFrom(this.http.get<ProduitCPLModel[]>(url));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
+
+  async getCPLByIdForClient(id: string): Promise<ProduitCPLModel | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<ProduitCPLModel>(`${this.apiUrl}/client/details/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
 }

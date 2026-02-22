@@ -93,4 +93,17 @@ export class VenteService {
       return null;
     }
   }
+
+  async getCPLByIdSource(id: string): Promise<VenteCPLModel[] | null> {
+    try {
+      let url = `${this.apiUrl}/source/${id}`;
+      const res = await firstValueFrom(this.http.get<VenteCPLModel[]>(url));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
+
 }

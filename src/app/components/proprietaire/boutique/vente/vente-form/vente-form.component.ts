@@ -17,6 +17,8 @@ import {BoutiqueModel} from "../../../../../models/boutique.model";
 import {ClientFormMinComponent} from "../../../../client/client/client-form-min/client-form-min.component";
 import * as bootstrap from 'bootstrap';
 import {ConstanteUtil} from "../../../../../utils/constante.util";
+import {BonDeCommandeService} from "../../../../../services/bon-de-commande.service/bon-de-commande.service";
+
 export interface FilleModel extends VenteDetailsModel {
   selected?: boolean;
 }
@@ -52,6 +54,7 @@ export class VenteFormComponent {
     private itemService:VenteService,
     private produitService: ProduitService,
     private clientService: ClientService,
+    private bonDeCommandeService: BonDeCommandeService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -70,6 +73,10 @@ export class VenteFormComponent {
     } else {
       // Mode création
       this.isEditMode = false;
+      const idSource = this.route.snapshot.queryParams['idSource'];
+      if (idSource) {
+        await this.loadByIdSource(idSource);
+      }
       this.initForm();
     }
     if (this.initialFilles && this.initialFilles.length > 0) {
@@ -101,6 +108,7 @@ export class VenteFormComponent {
   // Initialiser le formulaire
   initForm(): void {
     this.boxeForm = this.fb.group({
+      idSource: [this.item?.idSource || ''],
       idClient: [this.item?.idClient || '', [Validators.required]],
       designation: [this.item?.designation || ''],
       date: [UtilitaireUtil.getFormattedDate(this.item?.date), [Validators.required]]
@@ -115,6 +123,26 @@ export class VenteFormComponent {
       this.initialFilles = res?.filles;
     }
     this.initForm(); // Le formulaire se remplit automatiquement
+    this.loading = false;
+  }
+
+  async loadByIdSource(idSource: string): Promise<void> {
+    this.loading = true;
+    if (idSource.startsWith("bcmd_")) {
+      const source = await this.bonDeCommandeService.getCPLById(idSource);
+      if (source) {
+        this.item = {
+          idSource: source._id,
+          idClient: source.idClient,
+          designation: "Vente liée à la commande " + source._id
+        };
+        this.initialFilles = source.filles ? source.filles.map(f => ({
+          idProduit: f.idProduit,
+          quantite: f.quantite,
+          prixUnitaire: f.prixUnitaire,
+        })) : [];
+      }
+    }
     this.loading = false;
   }
 
