@@ -13,7 +13,7 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
