@@ -1,5 +1,9 @@
 <app-header></app-header>
-<div class="d-flex flex-column">
+<div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-2">Chargement...</div>
+</div>
+<div *ngIf="!loading" class="d-flex flex-column">
   <main class="pl-4 pr-4">
     <div class="product-details-page m-auto" style="width: 90%" *ngIf="item" (keydown)="handleKeyboard($event)" tabindex="0">
 
@@ -138,9 +142,14 @@
 <!--              </div>-->
 
               <!-- Stock -->
-              <div class="stock-status mb-3" [class.in-stock]="item.quantite && item.quantite>0">
+              <div class="stock-status mb-3" *ngIf="item.quantite!=null  && item.quantite>0">
                 <i class="fa fa-check-circle"></i>
                 En Stock
+              </div>
+
+              <div class="stock-status mb-3 text-danger" *ngIf="item.quantite!=null  && item.quantite<=0">
+                <i class="fa fa-cancel"></i>
+                Rupture de Stock
               </div>
 
               <hr class="my-3">
@@ -210,7 +219,7 @@
             <div class="buy-box sticky-top">
 
               <!-- Prix -->
-              <div class="buy-box-price">
+              <div class="buy-box-price" *ngIf="item.quantite && item.quantite>0">
                 <sup>Ar</sup>{{ UtilitaireUtil.formatAmountV2(item.prix) }}<sup>00</sup>
               </div>
 
@@ -232,13 +241,9 @@
 <!--                </div>-->
 <!--              </div>-->
 
-              <!-- Stock -->
-<!--              <div class="stock-info text-success mb-3">-->
-<!--                <strong>In Stock</strong>-->
-<!--              </div>-->
 
               <!-- Quantité -->
-              <div class="quantity-selector mb-3">
+              <div class="quantity-selector mb-3" *ngIf="item.quantite!=null  && item.quantite>0">
                 <label class="form-label">Quantity:</label>
                 <select class="form-select" [(ngModel)]="quantity">
                   <option *ngFor="let num of getQuantityOptions()" [value]="num">{{ num }}</option>
@@ -246,14 +251,16 @@
               </div>
 
               <!-- Boutons -->
-              <button class="btn btn-warning btn-lg w-100 mb-2" (click)="addToCart()" [disabled]="loading">
+              <button class="btn btn-warning btn-lg w-100 mb-2" (click)="addToCart()" [disabled]="loading" *ngIf="item.quantite!=null  && item.quantite>0">
                 Ajouter au panier
               </button>
-              <button class="btn btn-primary btn-lg w-100 mb-3" (click)="buyNow()" [disabled]="loading">
+              <button class="btn btn-primary btn-lg w-100 mb-3" (click)="buyNow()" [disabled]="loading" *ngIf="item.quantite!=null  && item.quantite>0">
                 Commander
               </button>
-
-              <!-- Seller info -->
+              <div *ngIf="item.quantite!=null && item.quantite<=0" class="text-center mb-3">
+                <img src="assets/sold-out.png">
+              </div>
+                <!-- Seller info -->
               <div class="seller-info">
                 <div class="info-row">
                   <span class="label">Provenance</span>
@@ -301,7 +308,7 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox-overlay" *ngIf="showLightbox && item && item.autrePhoto" (click)="closeLightbox()">
+<div class="lightbox-overlay" *ngIf="!loading && showLightbox && item && item.autrePhoto" (click)="closeLightbox()">
   <div class="lightbox-container">
 
     <button class="lightbox-close" (click)="closeLightbox()">

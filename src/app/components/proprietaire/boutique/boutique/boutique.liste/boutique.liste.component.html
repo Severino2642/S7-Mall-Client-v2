@@ -199,9 +199,6 @@
                 <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
                   Date
                 </th>
-                <th *ngIf="userRole===ConstanteUtil.role_proprietaire" class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
-                  Actions
-                </th>
               </tr>
               </thead>
               <tbody>
@@ -231,25 +228,6 @@
                 </td>
                 <td>
                   {{ item.date | date: 'dd/MM/yyyy' }}
-                </td>
-                <td *ngIf="userRole===ConstanteUtil.role_proprietaire">
-                  <div class="d-flex gap-2">
-                    <button
-                      class="btn btn-sm btn-link text-danger p-1"
-                      (click)="ouvrirBoutique(item,i)"
-                      title="Accepter"
-                      *ngIf="userRole===ConstanteUtil.role_proprietaire && item.status===ConstanteUtil.ETAT_OCCUPEE">
-                      <i class="fa fa-door-closed"></i>
-                    </button>
-
-                    <button
-                      class="btn btn-sm btn-link text-success p-1"
-                      (click)="fermerBoutique(item,i)"
-                      title="Accepter"
-                      *ngIf="userRole===ConstanteUtil.role_proprietaire && item.status===ConstanteUtil.ETAT_DISPONIBLE">
-                      <i class="fa fa-door-open"></i>
-                    </button>
-                  </div>
                 </td>
               </tr>
 

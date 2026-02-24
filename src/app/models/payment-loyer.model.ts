@@ -1,5 +1,8 @@
 import {CentreCommercialModel} from "./mall.model";
 import {BoutiqueModel} from "./boutique.model";
+import {LocationBoxeModel} from "./location-boxe.model";
+import {ProprietaireModel} from "./proprietaire.model";
+import {BoxeModel} from "./boxe.model";
 
 export interface PaymentLoyerModel {
   _id?: string;
@@ -15,6 +18,9 @@ export interface PaymentLoyerModel {
 export interface PaymentLoyerCPLModel extends PaymentLoyerModel {
   centreCommercial?: CentreCommercialModel;
   boutique?:BoutiqueModel;
+  location?:LocationBoxeModel;
+  proprietaire?: ProprietaireModel;
+  boxe?:BoxeModel;
 }
 
 export class PaymentLoyer {

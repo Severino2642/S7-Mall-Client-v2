@@ -40,7 +40,23 @@
                 <div class="col-6 col-md-3" *ngIf="roleUser===ConstanteUtil.role_proprietaire">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Centre Commercial</div>
-                    <div class="stat-value">{{ item?.centreCommercial?.nom }}</div>
+                    <div class="stat-value">
+                      <a [routerLink]="['/owner/centre_commercial/details', item?.centreCommercial?._id]">{{ item?.centreCommercial?.nom }}</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="roleUser!==ConstanteUtil.role_proprietaire">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Locataire</div>
+                    <div class="stat-value">
+                      <a [routerLink]="['/owner/details',item?.proprietaire?._id]">{{ item?.proprietaire?.nom }} {{ item?.proprietaire?.prenom }}</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Boxe</div>
+                    <div class="stat-value">{{ item?.boxe?.nom }}</div>
                   </div>
                 </div>
                 <div class="col-6 col-md-3">

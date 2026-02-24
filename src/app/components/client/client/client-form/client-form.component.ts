@@ -1,53 +1,52 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {ManagerCPLModel} from "../../../../models/manager.model";
+import {ProprietaireModel} from "../../../../models/proprietaire.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {BoutiqueCPLModel} from "../../../../models/boutique.model";
-import {ManagerService} from "../../../../services/manager.service/manager.service";
-import {BoutiqueService} from "../../../../services/boutique.service/boutique.service";
+import {ProprietaireService} from "../../../../services/proprietaire.service/proprietaire.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ImagekitService} from "../../../../services/imagekit.service/imagekit.service";
 import {StorageUtil} from "../../../../utils/storage.util";
+import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
 import {MouvementCaisseModel} from "../../../../models/mouvement-caisse.model";
 import {BoxeModel} from "../../../../models/boxe.model";
-import {PaymentLoyerModel} from "../../../../models/payment-loyer.model";
+import {ClientModel} from "../../../../models/client.model";
 import {ConstanteUtil} from "../../../../utils/constante.util";
-import {PaymentLoyerService} from "../../../../services/payment_loyer.service/payment-loyer.service";
-import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
-import {HeaderComponent} from "../../../admin/header.component/header.component";
-import {NavbarComponent} from "../../../admin/navbar.component/navbar.component";
-import {LocationBoxeCPLModel, LocationBoxeModel} from "../../../../models/location-boxe.model";
-import {LocationBoxeService} from "../../../../services/location_boxe.service/location-boxe.service";
+import {HeaderComponent} from "../../header.component/header.component";
+import {ClientService} from "../../../../services/client.service/client.service";
 
 @Component({
-  selector: 'app-payment-loyer-form',
+  selector: 'app-client-form',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, NavbarComponent, ReactiveFormsModule],
-  templateUrl: './payment-loyer-form.component.html',
-  styleUrl: './payment-loyer-form.component.css'
+  imports: [CommonModule, HeaderComponent, ReactiveFormsModule],
+  templateUrl: './client-form.component.html',
+  styleUrl: './client-form.component.css'
 })
-export class PaymentLoyerFormComponent {
-  @Input() item?: PaymentLoyerModel | null; // Données à modifier (null pour création)
-  @Output() onSubmit = new EventEmitter<PaymentLoyerModel>();
+export class ClientFormComponent {
+  @Input() item?: ClientModel | null; // Données à modifier (null pour création)
+  @Output() onSubmit = new EventEmitter<ClientModel>();
   @Output() onCancel = new EventEmitter<void>();
 
   boxeForm!: FormGroup;
   isEditMode = false;
   id = null;
   loading = false;
-  listBoutique: LocationBoxeCPLModel[] = [];
-  listMois = ConstanteUtil.listeMois;
+  selectedFile: File | null = null;
+  listSexe = [
+    {"val": ConstanteUtil.sexe.Homme , "label": "Homme"},
+    {"val": ConstanteUtil.sexe.Femme , "label": "Femme"},
+    {"val": ConstanteUtil.sexe.Autre , "label": "Autre"},
+  ];
 
   constructor(
     private fb: FormBuilder,
-    private itemService:PaymentLoyerService,
-    private boutiqueService: LocationBoxeService,
+    private itemService:ClientService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private imagekitService: ImagekitService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
-    await this.loadListeBoutique();
     if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
@@ -59,24 +58,19 @@ export class PaymentLoyerFormComponent {
     }
   }
 
-  async loadListeBoutique(): Promise<void> {
-    this.loading = true;
-    const auth = StorageUtil.getFromStorage<any>("auth");
-    var res = await this.boutiqueService.getDisponibleCPLByIdProprietaire(auth.idUser);
-    if (res!=null){
-      this.listBoutique = res;
-    }
-    this.loading = false;
-  }
-
   // Initialiser le formulaire
   initForm(): void {
+    const auth = StorageUtil.getFromStorage<any>("auth");
     this.boxeForm = this.fb.group({
-      idBoutique: [this.item?.idBoutique || '', [Validators.required]],
-      mois: [this.item?.mois || '', [Validators.required]],
-      annee: [this.item?.annee || '', [Validators.required, Validators.min(2025)]],
-      montant: [this.item?.montant || '', [Validators.required, Validators.min(0)]],
-      date: [UtilitaireUtil.getFormattedDate(this.item?.date) || '', [Validators.required]],
+      pdp:[this.item?.pdp||''],
+      nom: [this.item?.nom || ''],
+      prenom: [this.item?.prenom || '',[Validators.required]],
+      sexe: [this.item?.sexe || '', [Validators.required]],
+      adresse: [this.item?.adresse || ''],
+      contact: [this.item?.contact || '', [Validators.required]],
+      date_naissance: [UtilitaireUtil.getFormattedDate(this.item?.date_naissance) || '', [Validators.required]],
+      identifiant: [auth.identifiant || '', [Validators.email]],
+      mdp: ['', this.isEditMode ? [Validators.minLength(6)] : [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -116,13 +110,58 @@ export class PaymentLoyerFormComponent {
     return '';
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Le fichier est trop volumineux (max 5MB)');
+        event.target.value = ''; // Reset l'input
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Type de fichier non supporté (JPG, PNG, GIF, WebP uniquement)');
+        event.target.value = '';
+        return;
+      }
+
+      this.selectedFile = file;
+    }
+  }
+
   // Soumettre le formulaire
-  submitForm(): void {
+  async submitForm(): Promise<void> {
+    this.loading = true;
     if (this.boxeForm.valid) {
-      const boutique = this.listBoutique.find(b => b._id === this.boxeForm.value.idBoutique);
+
+      let imageUrl = '';
+
+      // 1. Upload l'image si un fichier est sélectionné
+      if (this.selectedFile) {
+        try {
+          console.log('📤 Upload de l\'image vers ImageKit...');
+
+          // Upload effectif
+          imageUrl = await this.imagekitService.uploadImage(
+            this.selectedFile,
+            '/proprietaires' // Dossier de destination
+          );
+
+          console.log('✅ Image uploadée avec succès:', imageUrl);
+
+          // Met à jour le formulaire avec l'URL
+          this.boxeForm.patchValue({ pdp: imageUrl });
+
+        } catch (uploadError: any) {
+          console.error('❌ Erreur upload:', uploadError);
+          this.loading = false;
+          return;
+        }
+      }
+
       const formData: MouvementCaisseModel = {
-        ...this.boxeForm.value,
-        idCentreCommercial: boutique?.centreCommercial?._id,
+        ...this.boxeForm.value
       };
 
       if (this.isEditMode && this.id) {
@@ -146,14 +185,14 @@ export class PaymentLoyerFormComponent {
   async createItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     var res = await this.itemService.create(formData);
-    this.router.navigate([`owner/payment_loyer/details/${res._id}`]);
+    this.router.navigate([`client/details/${res._id}`]);
     this.loading = false;
   }
 
   async updateItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     await this.itemService.update(this.id!, formData);
-    this.router.navigate([`owner/payment_loyer/details/${this.id}`]);
+    this.router.navigate([`client/details/${this.id}`]);
     this.loading = false;
   }
 
@@ -174,6 +213,6 @@ export class PaymentLoyerFormComponent {
   }
 
   getTitre(): string {
-    return this.isEditMode ? "Modification d'un payment de loyer" : "Saisie d'un payment de loyer";
+    return this.isEditMode ? "Modification de profil" : "Saisie d'un manager";
   }
 }

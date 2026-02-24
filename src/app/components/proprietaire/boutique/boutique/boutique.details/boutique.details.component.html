@@ -117,14 +117,14 @@
               Ajouter des images
             </a>
             <button
-              *ngIf="item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              *ngIf="item?.status===ConstanteUtil.ETAT_DISPONIBLE && item?.idBoxe"
               class="btn btn-success"
               (click)="fermerBoutique()">
               <i class="fa fa-door-open me-2"></i>
               Ouvert
             </button>
             <button
-              *ngIf="item?.status===ConstanteUtil.ETAT_OCCUPEE"
+              *ngIf="item?.status===ConstanteUtil.ETAT_OCCUPEE && item?.idBoxe"
               class="btn btn-danger"
               (click)="ouvrirBoutique()">
               <i class="fa fa-door-closed me-2"></i>
@@ -168,15 +168,6 @@
                 [class.active]="activeTab === 'tab2'"
                 href="javascript:void(0)"
                 (click)="changeTab('tab2')">
-                Payments Loyer
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                [class.active]="activeTab === 'tab3'"
-                href="javascript:void(0)"
-                (click)="changeTab('tab3')">
                 Fichiers rattachés
               </a>
             </li>
@@ -190,9 +181,6 @@
             <app-manager-onglet-liste [idMere]="item?._id"></app-manager-onglet-liste>
           </div>
           <div *ngIf="activeTab === 'tab2'">
-            <app-payment-loyer-onglet-liste [idMere]="item?._id"></app-payment-loyer-onglet-liste>
-          </div>
-          <div *ngIf="activeTab === 'tab3'">
             <app-fichier-liste-onglet [idMere]="item?._id" />
           </div>
         </div>

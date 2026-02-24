@@ -104,27 +104,27 @@
 
             <div class="product-card">
               <!-- Badge remise -->
-              <!--        <span class="badge-discount">11% off</span>-->
+              <span class="badge-discount" *ngIf="!item.quantite">Sold out</span>
 
               <!-- Badge statut -->
 <!--              <div class="m-0 d-flex align-items-center bg-transparent w-100 h-100 position-absolute" style="z-index: 400">-->
 <!--                <div class="spinner-border text-primary" role="status"></div>-->
 <!--              </div>-->
-              <span class="badge-status badge-red">limit&eacute;</span>
+<!--              <span class="badge-status badge-red">limit&eacute;</span>-->
 
               <!-- Image -->
               <div class="product-image">
                 <img src="{{item.photo?.url}}" alt="{{item.photo?.nom}}" (click)="goToDetails(item._id||'')">
 
                 <!-- Bouton Quick Add -->
-                <button class="btn-quick-add" [disabled]="loading" (click)="addToCart(item)">
+                <button class="btn-quick-add" *ngIf="item.quantite" [disabled]="loading" (click)="addToCart(item)">
                   <i class="fa fa-add" *ngIf="!loading"></i>
                   <i class="spinner-border" *ngIf="loading"></i>
                 </button>
               </div>
 
               <!-- Prix -->
-              <div class="product-price" (click)="goToDetails(item._id||'')">
+              <div class="product-price text-danger" (click)="goToDetails(item._id||'')">
                 <span><sup>Ar</sup>{{UtilitaireUtil.formatAmountV2(item.prix)}}<sup>00</sup></span>
 <!--                <span class="price-original">List: $99.99</span>-->
               </div>

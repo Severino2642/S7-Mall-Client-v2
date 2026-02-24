@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit{
   notifications: NotificationModel[] =[];
 
   userMenuItems = [
-    { label: 'Edit', icon: 'fa-edit', action: 'edit' },
+    { label: 'Mon Profil', icon: 'fa-user', action: 'profil' },
     { label: 'Déconnexion', icon: 'fa-door-open', action: 'logout' }
   ];
 
@@ -53,6 +53,7 @@ export class HeaderComponent implements OnInit{
       console.log("User from storage:", user);
       if (user) {
         this.userInfo.role = user.role.val;
+        this.userInfo.id = user.idUser;
         if (user.role.val === "Centre Commercial") {
           var mall = StorageUtil.getFromStorage<any>("mall");
           this.userInfo.name = mall.nom;
@@ -191,8 +192,9 @@ export class HeaderComponent implements OnInit{
     // this.showUserMenu = false;
 
     switch (action) {
-      case 'edit':
+      case 'profil':
         console.log('Edit profile');
+        this.router.navigate(['/client/details',this.userInfo.id]);
         // Ajouter votre logique pour éditer le profil
         break;
       case 'logout':

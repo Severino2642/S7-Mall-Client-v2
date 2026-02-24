@@ -52,7 +52,8 @@ export class NavbarComponent implements OnInit{
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/boxe/create' },
-            { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' }
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' },
+            { label: 'Locations', icon: 'fa fa-list', route: '/owner/location_boxe' }
           ]
         },
         {
@@ -94,7 +95,16 @@ export class NavbarComponent implements OnInit{
       children: [
         { label: 'Offres de location', icon: 'fa fa-area-chart', route: '/owner/offreLocation/liste' },
         { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
-        { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' },
+        { label: 'Mes boxes', icon: 'fa fa-shop', route: '/owner/location_boxe' },
+        {
+          label: 'Boutique',
+          icon: 'fa fa-shop',
+          route: '',
+          children: [
+            { label: 'Saisie', icon: 'fa fa-plus', route: '/owner/boutique/create' },
+            { label: 'Liste', icon: 'fa fa-list', route: '/owner/boutique' }
+          ]
+        },
         {
           label: 'Manager',
           icon: 'fa fa-users',
@@ -209,6 +219,7 @@ export class NavbarComponent implements OnInit{
           var mall = StorageUtil.getFromStorage<any>("mall");
           this.userInfo.id = mall._id;
           this.userInfo.name = mall.nom;
+          this.userInfo.avatar = mall.pdp.url;
         }
         if (user.role.val === "Proprietaire") {
           var owner = StorageUtil.getFromStorage<any>("owner");
@@ -244,6 +255,10 @@ export class NavbarComponent implements OnInit{
       case 'profil':
         if (this.userInfo.role === ConstanteUtil.role_centre_commercial) {
           this.router.navigate(['admin/centre_commercial/details', this.userInfo.id]);
+          return;
+        }
+        if (this.userInfo.role === ConstanteUtil.role_proprietaire) {
+          this.router.navigate(['owner/details', this.userInfo.id]);
           return;
         }
         break;

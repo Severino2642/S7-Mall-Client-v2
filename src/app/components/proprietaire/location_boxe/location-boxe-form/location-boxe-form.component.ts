@@ -1,21 +1,23 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {OffreDeLocationModel} from "../../../../../models/offre_location.model";
+import {PaymentLoyerModel} from "../../../../models/payment-loyer.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {BoxeModel} from "../../../../../models/boxe.model";
-import {
-  OffreLocationServiceService
-} from "../../../../../services/offre_location.service/offre-location.service.service";
-import {BoxeService} from "../../../../../services/boxe.service/boxe.service";
+import {LocationBoxeCPLModel, LocationBoxeModel} from "../../../../models/location-boxe.model";
+import {ConstanteUtil} from "../../../../utils/constante.util";
+import {PaymentLoyerService} from "../../../../services/payment_loyer.service/payment-loyer.service";
+import {LocationBoxeService} from "../../../../services/location_boxe.service/location-boxe.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {StorageUtil} from "../../../../../utils/storage.util";
-import {BoutiqueModel} from "../../../../../models/boutique.model";
-import {BoutiqueService} from "../../../../../services/boutique.service/boutique.service";
-import {HeaderComponent} from "../../../../admin/header.component/header.component";
-import {NavbarComponent} from "../../../../admin/navbar.component/navbar.component";
+import {StorageUtil} from "../../../../utils/storage.util";
+import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
+import {MouvementCaisseModel} from "../../../../models/mouvement-caisse.model";
+import {BoxeModel} from "../../../../models/boxe.model";
+import {BoutiqueCPLModel} from "../../../../models/boutique.model";
+import {BoutiqueService} from "../../../../services/boutique.service/boutique.service";
+import {HeaderComponent} from "../../../admin/header.component/header.component";
+import {NavbarComponent} from "../../../admin/navbar.component/navbar.component";
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-boutique-form',
+  selector: 'app-location-boxe-form',
   standalone: true,
   imports: [
     HeaderComponent,
@@ -24,28 +26,31 @@ import {NgForOf, NgIf} from "@angular/common";
     NgIf,
     ReactiveFormsModule
   ],
-  templateUrl: './boutique-form.component.html',
-  styleUrl: './boutique-form.component.css'
+  templateUrl: './location-boxe-form.component.html',
+  styleUrl: './location-boxe-form.component.css'
 })
-export class BoutiqueFormComponent {
-  @Input() item?: BoutiqueModel | null; // Données à modifier (null pour création)
-  @Output() onSubmit = new EventEmitter<BoutiqueModel>();
+export class LocationBoxeFormComponent {
+  @Input() item?: LocationBoxeModel | null; // Données à modifier (null pour création)
+  @Output() onSubmit = new EventEmitter<LocationBoxeModel>();
   @Output() onCancel = new EventEmitter<void>();
 
   boxeForm!: FormGroup;
   isEditMode = false;
   id = null;
   loading = false;
+  listBoutique: BoutiqueCPLModel[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private itemService:BoutiqueService,
+    private itemService:LocationBoxeService,
+    private boutiqueService: BoutiqueService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
+    await this.loadListeBoutique();
     if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
@@ -57,21 +62,26 @@ export class BoutiqueFormComponent {
     }
   }
 
+  async loadListeBoutique(): Promise<void> {
+    this.loading = true;
+    const auth = StorageUtil.getFromStorage<any>("auth");
+    var res = await this.boutiqueService.getByIdProprietaire(auth.idUser);
+    if (res!=null){
+      this.listBoutique = res;
+    }
+    this.loading = false;
+  }
+
   // Initialiser le formulaire
   initForm(): void {
     this.boxeForm = this.fb.group({
-      nom: [this.item?.nom || '', [Validators.required]],
-      description: [this.item?.description || ''],
-      email: [this.item?.email || '',[Validators.email]],
-      contact: [this.item?.contact || '',[Validators.required]],
-      heure_ouverture: [this.item?.heure_ouverture || '',[Validators.required]],
-      heure_fermeture: [this.item?.heure_fermeture || '',[Validators.required]]
+      idBoutique: [this.item?.idBoutique || ''],
     });
   }
 
   async loadItem(id: string): Promise<void> {
     this.loading = true;
-    this.item = await this.itemService.getById(id);
+    this.item = await this.itemService.getCPLById(id);
     this.initForm(); // Le formulaire se remplit automatiquement
     this.loading = false;
   }
@@ -96,10 +106,11 @@ export class BoutiqueFormComponent {
     }
     if (field.hasError('min')){
       const min = field.getError('min');
-      return `La valeur minimum doit etre ${min}`;
+      return `La valeur doit être au moins ${min.min}`;
     }
-    if (field.hasError('email')){
-      return `adresse email invalide`;
+    if (field.hasError('max')){
+      const max = field.getError('max');
+      return `La valeur doit être au plus ${max.max}`;
     }
     return '';
   }
@@ -107,10 +118,8 @@ export class BoutiqueFormComponent {
   // Soumettre le formulaire
   submitForm(): void {
     if (this.boxeForm.valid) {
-      const auth = StorageUtil.getFromStorage<any>("auth");
-      const formData: BoutiqueModel = {
-        ...this.boxeForm.value,
-        idProprietaire: auth.idUser
+      const formData: MouvementCaisseModel = {
+        ...this.boxeForm.value
       };
 
       if (this.isEditMode && this.id) {
@@ -131,17 +140,17 @@ export class BoutiqueFormComponent {
     }
   }
 
-  async createItem(formData: BoutiqueModel): Promise<void> {
+  async createItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     var res = await this.itemService.create(formData);
-    this.router.navigate([`owner/boutique/details/${res._id}`]);
+    this.router.navigate([`owner/location_boxe/details/${res._id}`]);
     this.loading = false;
   }
 
-  async updateItem(formData: BoutiqueModel): Promise<void> {
+  async updateItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     await this.itemService.update(this.id!, formData);
-    this.router.navigate([`owner/boutique/details/${this.id}`]);
+    this.router.navigate([`owner/location_boxe/details/${this.id}`]);
     this.loading = false;
   }
 
@@ -153,13 +162,15 @@ export class BoutiqueFormComponent {
   // Réinitialiser le formulaire
   resetForm(): void {
     this.boxeForm.reset({
-      idBoxe: '',
-      description: '',
-      montantLoyer: 0,
+      idCaisse: '',
+      designation: '',
+      debit: '',
+      credit: '',
+      date: '',
     });
   }
 
   getTitre(): string {
-    return this.isEditMode ? "Modification d'une boutique" : "Créer une nouvelle boutique";
+    return this.isEditMode ? "Modification de location de boxe" : "Saisie d'un payment de loyer";
   }
 }

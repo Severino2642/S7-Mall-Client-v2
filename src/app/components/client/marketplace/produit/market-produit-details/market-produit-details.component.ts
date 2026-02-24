@@ -80,10 +80,12 @@ export class MarketProduitDetailsComponent {
   }
 
   async loadProduct(id: string): Promise<void> {
+    this.loading = true;
     let res = await this.produitService.getCPLByIdForClient(id);
     if (res){
       this.item = res;
     }
+    this.loading = false;
   }
 
   // Galerie - Sélectionner une image

@@ -109,6 +109,21 @@ import {
 import {
   BoutiqueDetailsForClientComponent
 } from "./components/proprietaire/boutique/boutique/boutique-details-for-client/boutique-details-for-client.component";
+import {
+  ProprietaireDetailsComponent
+} from "./components/proprietaire/proprietaire-details/proprietaire-details.component";
+import {ProprietaireFormComponent} from "./components/proprietaire/proprietaire-form/proprietaire-form.component";
+import {ClientDetailsComponent} from "./components/client/client/client-details/client-details.component";
+import {ClientFormComponent} from "./components/client/client/client-form/client-form.component";
+import {
+  LocationBoxeListeComponent
+} from "./components/proprietaire/location_boxe/location-boxe-liste/location-boxe-liste.component";
+import {
+  LocationBoxeDetailsComponent
+} from "./components/proprietaire/location_boxe/location-boxe-details/location-boxe-details.component";
+import {
+  LocationBoxeFormComponent
+} from "./components/proprietaire/location_boxe/location-boxe-form/location-boxe-form.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -138,13 +153,18 @@ export const routes: Routes = [
     { path: 'owner/offreLocation/liste', component:  OffreLocationListeComponentFrontOffice},
     { path: 'owner/offreLocation/details/:id', component:  OffreLocationDetailsFrontOfficeComponent},
 
+    { path: 'owner/details/:id', component:  ProprietaireDetailsComponent},
+    { path: 'owner/update/:id', component:  ProprietaireFormComponent},
     // Demande de location
     { path: 'owner/demandeLocation', component:  DemandeLocationListeComponent},
-
+    { path: 'owner/location_boxe', component:  LocationBoxeListeComponent},
+    { path: 'owner/location_boxe/details/:id', component:  LocationBoxeDetailsComponent},
+    { path: 'owner/location_boxe/update/:id', component:  LocationBoxeFormComponent},
     // Boutique
     { path: 'owner/boutique', component:  BoutiqueListeComponent},
     { path: 'owner/boutique/details/:id', component:  BoutiqueDetailsComponent},
     { path: 'owner/boutique/update/:id', component:  BoutiqueFormComponent},
+    { path: 'owner/boutique/create', component:  BoutiqueFormComponent},
     { path: 'client/boutique/details/:id', component:  BoutiqueDetailsForClientComponent},
 
     // Manager
@@ -195,6 +215,8 @@ export const routes: Routes = [
     { path: 'fichier/create/:idProprietaire', component:  FichierSaisieMultipleComponent},
 
     // Client
+    { path: 'client/details/:id', component:  ClientDetailsComponent},
+    { path: 'client/update/:id', component:  ClientFormComponent},
     { path: 'client/market/produit', component:  MarketProduitListeComponent},
     { path: 'client/market/produit/details/:id', component:  MarketProduitDetailsComponent},
     { path: 'client/market/panier', component:  MarketPanierListeComponent},

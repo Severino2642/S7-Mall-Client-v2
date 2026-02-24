@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {ManagerCPLModel} from "../../../../models/manager.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ManagerService} from "../../../../services/manager.service/manager.service";
 import {PaymentLoyer, PaymentLoyerCPLModel} from "../../../../models/payment-loyer.model";
 import {PaymentLoyerService} from "../../../../services/payment_loyer.service/payment-loyer.service";
@@ -27,7 +27,7 @@ import {
 @Component({
   selector: 'app-payment-loyer-details',
   standalone: true,
-  imports: [CommonModule, BonCommandeFactureComponent, BonCommandeFillesListeComponent, HeaderComponent, NavbarComponent, PayementListeComponent, PaymentLoyerDecaissementListeComponent, PaymentLoyerEncaissementListeComponent],
+  imports: [CommonModule, BonCommandeFactureComponent, BonCommandeFillesListeComponent, HeaderComponent, NavbarComponent, PayementListeComponent, PaymentLoyerDecaissementListeComponent, PaymentLoyerEncaissementListeComponent, RouterLink],
   templateUrl: './payment-loyer-details.component.html',
   styleUrl: './payment-loyer-details.component.css'
 })

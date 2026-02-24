@@ -71,7 +71,7 @@ export class LoginComponent {
 
       // si c'est un centre commercial
       if (res.role?.val === "Centre Commercial") {
-        const mall = await this.mallService.getById(res.idUser);
+        const mall = await this.mallService.getCPLById(res.idUser);
         console.log("User is a mall:", mall);
         localStorage.setItem('mall', JSON.stringify(mall));
       }

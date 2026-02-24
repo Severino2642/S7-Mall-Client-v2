@@ -1,0 +1,143 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="d-flex align-items-center gap-2">
+        <span>
+          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
+        </span>
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Details de la location</h4>
+      </div>
+      <!-- Header Section avec Image et Détails -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Informations Principales -->
+            <div class="col-12">
+              <!-- Titre et Badge -->
+              <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-1">
+                <div>
+                  <p class="text-muted mb-0 fw-semibold">
+                    <small>ID : {{ item?._id }}</small>
+                  </p>
+                </div>
+                <span class="badge px-3 py-2" [ngClass]="LocationBoxe.getStatusClass(item?.status)">{{LocationBoxe.getStatusLabel(item?.status)}}</span>
+              </div>
+              <div class="d-flex gap-4">
+                <div class="w-100">
+                  <div class="row g-3 mb-2">
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Boxe</div>
+                        <div class="stat-value">{{ item?.boxe?.nom }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4" *ngIf="userRole!==ConstanteUtil.role_proprietaire">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Locataire</div>
+                        <div class="stat-value">
+                          <a [routerLink]="['/owner/details',item?.idProprietaire]">{{ item?.proprietaire?.nom }} {{ item?.proprietaire?.prenom }}</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4" *ngIf="userRole!==ConstanteUtil.role_centre_commercial">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Centre Commercial</div>
+                        <div class="stat-value">
+                          <a [routerLink]="['/owner/centre_commercial/details', item?.centreCommercial?._id]">{{ item?.centreCommercial?.nom }}</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Boutique</div>
+                        <div class="stat-value" [class.text-danger]="!item?.boutique">{{ item?.boutique?.nom || 'Aucune' }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Date</div>
+                        <div class="stat-value">{{ item?.date|date:'dd/MM/YYYY' }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer d-flex gap-2 justify-content-end">
+          <div class="d-flex gap-2">
+            <button
+              *ngIf="userRole===ConstanteUtil.role_centre_commercial && item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              class="btn btn-danger"
+              (click)="bloquer()">
+              <i class="fa fa-lock me-2"></i>
+              Bloquer
+            </button>
+            <button
+              *ngIf="userRole===ConstanteUtil.role_centre_commercial && item?.status===ConstanteUtil.ETAT_OCCUPEE"
+              class="btn btn-success"
+              (click)="debloquer()">
+              <i class="fa fa-lock-open me-2"></i>
+              Debloquer
+            </button>
+            <button
+              *ngIf="userRole===ConstanteUtil.role_centre_commercial && item?.status===ConstanteUtil.ETAT_OCCUPEE"
+              class="btn btn-danger"
+              (click)="deleteItem()">
+              <i class="fa fa-trash me-2"></i>
+              Supprimer
+            </button>
+            <button
+              *ngIf="userRole===ConstanteUtil.role_proprietaire && item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              class="btn btn-primary"
+              (click)="editItem()">
+              <i class="fa fa-edit me-2"></i>
+              Attribuer une boutique
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglets Section -->
+      <div class="card border-0 shadow-sm">
+
+        <!-- Tabs Navigation -->
+        <div class="card-header bg-white border-bottom-0 pt-3 px-4 pb-0">
+          <ul class="nav nav-tabs border-bottom-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab1'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab1')">
+                Payments Loyer
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tabs Content -->
+        <div class="card-body p-4">
+          <div *ngIf="activeTab === 'tab1'">
+            <app-payment-loyer-onglet-liste [idMere]="item?._id"></app-payment-loyer-onglet-liste>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

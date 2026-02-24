@@ -31,10 +31,10 @@
                 <span class="badge px-3 py-2" [ngClass]="Produit.getStatusClass(item?.status)">{{Produit.getStatusLabel(item?.status)}}</span>
               </div>
               <div class="d-flex gap-4">
-                <div class="boxe-image-container">
+                <div class="boxe-image-container h-fit">
                   <img src="{{item?.photo?.url}}" alt="Image du produit" class="boxe-image">
                 </div>
-                <div>
+                <div class="w-100">
                   <div class="row g-3 mb-2">
                     <div class="col-6 col-md-3">
                       <div class="stat-box">
