@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit{
         { label: 'Tableau de bord', icon: 'fa fa-area-chart', route: '/home' },
         {
           label: 'Boxes',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-warehouse',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/boxe/create' },
@@ -58,19 +58,19 @@ export class NavbarComponent implements OnInit{
         },
         {
           label: 'Offres de location',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-tag',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/offreLocation/create' },
             { label: 'Liste', icon: 'fa fa-list', route: 'admin/offreLocation/' }
           ]
         },
-        { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
+        { label: 'Demande de location', icon: 'fa fa-file-alt', route: '/owner/demandeLocation' },
         { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' },
-        { label: 'Payment de loyer', icon: 'fa fa-shop', route: '/owner/payment_loyer' },
+        { label: 'Payment de loyer', icon: 'fa fa-money-bill', route: '/owner/payment_loyer' },
         {
           label: 'Caisse',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-cash-register',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/create' },
@@ -79,7 +79,7 @@ export class NavbarComponent implements OnInit{
         },
         {
           label: 'Mouvement de caisse',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-exchange-alt',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/mouvement/create' },
@@ -93,9 +93,9 @@ export class NavbarComponent implements OnInit{
       icon: '',
       role:'Proprietaire',
       children: [
-        { label: 'Offres de location', icon: 'fa fa-area-chart', route: '/owner/offreLocation/liste' },
-        { label: 'Demande de location', icon: 'fa fa-area-chart', route: '/owner/demandeLocation' },
-        { label: 'Mes boxes', icon: 'fa fa-shop', route: '/owner/location_boxe' },
+        { label: 'Offres de location', icon: 'fa fa-tag', route: '/owner/offreLocation/liste' },
+        { label: 'Demande de location', icon: 'fa fa-file-alt', route: '/owner/demandeLocation' },
+        { label: 'Mes boxes', icon: 'fa fa-warehouse', route: '/owner/location_boxe' },
         {
           label: 'Boutique',
           icon: 'fa fa-shop',
@@ -116,7 +116,7 @@ export class NavbarComponent implements OnInit{
         },
         {
           label: 'Payment de loyer',
-          icon: 'fa fa-users',
+          icon: 'fa fa-money-bill',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'owner/payment_loyer/create' },
@@ -125,7 +125,7 @@ export class NavbarComponent implements OnInit{
         },
         {
           label: 'Caisse',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-cash-register',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/create' },
@@ -134,7 +134,7 @@ export class NavbarComponent implements OnInit{
         },
         {
           label: 'Mouvement de caisse',
-          icon: 'fa fa-shop',
+          icon: 'fa fa-exchange-alt',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'caisse/mouvement/create' },
