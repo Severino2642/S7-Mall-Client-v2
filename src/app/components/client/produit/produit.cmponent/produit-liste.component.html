@@ -1,0 +1,174 @@
+<!-- Header -->
+<app-header></app-header>
+
+<!-- Main Content -->
+<main class="container-fluid py-4">
+    <div class="row g-4">
+        <!-- Sidebar Filters -->
+        <aside class="col-lg-3 d-none d-lg-block">
+            <div class="sticky-top" style="top: 80px;">
+                <!-- Filter Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="h5 fw-bold mb-0">Filters</h3>
+                    <button class="btn btn-link btn-sm text-primary p-0" (click)="clearFilters()">Clear All</button>
+                </div>
+
+                <!-- Search Filter -->
+                <div class="mb-4">
+                    <h4 class="filter-title">Search</h4>
+                    <input type="text" class="form-control" placeholder="Search products..." [(ngModel)]="searchTerm"
+                        (input)="applyFilters()" />
+                </div>
+
+                <!-- Categories -->
+                <div class="mb-4">
+                    <h4 class="filter-title">Categories</h4>
+                    <select class="form-select" [(ngModel)]="filters.selectedCategory" (change)="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option *ngFor="let category of filters.categories" [value]="category.label">
+                            {{ category.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Price Range -->
+                <div class="mb-4">
+                    <h4 class="filter-title">Price Range</h4>
+                    <div class="price-range-container">
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small mb-1">Min: Ar {{ filters.priceMin }}</label>
+                                <input type="range" class="form-range" min="0" max="850" step="10"
+                                    [(ngModel)]="filters.priceMin" (input)="applyFilters()">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small mb-1">Max: Ar {{ filters.priceMax }}</label>
+                                <input type="range" class="form-range" min="0" max="850" step="10"
+                                    [(ngModel)]="filters.priceMax" (input)="applyFilters()">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between small mt-2">
+                            <input type="number" class="form-control form-control-sm" style="width: 45%;"
+                                min="0" max="850" [(ngModel)]="filters.priceMin" (change)="applyFilters()"
+                                placeholder="Min">
+                            <span class="align-self-center">-</span>
+                            <input type="number" class="form-control form-control-sm" style="width: 45%;"
+                                min="0" max="850" [(ngModel)]="filters.priceMax" (change)="applyFilters()"
+                                placeholder="Max">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutiques -->
+                <div class="mb-4">
+                    <h4 class="filter-title">Boutiques</h4>
+                    <select class="form-select" [(ngModel)]="filters.selectedBoutique" (change)="applyFilters()">
+                        <option value="">All Boutiques</option>
+                        <option *ngFor="let boutique of filters.boutiques" [value]="boutique.label">
+                            {{ boutique.label }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9">
+            <!-- Product Grid -->
+            <div class="row g-4 mb-4">
+                <div *ngFor="let product of paginatedProducts" class="col-12 col-sm-6 col-lg-4">
+                    <!-- Product Card -->
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <img [src]="product.image" [alt]="product.nom" class="product-image">
+                            <button class="favorite-btn" (click)="toggleFavorite(product)">
+                                <span class="material-icons">favorite_border</span>
+                            </button>
+                            <div *ngIf="product.badges && product.badges.length > 0" class="product-badges">
+                                <span *ngFor="let badge of product.badges" class="badge"
+                                    [class.bg-danger]="badge === 'HOT'" [class.bg-success]="badge.includes('SAVE')">
+                                    {{ badge }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <p class="product-boutique">{{ product.boutique }}</p>
+                            <h3 class="product-name">{{ product.nom }}</h3>
+                            <p class="product-category">{{ product.categorie }}</p>
+
+                            <!-- Rating -->
+                            <div class="product-rating">
+                                <div class="stars">
+                                    <span *ngFor="let i of [].constructor(getStars(product.rating).full)"
+                                        class="material-icons star-filled">star</span>
+                                    <span *ngIf="getStars(product.rating).half"
+                                        class="material-icons star-filled">star_half</span>
+                                    <span *ngFor="let i of [].constructor(getStars(product.rating).empty)"
+                                        class="material-icons star-empty">star_outline</span>
+                                </div>
+                                <span class="reviews-count">({{ product.reviews > 999 ? (product.reviews /
+                                    1000).toFixed(1) + 'k' : product.reviews }} reviews)</span>
+                            </div>
+
+                            <!-- Stock Info -->
+                            <div class="stock-info">
+                                <small class="text-muted">Stock: <span class="fw-semibold">{{ product.quantite
+                                        }}</span></small>
+                            </div>
+
+                            <!-- Price & Cart -->
+                            <div class="product-footer">
+                                <div>
+                                    <span class="product-price">Ar {{ product.prix.toFixed(2) }}</span>
+                                    <span *ngIf="product.prixOriginal" class="product-price-original">Ar {{
+                                        product.prixOriginal.toFixed(2) }}</span>
+                                </div>
+                                <button class="cart-btn" (click)="goToDetails(product)">
+                                    <span>Voir le produit</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-12 flex items-center justify-center gap-2">
+                <button
+                    (click)="goToPage(currentPage - 1)"
+                    [disabled]="currentPage === 1"
+                    [style.background-color]="currentPage === 1 ? '#e5e7eb' : 'white'"
+                    [style.cursor]="currentPage === 1 ? 'not-allowed' : 'pointer'"
+                    class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-slate-100">
+                    <span class="material-icons text-sm">chevron_left</span>
+                </button>
+                
+                <button
+                    *ngFor="let page of getPageNumbers()"
+                    (click)="page > 0 && goToPage(page)"
+                    [disabled]="page === -1"
+                    [style.background-color]="currentPage === page ? 'var(--primary-color)' : 'white'"
+                    [style.color]="currentPage === page ? 'white' : 'var(--text-primary)'"
+                    [style.box-shadow]="currentPage === page ? '0 4px 12px rgba(26, 74, 84, 0.3)' : 'none'"
+                    [style.cursor]="page === -1 ? 'default' : 'pointer'"
+                    class="w-10 h-10 rounded-lg border flex items-center justify-center font-bold"
+                    [class.hover:bg-slate-100]="page !== -1 && currentPage !== page">
+                    <span *ngIf="page === -1">...</span>
+                    <span *ngIf="page > 0">{{ page }}</span>
+                </button>
+                
+                <button
+                    (click)="goToPage(currentPage + 1)"
+                    [disabled]="currentPage === totalPages"
+                    [style.background-color]="currentPage === totalPages ? '#e5e7eb' : 'white'"
+                    [style.cursor]="currentPage === totalPages ? 'not-allowed' : 'pointer'"
+                    class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-slate-100">
+                    <span class="material-icons text-sm">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

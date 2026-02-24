@@ -1,0 +1,123 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="d-flex align-items-center gap-2">
+        <span>
+          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
+        </span>
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Details d'une offre de location</h4>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Informations Principales -->
+            <div class="col-12">
+              <!-- Titre et Badge -->
+              <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-1">
+                <div>
+                  <p class="text-muted mb-0 fw-semibold">
+                    <small>ID : {{ item?._id }}</small>
+                  </p>
+                </div>
+                <span class="badge px-3 py-2" [ngClass]="OffreDeLocation.getStatusClass(item?.status)">{{OffreDeLocation.getStatusLabel(item?.status)}}</span>
+              </div>
+
+              <div class="row g-3 mb-2">
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Boxe</div>
+                    <div class="stat-value">
+                      <a  [routerLink]="['/admin/boxe/details', item?.idBoxe]">{{ item?.nomBoxe }}</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Date</div>
+                    <div class="stat-value-date">{{ UtilitaireUtil.dateToDMY_HM(item?.date) }}</div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Montant du Loyer</div>
+                    <div class="stat-value">{{ item?.montantLoyer }} <small class="text-muted">Ar</small></div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Surface De La Boxe</div>
+                    <div class="stat-value">{{ calculateSurface() }} <small class="text-muted">m²</small></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-3 mb-2">
+                <div class="col-6 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Description</div>
+                    <div class="stat-value-muted">{{ item?.description }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer d-flex gap-2 justify-content-end" *ngIf="item?.status !== ConstanteUtil.ETAT_OCCUPEE">
+          <button
+            class="btn btn-warning"
+            (click)="editItem()">
+            <i class="fa fa-edit me-2"></i>
+            Modifier
+          </button>
+          <button
+            class="btn btn-danger"
+            (click)="deleteItem()">
+            <i class="fa fa-trash me-2"></i>
+            Supprimer
+          </button>
+        </div>
+      </div>
+
+      <!-- Onglets Section -->
+      <div class="card border-0 shadow-sm">
+
+        <!-- Tabs Navigation -->
+        <div class="card-header bg-white border-bottom-0 pt-3 px-4 pb-0">
+          <ul class="nav nav-tabs border-bottom-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab1'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab1')">
+                Demandes de locations
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tabs Content -->
+        <div class="card-body p-4">
+
+          <div *ngIf="activeTab === 'tab1'">
+            <app-demande-location-liste-onglet [idMere]="item?._id"></app-demande-location-liste-onglet>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

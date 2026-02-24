@@ -1,0 +1,135 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <!-- Contenu principal -->
+  <main class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div>
+        <h4 class="text-3xl font-bold" style="color: #101828;">{{getTitre()}}</h4>
+      </div>
+      <div class="boxe-form-container">
+        <form [formGroup]="boxeForm" (ngSubmit)="submitForm()">
+
+          <!-- General Information Section -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+              <!-- Section Header -->
+              <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center">
+                  <i class="fa fa-info-circle text-white"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-semibold">Information General</h6>
+                  <small class="text-muted">Details de l'objet</small>
+                </div>
+              </div>
+
+              <!-- Form Fields -->
+              <div class="row g-3">
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('date')"
+                    formControlName="date"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('date')">
+                    {{ getFieldError('date') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Location <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('idBoutique')"
+                    formControlName="idBoutique">
+                    <option value="" disabled>Selectionner</option>
+                    <option *ngFor="let item of listBoutique" [value]="item._id">
+                      {{ item?.boutique?.nom }} - {{item.boxe?.nom}} - {{item.centreCommercial?.nom}}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('idBoutique')">
+                    {{ getFieldError('idBoutique') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Mois <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('mois')"
+                    formControlName="mois">
+                    <option value="" disabled>Selectionner</option>
+                    <option *ngFor="let item of listMois" [value]="item">
+                      {{ item }}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('mois')">
+                    {{ getFieldError('mois') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Annee <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('annee')"
+                    formControlName="annee"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('annee')">
+                    {{ getFieldError('annee') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Montant <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('montant')"
+                    formControlName="montant"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('montant')">
+                    {{ getFieldError('montant') }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="card-footer form-actions d-flex gap-2 justify-content-end">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetForm()">
+                <i class="fa fa-times"></i>
+                R&eacute;initialiser
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="boxeForm.invalid">
+                <i class="fa fa-check"></i>
+                {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+</div>
+

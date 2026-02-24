@@ -1,0 +1,171 @@
+<!-- Header -->
+<app-header></app-header>
+
+<!-- Main Content -->
+<main class="centres-page">
+  <div class="container-fluid p-0 h-100">
+    <div class="row g-0 h-100">
+      
+      <!-- Sidebar gauche - Détails du centre sélectionné -->
+      <div class="col-lg-4 sidebar-container">
+        <div class="sidebar-content">
+          
+          <!-- Search Bar -->
+          <div class="search-section p-4 border-bottom">
+            <h2 class="h4 fw-bold mb-3">Centres Commerciaux</h2>
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <span class="material-icons text-muted">search</span>
+              </span>
+              <input 
+                type="text" 
+                class="form-control border-start-0" 
+                placeholder="Rechercher un centre..."
+                [(ngModel)]="searchTerm"
+                (input)="searchCentres()">
+            </div>
+          </div>
+
+          <!-- Centre Details -->
+          <div *ngIf="selectedCentre" class="centre-details p-4">
+            
+            <!-- Centre Image -->
+            <div class="centre-image-container mb-4">
+              <img [src]="selectedCentre.image" 
+                   [alt]="selectedCentre.nom" 
+                   class="centre-image">
+            </div>
+
+            <!-- Centre Info -->
+            <div class="centre-info">
+              <!-- Nom -->
+              <h3 class="centre-name mb-2">{{ selectedCentre.nom }}</h3>
+              
+              <!-- Status Badge -->
+              <div class="mb-3">
+                <span class="badge status-badge" 
+                      [ngClass]="getStatus(selectedCentre).class">
+                  <span class="material-icons me-1" style="font-size: 14px;">
+                    {{ isOpen(selectedCentre) ? 'check_circle' : 'cancel' }}
+                  </span>
+                  {{ getStatus(selectedCentre).text }}
+                </span>
+              </div>
+
+              <!-- Adresse -->
+              <div class="info-item mb-3">
+                <span class="material-icons info-icon">place</span>
+                <div>
+                  <div class="info-label">Adresse</div>
+                  <div class="info-value">{{ selectedCentre.adresse }}</div>
+                  <div class="info-value text-muted">{{ selectedCentre.ville }}</div>
+                </div>
+              </div>
+
+              <!-- Horaires -->
+              <div class="info-item mb-3">
+                <span class="material-icons info-icon">schedule</span>
+                <div>
+                  <div class="info-label">Horaires</div>
+                  <div class="info-value">
+                    Ouverture: {{ formatTime(selectedCentre.heureOuverture) }}
+                  </div>
+                  <div class="info-value">
+                    Fermeture: {{ formatTime(selectedCentre.heureFermeture) }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Téléphone -->
+              <div class="info-item mb-3" *ngIf="selectedCentre.telephone">
+                <span class="material-icons info-icon">phone</span>
+                <div>
+                  <div class="info-label">Téléphone</div>
+                  <div class="info-value">{{ selectedCentre.telephone }}</div>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="info-item mb-3" *ngIf="selectedCentre.email">
+                <span class="material-icons info-icon">email</span>
+                <div>
+                  <div class="info-label">Email</div>
+                  <div class="info-value">{{ selectedCentre.email }}</div>
+                </div>
+              </div>
+
+              <!-- Distance -->
+              <div class="info-item mb-4">
+                <span class="material-icons info-icon">near_me</span>
+                <div>
+                  <div class="info-label">Distance</div>
+                  <div class="info-value">{{ getDistance(selectedCentre) }}</div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="description mb-4" *ngIf="selectedCentre.description">
+                <p class="text-muted">{{ selectedCentre.description }}</p>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons d-grid gap-2">
+                <button class="btn btn-primary" (click)="getDirections(selectedCentre)">
+                  <span class="material-icons me-2">directions</span>
+                  Itinéraire
+                </button>
+                <button class="btn btn-outline-primary" (click)="viewProducts(selectedCentre)">
+                  <span class="material-icons me-2">storefront</span>
+                  Voir les boutiques
+                </button>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <button class="btn btn-outline-secondary w-100" 
+                            (click)="callCentre(selectedCentre)"
+                            *ngIf="selectedCentre.telephone">
+                      <span class="material-icons">phone</span>
+                    </button>
+                  </div>
+                  <div class="col-6">
+                    <button class="btn btn-outline-secondary w-100" 
+                            (click)="emailCentre(selectedCentre)"
+                            *ngIf="selectedCentre.email">
+                      <span class="material-icons">email</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- No Centre Selected -->
+          <div *ngIf="!selectedCentre" class="no-selection p-4 text-center">
+            <span class="material-icons text-muted mb-3" style="font-size: 64px;">store</span>
+            <p class="text-muted">Sélectionnez un centre commercial sur la carte</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map Section - Droite -->
+      <div class="col-lg-8 map-container">
+        <div class="map-wrapper">
+          
+          <!-- Map Header -->
+          <div class="map-header">
+            <h5 class="mb-0">
+              <span class="material-icons me-2">map</span>
+              {{ filteredCentres.length }} centre{{ filteredCentres.length > 1 ? 's' : '' }} trouvé{{ filteredCentres.length > 1 ? 's' : '' }}
+            </h5>
+          </div>
+
+          <!-- Interactive Map -->
+          <div id="map" style="width: 100%; height: 600px; border-radius: 8px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

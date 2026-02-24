@@ -20,7 +20,7 @@
     <!-- Formulaire -->
     <div class="bg-white rounded-2xl shadow-xl p-8">
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        
+
         <!-- Photo de profil -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -77,6 +77,33 @@
           }
         </div>
 
+        <div>
+          <label class="form-label block text-sm font-medium text-gray-700 mb-2">
+            Sexe <span class="text-danger">*</span>
+          </label>
+          <div class="input-group">
+            <select
+              class="form-select"
+              formControlName="sexe">
+              <option value="" disabled>Selectionner</option>
+              <option *ngFor="let item of listSexe" [value]="item.val">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          @if (sexe?.invalid && sexe?.touched) {
+            <p class="mt-1 text-sm text-red-600">Sexe requis</p>
+          }
+        </div>
+
+        <div>
+          <label for="dtn" class="block text-sm font-medium text-gray-700 mb-2">Date de naissance</label>
+          <input id="dtn" type="date" formControlName="date_naissance" class="block w-full px-3 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all" style="--tw-ring-color: #1A4A54;" [ngClass]="{'border-gray-300': !contact?.invalid || !contact?.touched, 'border-red-500 bg-red-50': contact?.invalid && contact?.touched}" placeholder="Numéro de téléphone" />
+          @if (date_naissance?.invalid && date_naissance?.touched) {
+            <p class="mt-1 text-sm text-red-600">Date de naissance requis</p>
+          }
+        </div>
+
         <!-- Identifiant -->
         <div>
           <label for="identifiant" class="block text-sm font-medium text-gray-700 mb-2">Identifiant</label>
@@ -118,8 +145,8 @@
 
       <div class="mt-6 text-center text-sm">
         <p class="text-gray-600">
-          <a href="/login" class="font-medium" style="color: #1A4A54;">Se connecter</a> | 
-          <a href="/register/owner" class="font-medium" style="color: #1A4A54;">Propriétaire</a> | 
+          <a href="/login" class="font-medium" style="color: #1A4A54;">Se connecter</a> |
+          <a href="/register/owner" class="font-medium" style="color: #1A4A54;">Propriétaire</a> |
           <a href="/register/mall" class="font-medium" style="color: #1A4A54;">Centre Commercial</a>
         </p>
       </div>

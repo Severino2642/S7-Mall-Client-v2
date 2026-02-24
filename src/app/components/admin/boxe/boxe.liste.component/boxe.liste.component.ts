@@ -2,15 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from '../../navbar.component/navbar.component';
 import {FormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
-import {BoxeModel} from '../../../../models/boxe.model';
+import {Boxe, BoxeModel} from '../../../../models/boxe.model';
 import {BoxeService} from '../../../../services/boxe.service/boxe.service';
 import {StorageUtil} from '../../../../utils/storage.util';
 import {HeaderComponent} from '../../header.component/header.component';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-boxe.liste.component',
-  imports: [NavbarComponent, FormsModule, NgForOf, NgIf, NgClass, HeaderComponent],
+  imports: [NavbarComponent, FormsModule, NgForOf, NgIf, NgClass, HeaderComponent, RouterLink],
   templateUrl: './boxe.liste.component.html',
   styleUrl: './boxe.liste.component.css',
   standalone: true
@@ -66,6 +66,7 @@ export class BoxeListeComponent implements OnInit{
     this.applyFilters();
     this.loadStats();
     this.updateTabCounts();
+    this.updatePagination();
   }
 
 
@@ -101,11 +102,9 @@ export class BoxeListeComponent implements OnInit{
   applyFilters():void{
     this.filteredItems = this.items.filter(item => {
       if (this.filters.nom !== "" && item.nom !== this.filters.nom) {
-        console.log("diso nom");
         return false;
       }
       if (this.filters.status != 0 && item.status != this.filters.status) {
-        console.log("diso status ",item.status,this.filters.status);
         return false;
       }
       return true;
@@ -158,41 +157,16 @@ export class BoxeListeComponent implements OnInit{
     this.currentPage = page;
   }
 
-  getStatusClass(status: number | undefined): string {
-    switch (status) {
-      case 1:
-        return 'badge-success';
-      case 2:
-        return 'badge-warning';
-      case 3:
-        return 'badge-danger';
-      default:
-        return 'badge-secondary';
-    }
-  }
-
-  getStatusLabel(status: number | undefined):string {
-    switch (status) {
-      case 1:
-        return 'DISPONIBLE';
-      case 2:
-        return 'EN ATTENTE';
-      case 3:
-        return 'OCCUPEE';
-      default:
-        return "DISPONIBLE";
-    }
-  }
 
   editItem(item:any): void {
     console.log('Edit item:', item._id);
     this.router.navigate(['admin/boxe/update', item._id]);
   }
 
-  // Supprimer une facture
-  deleteItem(item:any): void {
-    console.log('Delete invoice:', item.id);
-    // Implémenter la logique de suppression
+  async deleteItem(item:any): Promise<void> {
+    console.log('Delete invoice:', item._id);
+    await this.boxeService.delete(item._id);
+    this.router.navigate(['admin/boxe/']);
   }
 
   formatAmount(amount: number): string {
@@ -202,4 +176,6 @@ export class BoxeListeComponent implements OnInit{
   formatTaille(longueur: any, largeur: any):string{
     return `${longueur} x ${largeur} m`;
   }
+
+  protected readonly Boxe = Boxe;
 }

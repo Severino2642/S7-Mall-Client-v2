@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {UtilitaireUtil} from "../../../utils/utilitaire.util";
+import {NotificationModel} from "../../../models/notification.model";
+import {Router} from "@angular/router";
+import {NotificationService} from "../../../services/notification.service/notification.service";
+import {StorageUtil} from "../../../utils/storage.util";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 export interface Notification {
   id: number;
@@ -21,52 +27,51 @@ export interface Notification {
 export class HeaderComponent {
   searchQuery = '';
   showNotifications = false;
+  private notifRefreshTimer: any;
 
-  // Nombre de notifications non lues
-  unreadCount = 3;
-
-  // Liste des notifications
-  notifications: Notification[] = [
-    {
-      id: 1,
-      title: 'Nouvelle facture',
-      message: 'La facture INV-001 a été créée',
-      time: 'Il y a 5 min',
-      read: false,
-      type: 'info'
-    },
-    {
-      id: 2,
-      title: 'Paiement reçu',
-      message: 'Paiement de 1,200.00 € reçu',
-      time: 'Il y a 1 heure',
-      read: false,
-      type: 'success'
-    },
-    {
-      id: 3,
-      title: 'Facture en retard',
-      message: 'La facture INV-003 est en retard',
-      time: 'Il y a 2 heures',
-      read: false,
-      type: 'warning'
-    },
-    {
-      id: 4,
-      title: 'Rapport mensuel',
-      message: 'Le rapport du mois est disponible',
-      time: 'Il y a 1 jour',
-      read: true,
-      type: 'info'
-    }
-  ];
-
+  notifications: NotificationModel[] =[];
+  idUser = "";
   // Breadcrumb
   breadcrumbs = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'Home', link: '/home' },
     { label: 'Accounting', link: null } // null = page actuelle
   ];
+
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService,
+    private sanitizer: DomSanitizer
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    var boutique = StorageUtil.getFromStorage<any>("boutique");
+    if (!boutique){
+      var user = StorageUtil.getFromStorage<any>("auth");
+      if (user) {
+        this.idUser = user.idUser;
+      }
+    }
+    else {
+      this.idUser = boutique._id;
+    }
+
+    await this.loadNotifications();
+    this.notifRefreshTimer = setInterval(() => {
+      this.loadNotifications();
+    }, 5000);
+  }
+
+  async loadNotifications(): Promise<void> {
+    try {
+      const notifications = await this.notificationService.getByIdUser(this.idUser);
+      if (notifications) {
+        this.notifications = notifications;
+      }
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    }
+  }
 
   // Toggle le panneau des notifications
   toggleNotifications(): void {
@@ -78,29 +83,34 @@ export class HeaderComponent {
     this.showNotifications = false;
   }
 
-  // Marquer une notification comme lue
-  markAsRead(notification: Notification): void {
-    if (!notification.read) {
-      notification.read = true;
-      this.updateUnreadCount();
+  // Marquer comme lue
+  async markAsRead(notification: NotificationModel): Promise<void> {
+    notification.lu = true;
+    if (notification._id){
+      await this.notificationService.marquerCommeLu(notification._id);
     }
+    this.router.navigate([notification.lien]);
   }
 
   // Marquer toutes comme lues
-  markAllAsRead(): void {
-    this.notifications.forEach(n => n.read = true);
-    this.updateUnreadCount();
+  async markAllAsRead(): Promise<void> {
+    this.notifications.forEach(n => n.lu = true);
+    await this.notificationService.toutmarquerCommeLu(this.idUser);
   }
 
   // Supprimer une notification
-  deleteNotification(notification: Notification): void {
-    this.notifications = this.notifications.filter(n => n.id !== notification.id);
-    this.updateUnreadCount();
+  async deleteNotification(notificationId: string): Promise<void> {
+    this.notifications = this.notifications.filter(n => n._id !== notificationId);
+    await this.notificationService.delete(notificationId);
   }
 
-  // Mettre à jour le compteur de notifications non lues
-  updateUnreadCount(): void {
-    this.unreadCount = this.notifications.filter(n => !n.read).length;
+  // Compter les notifications non lues
+  getUnreadCount(): number {
+    return this.notifications.filter(n => !n.lu).length;
+  }
+
+  getSafeBadge(badgeHtml: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(badgeHtml || '');
   }
 
   // Rechercher
@@ -138,4 +148,5 @@ export class HeaderComponent {
   //   // Nettoyer les écouteurs
   //   document.removeEventListener('keydown', (e) => this.handleSearchShortcut(e));
   // }
+  protected readonly UtilitaireUtil = UtilitaireUtil;
 }

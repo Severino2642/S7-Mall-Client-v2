@@ -1,0 +1,150 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="d-flex align-items-center gap-2">
+        <span>
+          <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
+        </span>
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Details d'une produit</h4>
+      </div>
+      <!-- Header Section avec Image et Détails -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Informations Principales -->
+            <div class="col-12">
+              <!-- Titre et Badge -->
+              <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-1">
+                <div>
+                  <p class="text-muted mb-0 fw-semibold">
+                    <small>ID : {{ item?._id }}</small>
+                  </p>
+                </div>
+                <span class="badge px-3 py-2" [ngClass]="Produit.getStatusClass(item?.status)">{{Produit.getStatusLabel(item?.status)}}</span>
+              </div>
+              <div class="d-flex gap-4">
+                <div class="boxe-image-container h-fit">
+                  <img src="{{item?.photo?.url}}" alt="Image du produit" class="boxe-image">
+                </div>
+                <div class="w-100">
+                  <div class="row g-3 mb-2">
+                    <div class="col-6 col-md-3">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Nom</div>
+                        <div class="stat-value">{{ item?.nom }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Categorie</div>
+                        <div class="stat-value">{{ item?.categorie?.desce }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Prix</div>
+                        <div class="stat-value">{{ item?.prix }} <small class="text-muted">Ar</small></div>
+                      </div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Quantite</div>
+                        <div class="stat-value">{{ item?.quantite }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row g-3 mb-2">
+                    <div class="col-6 col-md-3">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Description</div>
+                        <div class="text-muted">{{ item?.description }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer d-flex gap-2 justify-content-between">
+          <div>
+            <a
+              class="btn bg-primary text-white"
+              [routerLink]="['/fichier/create', item?._id]"
+              [queryParams]="{ backlink: '/boutique/produit/details' }">
+              <i class="fa fa-file-image me-2"></i>
+              Ajouter des images
+            </a>
+          </div>
+          <div class="d-flex gap-2">
+            <button
+              class="btn {{ item?.status == ConstanteUtil.ETAT_DISPONIBLE ? 'btn-danger' : 'btn-success' }}"
+              (click)="setStatus()">
+              <i class="fa fa-{{ item?.status == ConstanteUtil.ETAT_DISPONIBLE ? 'times' : 'check' }} me-2"></i>
+              {{ item?.status == ConstanteUtil.ETAT_DISPONIBLE ? 'Désactiver' : 'Activer' }}
+            </button>
+            <button
+              class="btn btn-warning"
+              (click)="editBoxe()">
+              <i class="fa fa-edit me-2"></i>
+              Modifier
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Onglets Section -->
+      <div class="card border-0 shadow-sm">
+
+        <!-- Tabs Navigation -->
+        <div class="card-header bg-white border-bottom-0 pt-3 px-4 pb-0">
+          <ul class="nav nav-tabs border-bottom-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab1'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab1')">
+                Variantes
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link"
+                [class.active]="activeTab === 'tab2'"
+                href="javascript:void(0)"
+                (click)="changeTab('tab2')">
+                Fichiers rattachés
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tabs Content -->
+        <div class="card-body p-4">
+
+          <!-- Tab: Ventes & Locations -->
+          <div *ngIf="activeTab === 'tab1'">
+            <app-produit-variante-liste [items]="item?.variantes||[]" [idMere]="item?._id" />
+          </div>
+          <div *ngIf="activeTab === 'tab2'">
+            <app-fichier-liste-onglet [idMere]="item?._id" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>

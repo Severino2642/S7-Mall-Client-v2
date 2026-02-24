@@ -1,9 +1,3 @@
-/* Variables personnalisées */
-:root {
-  --primary-color: #1A4A54;
-  --secondary-color: #DDC9A4;
-}
-
 /* Sidebar principal */
 .sidebar {
   width: 240px;

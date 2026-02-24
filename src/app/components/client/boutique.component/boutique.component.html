@@ -1,0 +1,236 @@
+<!-- Header Navigation -->
+<app-header></app-header>
+
+<!-- Centre Commercial Header -->
+<header class="centre-header">
+  <img [src]="centre.image" 
+       [alt]="centre.nom" 
+       class="centre-header-image">
+  <div class="centre-header-overlay"></div>
+  <div class="container centre-header-content">
+    <h1 class="centre-header-title">Découvrez {{ centre.nom }}</h1>
+    <div class="centre-header-info">
+      <div class="info-badge">
+        <span class="material-icons">schedule</span>
+        <span class="info-text">
+          {{ isCentreOpen() ? 'Ouvert' : 'Fermé' }} aujourd'hui: 
+          {{ formatTime(centre.heureOuverture) }} - {{ formatTime(centre.heureFermeture) }}
+        </span>
+      </div>
+      <div class="info-badge">
+        <span class="material-icons">location_on</span>
+        <span class="info-text">{{ centre.adresse }}, {{ centre.ville }}</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="boutiques-page">
+  <div class="container">
+    
+    <!-- Search & Filter Bar -->
+    <div class="filter-card">
+      <div class="row g-3">
+        <!-- Recherche -->
+        <div class="col-lg-5">
+          <div class="search-input-wrapper">
+            <span class="material-icons search-icon">search</span>
+            <input 
+              type="text" 
+              class="form-control search-input" 
+              placeholder="Rechercher une boutique ou marque..."
+              [(ngModel)]="searchTerm"
+              (input)="applyFilters()">
+          </div>
+        </div>
+
+        <!-- Sélecteur d'étage -->
+        <div class="col-lg-3">
+          <select 
+            class="form-select custom-select" 
+            [(ngModel)]="selectedEtage"
+            (change)="applyFilters()">
+            <option *ngFor="let etage of etages" [value]="etage">{{ etage }}</option>
+          </select>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="col-lg-4">
+          <div class="d-flex gap-2">
+            <button 
+              class="btn btn-outline-secondary"
+              (click)="resetFilters()"
+              title="Réinitialiser">
+              <span class="material-icons">refresh</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtres horaires -->
+      <div class="row g-3 mt-2">
+        <div class="col-md-6">
+          <label class="form-label small text-muted">Heure d'ouverture minimum</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            [(ngModel)]="heureDebutFilter"
+            (change)="applyFilters()">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small text-muted">Heure de fermeture minimum</label>
+          <input 
+            type="time" 
+            class="form-control" 
+            [(ngModel)]="heureFinFilter"
+            (change)="applyFilters()">
+        </div>
+      </div>
+
+      <!-- Quick Category Pills -->
+      <div class="category-pills">
+        <button 
+          *ngFor="let categorie of categories"
+          class="category-pill"
+          [class.active]="selectedCategorie === categorie"
+          (click)="selectCategorie(categorie)">
+          {{ categorie }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-info mb-4">
+      <p class="text-muted mb-0">
+        <strong>{{ filteredBoutiques.length }}</strong> boutique{{ filteredBoutiques.length > 1 ? 's' : '' }} trouvée{{ filteredBoutiques.length > 1 ? 's' : '' }}
+      </p>
+    </div>
+
+    <!-- Store Grid -->
+    <div class="row g-4 mb-5">
+      <div 
+        *ngFor="let boutique of getPaginatedBoutiques()" 
+        class="col-sm-6 col-lg-4 col-xl-3">
+        <div class="store-card">
+          <!-- Image -->
+          <div class="store-card-image-wrapper">
+            <img 
+              [src]="boutique.image" 
+              [alt]="boutique.nom" 
+              class="store-card-image">
+            <div class="store-card-badge">{{ boutique.etage }}</div>
+          </div>
+
+          <!-- Content -->
+          <div class="store-card-body">
+            <!-- Header avec icône -->
+            <div class="store-card-header">
+              <div class="store-icon">
+                <span class="material-icons">{{ boutique.icon }}</span>
+              </div>
+              <div class="store-info">
+                <h3 class="store-name">{{ boutique.nom }}</h3>
+                <p class="store-category">{{ boutique.categorie }}</p>
+              </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="mb-3">
+              <span 
+                class="badge status-badge-small"
+                [ngClass]="getStatus(boutique).class">
+                <span class="material-icons status-icon">
+                  {{ isOpen(boutique) ? 'check_circle' : 'cancel' }}
+                </span>
+                {{ getStatus(boutique).text }}
+              </span>
+            </div>
+
+            <!-- Horaires -->
+            <div class="store-hours mb-3">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="material-icons text-muted" style="font-size: 16px;">schedule</span>
+                <span class="small text-muted">Horaires</span>
+              </div>
+              <div class="small">
+                <strong>{{ formatTime(boutique.heureOuverture) }}</strong> - 
+                <strong>{{ formatTime(boutique.heureFermeture) }}</strong>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="store-description">{{ boutique.description }}</p>
+
+            <!-- Footer -->
+            <div class="store-card-footer">
+              <span class="store-unit">Unité {{ boutique.unite }}</span>
+              <button 
+                class="btn-details"
+                (click)="viewBoutiqueDetails(boutique)">
+                Détails 
+                <span class="material-icons">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="filteredBoutiques.length === 0" class="no-results">
+      <span class="material-icons no-results-icon">store_mall_directory</span>
+      <h3 class="no-results-title">Aucune boutique trouvée</h3>
+      <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+      <button class="btn btn-outline-primary" (click)="resetFilters()">
+        Réinitialiser les filtres
+      </button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper" *ngIf="totalPages > 1">
+      <nav aria-label="Navigation des boutiques">
+        <ul class="pagination justify-content-center">
+          <!-- Previous -->
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button 
+              class="page-link page-link-icon"
+              (click)="goToPage(currentPage - 1)"
+              [disabled]="currentPage === 1">
+              <span class="material-icons">chevron_left</span>
+            </button>
+          </li>
+
+          <!-- Page Numbers -->
+          <li 
+            *ngFor="let page of getPageNumbers()"
+            class="page-item"
+            [class.active]="page === currentPage"
+            [class.disabled]="page === -1">
+            <button 
+              *ngIf="page !== -1"
+              class="page-link"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+            <span *ngIf="page === -1" class="page-link">...</span>
+          </li>
+
+          <!-- Next -->
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button 
+              class="page-link page-link-icon"
+              (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages">
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>

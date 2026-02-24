@@ -1,0 +1,349 @@
+<app-header></app-header>
+<div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-2">Chargement...</div>
+</div>
+<div *ngIf="!loading" class="d-flex flex-column">
+  <main class="pl-4 pr-4">
+    <div class="product-details-page m-auto" style="width: 90%" *ngIf="item" (keydown)="handleKeyboard($event)" tabindex="0">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb-container">
+        <div class="container-fluid">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Produits</a></li>
+              <li class="breadcrumb-item"><a href="/car-seats">Categories</a></li>
+              <li class="breadcrumb-item"><a href="/car-seats/convertible">{{item.categorie?.val}}</a></li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="row">
+
+          <!-- COLONNE GAUCHE - Galerie d'images -->
+          <div class="col-12 col-lg-4">
+            <div class="gallery-section">
+
+              <!-- Thumbnails verticaux -->
+              <div class="thumbnails-vertical">
+                <button
+                  *ngFor="let image of item.autrePhoto; let i = index"
+                  class="thumbnail-button"
+                  [class.active]="i === currentImageIndex"
+                  (click)="selectImage(i)">
+                  <img [src]="image.url" [alt]="image.nom">
+<!--                  <i *ngIf="image.type === 'video'" class="fa fa-play-circle video-overlay"></i>-->
+                </button>
+              </div>
+
+              <!-- Image principale -->
+              <div class="main-image-container">
+                <button class="nav-arrow nav-left" (click)="previousImage()" *ngIf="item.autrePhoto && item.autrePhoto.length > 1">
+                  <i class="fa fa-chevron-left"></i>
+                </button>
+
+                <div class="main-image-wrapper" (click)="openLightbox()">
+                  <img
+                    [src]="getCurrentImage()?.url"
+                    [alt]="getCurrentImage()?.nom"
+                    class="main-image">
+                  <div class="zoom-hint">
+                    <i class="fa fa-search-plus me-2"></i>
+                    Cliquer pour zoomer
+                  </div>
+                </div>
+
+                <button class="nav-arrow nav-right" (click)="nextImage()" *ngIf="item.autrePhoto && item.autrePhoto.length > 1">
+                  <i class="fa fa-chevron-right"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COLONNE DROITE - Informations produit -->
+          <div class="col-12 col-lg-5">
+            <div class="product-info-section">
+
+              <!-- En-tête avec partage -->
+<!--              <div class="d-flex justify-content-between align-items-start mb-2">-->
+<!--                <span class="visit-store">Visit the Graco Store</span>-->
+<!--                <button class="btn-share" (click)="shareProduct()">-->
+<!--                  <i class="far fa-star"></i>-->
+<!--                </button>-->
+<!--              </div>-->
+
+              <!-- Titre -->
+              <h1 class="product-name">{{ item.nom }}</h1>
+
+              <!-- Rating et avis -->
+              <div class="rating-section d-flex align-items-center gap-2 mb-3">
+                <div class="stars">
+                  <i *ngFor="let filled of getStarArray()"
+                     class="fa"
+                     [class.fa-star]="filled"
+                     [class.fa-star-o]="!filled"
+                     [class.filled]="filled">
+                  </i>
+                </div>
+                <span class="rating-value">4</span>
+                <a href="#reviews" class="reviews-count">(4 ratings)</a>
+                <span class="separator">|</span>
+                <a href="javascript:void(0)" class="search-page" (click)="goToBoutique(item.idBoutique)">Visiter la boutique {{item.boutique?.nom}}</a>
+              </div>
+
+              <!-- Badge achat -->
+              <div class="bought-badge" (click)="goToMall()">
+                <i class="fa fa-map-location-dot"></i> {{item.centreCommercial?.nom}}
+              </div>
+
+              <!-- Prix -->
+              <div class="price-section">
+                <!-- Limited time deal -->
+                <div class="limited-deal-badge">
+                  Produit limité
+                </div>
+
+                <div class="price-container">
+<!--                  <div class="discount-badge" *ngIf="product.discount">-->
+<!--                    -{{ product.discount }}%-->
+<!--                  </div>-->
+                  <div class="current-price">
+                    <sup>Ar</sup>{{ UtilitaireUtil.formatAmountV2(item.prix) }}<sup>00</sup>
+                  </div>
+                  <div class="price-suffix">
+                    (Ar {{ UtilitaireUtil.formatAmountV2(item.prix) }} / unit&eacute;)
+                  </div>
+                </div>
+
+<!--                <div class="original-price" *ngIf="product.originalPrice">-->
+<!--                  List Price: <span class="line-through">${{ product.originalPrice | number:'1.2-2' }}</span>-->
+<!--                </div>-->
+              </div>
+
+<!--              <hr class="my-3">-->
+
+<!--              &lt;!&ndash; Détails livraison &ndash;&gt;-->
+<!--              <div class="delivery-section mb-3">-->
+<!--                <div class="delivery-row">-->
+<!--                  <i class="fa fa-truck text-primary me-2"></i>-->
+<!--                  <div>-->
+<!--                    <div><strong>Delivery {{ product.delivery.date }}</strong></div>-->
+<!--                    <div class="text-muted small">Order within {{ product.delivery.time }}</div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="delivery-location mt-2">-->
+<!--                  <i class="fa fa-map-marker-alt text-muted me-2"></i>-->
+<!--                  <a href="#" class="text-primary">Deliver to Madagascar</a>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <!-- Stock -->
+              <div class="stock-status mb-3" *ngIf="item.quantite!=null  && item.quantite>0">
+                <i class="fa fa-check-circle"></i>
+                En Stock
+              </div>
+
+              <div class="stock-status mb-3 text-danger" *ngIf="item.quantite!=null  && item.quantite<=0">
+                <i class="fa fa-cancel"></i>
+                Rupture de Stock
+              </div>
+
+              <hr class="my-3">
+
+              <!-- Options de taille -->
+<!--              <div class="option-section mb-3" *ngIf="product.sizeOptions && product.sizeOptions.length > 0">-->
+<!--                <div class="option-label">Size: <strong>{{ selectedSize }}</strong></div>-->
+<!--                <div class="size-options">-->
+<!--                  <button-->
+<!--                    *ngFor="let size of product.sizeOptions"-->
+<!--                    class="size-button"-->
+<!--                    [class.active]="selectedSize === size"-->
+<!--                    (click)="selectSize(size)">-->
+<!--                    <div class="size-name">{{ size }}</div>-->
+<!--                    <div class="size-price" *ngIf="size === 'Slimfit LX'">${{ product.price | number:'1.2-2' }}</div>-->
+<!--                    <div class="size-price" *ngIf="size !== 'Slimfit LX'">${{ (product.price - 50) | number:'1.2-2' }}</div>-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--                <div class="see-available">See available options</div>-->
+<!--              </div>-->
+
+              <!-- Options de couleur -->
+<!--              <div class="option-section mb-3" *ngIf="product.colors && product.colors.length > 0">-->
+<!--                <div class="option-label">Color: <strong>{{ selectedColor }}</strong></div>-->
+<!--                <div class="color-options">-->
+<!--                  <button-->
+<!--                    *ngFor="let color of product.colors"-->
+<!--                    class="color-swatch"-->
+<!--                    [class.active]="selectedColor === color.name"-->
+<!--                    [class.unavailable]="!color.available"-->
+<!--                    [style.background-color]="color.color"-->
+<!--                    [disabled]="!color.available"-->
+<!--                    (click)="selectColor(color.name)"-->
+<!--                    [title]="color.name">-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <!-- Spécifications -->
+              <div class="specifications-grid mb-3">
+                <div *ngFor="let spec of item.variantes" class="spec-item">
+                  <span class="spec-label">{{ spec.val }}</span>
+                  <span class="spec-value">{{ spec.desce }}</span>
+                </div>
+              </div>
+
+              <hr class="my-3">
+
+              <!-- Section About -->
+              <div class="about-section mb-4">
+                <h3 class="about-title">Concernant ce produit</h3>
+                <p>{{item.description}}</p>
+<!--                <ul class="features-list">-->
+<!--                  <li *ngFor="let feature of product.features">{{ feature }}</li>-->
+<!--                </ul>-->
+<!--                <button class="btn-show-more">-->
+<!--                  <i class="fa fa-chevron-down me-2"></i>-->
+<!--                  Show more-->
+<!--                </button>-->
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COLONNE STICKY - Actions d'achat -->
+          <div class="col-12 col-lg-3 d-none d-lg-block">
+            <div class="buy-box sticky-top">
+
+              <!-- Prix -->
+              <div class="buy-box-price" *ngIf="item.quantite && item.quantite>0">
+                <sup>Ar</sup>{{ UtilitaireUtil.formatAmountV2(item.prix) }}<sup>00</sup>
+              </div>
+
+              <!-- Frais -->
+<!--              <div class="shipping-info">-->
+<!--                <div class="text-muted small">-->
+<!--                  ${{ (469.26).toFixed(2) }} Shipping & Import Charges to Madagascar-->
+<!--                  <a href="#" class="text-primary">Details</a>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <!-- Livraison -->
+<!--              <div class="delivery-info my-3">-->
+<!--                <div><strong>Delivery {{ product.delivery.date }}</strong></div>-->
+<!--                <div class="text-muted small">Order within {{ product.delivery.time }}</div>-->
+<!--                <div class="mt-2">-->
+<!--                  <i class="fa fa-map-marker-alt text-muted me-2"></i>-->
+<!--                  <a href="#" class="text-primary small">Deliver to Madagascar</a>-->
+<!--                </div>-->
+<!--              </div>-->
+
+
+              <!-- Quantité -->
+              <div class="quantity-selector mb-3" *ngIf="item.quantite!=null  && item.quantite>0">
+                <label class="form-label">Quantity:</label>
+                <select class="form-select" [(ngModel)]="quantity">
+                  <option *ngFor="let num of getQuantityOptions()" [value]="num">{{ num }}</option>
+                </select>
+              </div>
+
+              <!-- Boutons -->
+              <button class="btn btn-warning btn-lg w-100 mb-2" (click)="addToCart()" [disabled]="loading" *ngIf="item.quantite!=null  && item.quantite>0">
+                Ajouter au panier
+              </button>
+              <button class="btn btn-primary btn-lg w-100 mb-3" (click)="buyNow()" [disabled]="loading" *ngIf="item.quantite!=null  && item.quantite>0">
+                Commander
+              </button>
+              <div *ngIf="item.quantite!=null && item.quantite<=0" class="text-center mb-3">
+                <img src="assets/sold-out.png">
+              </div>
+                <!-- Seller info -->
+              <div class="seller-info">
+                <div class="info-row">
+                  <span class="label">Provenance</span>
+                  <span class="value" (click)="goToMall()" >{{ item.centreCommercial?.nom }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Vendu par</span>
+                  <span class="value">{{ item.boutique?.nom }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Contact du magasin</span>
+                  <span class="value">{{ item.boutique?.contact }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Mail du magasin</span>
+                  <span class="value">{{ item.boutique?.email }}</span>
+                </div>
+              </div>
+
+              <hr>
+
+              <!-- Options cadeaux -->
+<!--              <div class="gift-options">-->
+<!--                <div class="d-flex justify-content-between align-items-center">-->
+<!--                  <span class="small">Gift options:</span>-->
+<!--                  <a href="#" class="text-primary small">Available at checkout</a>-->
+<!--                </div>-->
+<!--              </div>-->
+
+              <!-- Actions secondaires -->
+              <button class="btn btn-outline-secondary w-100 mb-2 mt-3" (click)="addToList()">
+                <i class="fa fa-heart me-2"></i>
+                Add to List
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  <div class="flex-grow-1"></div>
+  <app-footer></app-footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox-overlay" *ngIf="!loading && showLightbox && item && item.autrePhoto" (click)="closeLightbox()">
+  <div class="lightbox-container">
+
+    <button class="lightbox-close" (click)="closeLightbox()">
+      <i class="fa fa-times"></i>
+    </button>
+
+    <button class="lightbox-nav lightbox-nav-left" (click)="previousImage(); $event.stopPropagation()">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <img
+        [src]="getCurrentImage()?.url"
+        [alt]="getCurrentImage()?.nom"
+        class="lightbox-image">
+    </div>
+
+    <button class="lightbox-nav lightbox-nav-right" (click)="nextImage(); $event.stopPropagation()">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+
+    <div class="lightbox-counter">
+      {{ currentImageIndex + 1 }} / {{ item.autrePhoto.length }}
+    </div>
+
+    <!-- Thumbnails lightbox -->
+    <div class="lightbox-thumbnails" (click)="$event.stopPropagation()">
+      <div
+        *ngFor="let image of item.autrePhoto; let i = index"
+        class="lightbox-thumb"
+        [class.active]="i === currentImageIndex"
+        (click)="selectImage(i)">
+        <img [src]="image.url" [alt]="image.nom">
+      </div>
+    </div>
+
+  </div>
+</div>

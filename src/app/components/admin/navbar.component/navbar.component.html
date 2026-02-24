@@ -8,7 +8,7 @@
 
   <!-- Menu Items -->
   <nav class="sidebar-nav flex-grow-1 overflow-auto py-3">
-    <div *ngFor="let section of menuItems" class="mb-4">
+    <div *ngFor="let section of filteredMenuItems" class="mb-4">
       <h6 class="text-uppercase text-muted px-3 mb-2 fw-semibold" style="font-size: 0.75rem; letter-spacing: 0.5px;">
         {{ section.label }}
       </h6>
@@ -39,13 +39,14 @@
             </a>
 
             <!-- Sous-menu avec Bootstrap Collapse -->
-            <div class="collapse" [class.show]="item.expanded">
+            <div [style.display]="item.expanded ? 'block' : 'none'">
               <ul class="list-unstyled ms-5 bg-light rounded mx-2">
                 <li *ngFor="let child of item.children">
                   <a
                     href="javascript:void(0)"
                     class="d-block px-3 py-2 text-decoration-none text-muted submenu-link"
                     (click)="navigateTo(child.route)">
+                    <i [class]="child.icon ? child.icon : 'fa fa-arrow-right'"></i>
                     {{ child.label }}
                   </a>
                 </li>

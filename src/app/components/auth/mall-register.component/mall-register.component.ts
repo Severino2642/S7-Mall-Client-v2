@@ -44,6 +44,7 @@ export class MallRegisterComponent {
       if (res!=null){
         console.log('Centre créé', res);
         alert('Centre créé avec succès');
+        this.router.navigate(['/login']);
       }
       this.isLoading = false;
     } else {

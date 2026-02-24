@@ -1,0 +1,665 @@
+/* Container */
+.products-gallery {
+  background-color: #f9fafb;
+  /*min-height: 60vh;*/
+  padding: 1rem 0;
+}
+
+/* Product Card */
+.product-card {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Image Container */
+.product-image {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background-color: #f3f4f6;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.1);
+}
+
+/* Bouton Découvrir */
+.btn-discover {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.product-card:hover .btn-discover {
+  opacity: 1;
+  bottom: 30px;
+}
+
+.btn-discover:hover {
+  background-color: #153a42;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Body */
+.card-body {
+  background-color: white;
+}
+
+/* Titre et sous-titre */
+.product-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.product-subtitle {
+  font-size: 0.813rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Caractéristiques */
+.product-features {
+  padding: 0.75rem 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.feature {
+  font-size: 0.875rem;
+}
+
+.feature i {
+  font-size: 1rem;
+}
+
+.text-warning {
+  color: var(--warning-color) !important;
+}
+
+/* Prix */
+.product-price {
+}
+
+.price-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Pagination */
+.pagination {
+  gap: 0.5rem;
+}
+
+.page-link {
+  border: none;
+  background-color: white;
+  color: #6b7280;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.page-link:hover {
+  background-color: #f3f4f6;
+  color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+}
+
+.page-item.disabled .page-link {
+  background-color: #f9fafb;
+  color: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.page-item.disabled .page-link:hover {
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .product-title {
+    font-size: 1rem;
+  }
+
+  .price-value {
+    font-size: 1.5rem;
+  }
+
+  .btn-discover {
+    font-size: 0.813rem;
+    padding: 0.625rem 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .products-gallery {
+    padding: 1rem 0;
+  }
+
+  .product-features {
+    flex-wrap: wrap;
+  }
+
+  .feature {
+    font-size: 0.813rem;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Afficher le bouton sur mobile sans hover */
+  .btn-discover {
+    opacity: 1;
+    bottom: 20px;
+  }
+
+  .product-card:hover .btn-discover {
+    bottom: 25px;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-title {
+    font-size: 0.938rem;
+  }
+
+  .product-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .price-value {
+    font-size: 1.375rem;
+  }
+
+  .pagination {
+    gap: 0.25rem;
+  }
+
+  .page-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-card {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* Animation en cascade pour les cartes */
+.col-12:nth-child(1) .product-card {
+  animation-delay: 0.1s;
+}
+
+.col-12:nth-child(2) .product-card {
+  animation-delay: 0.2s;
+}
+
+.col-12:nth-child(3) .product-card {
+  animation-delay: 0.3s;
+}
+
+.col-12:nth-child(4) .product-card {
+  animation-delay: 0.4s;
+}
+
+.col-12:nth-child(5) .product-card {
+  animation-delay: 0.5s;
+}
+
+.col-12:nth-child(6) .product-card {
+  animation-delay: 0.6s;
+}
+
+/* Effet de surbrillance au focus */
+.product-card:focus-within {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 4px;
+}
+
+/* Badge "Nouveau" (optionnel) */
+.badge-new {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* Badge "Promo" (optionnel) */
+.badge-promo {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background-color: var(--warning-color);
+  color: white;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+/* Overlay sombre au hover */
+.product-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.product-card:hover .product-image::before {
+  opacity: 1;
+}
+
+.btn-discover {
+  z-index: 2;
+}
+
+/* Amélioration de la lisibilité */
+.product-features .feature span {
+  font-weight: 500;
+}
+
+/* Style pour les nombres */
+.feature span::before {
+  content: '';
+  margin-right: 0.25rem;
+}
+
+/* Effet de pulse sur les icônes au hover de la carte */
+.product-card:hover .feature i {
+  animation: pulse 1s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Container principal */
+.product-filters {
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 0px; /* Ajustez selon la hauteur de votre header */
+  z-index: 100;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Wrapper des filtres */
+.filters-wrapper {
+  padding: 0 1rem;
+}
+
+/* Groupe de filtre */
+.filter-group {
+  display: flex;
+
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 180px;
+}
+
+/* Label du filtre */
+.filter-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Dropdown button */
+.filter-dropdown {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: #111827;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.625rem 1rem;
+  border-radius: 8px;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  min-width: 180px;
+}
+
+.filter-dropdown:hover {
+  border-color: var(--primary-color);
+  background-color: var(--bg-light);
+}
+
+.filter-dropdown:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 74, 84, 0.1);
+  background-color: white;
+}
+
+.filter-dropdown::after {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Bouton de tri */
+.btn-sort {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: #111827;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.btn-sort:hover {
+  border-color: var(--primary-color);
+  background-color: var(--bg-light);
+  color: var(--primary-color);
+}
+
+.btn-sort:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 74, 84, 0.1);
+  background-color: white;
+}
+
+.btn-sort i {
+  color: var(--text-muted);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  min-width: 220px;
+  margin-top: 0.5rem;
+}
+
+.dropdown-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  padding: 0.5rem 1rem;
+  margin-top: 0.25rem;
+}
+
+.dropdown-item {
+  font-size: 0.875rem;
+  padding: 0.625rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: #374151;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-light);
+  color: var(--primary-color);
+}
+
+.dropdown-item.active {
+  background-color: rgba(26, 74, 84, 0.1);
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.dropdown-item i {
+  width: 20px;
+  opacity: 0.6;
+}
+
+.dropdown-item.active i {
+  opacity: 1;
+}
+
+.dropdown-divider {
+  margin: 0.5rem 0;
+  border-color: var(--border-color);
+}
+
+/* Animation du dropdown */
+.dropdown-menu {
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .filters-wrapper {
+    justify-content: flex-start !important;
+  }
+
+  .filters-left {
+    width: 100%;
+  }
+
+  .filters-right {
+    width: 100%;
+  }
+
+  .btn-sort {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-filters {
+    padding: 1rem 0;
+    position: relative;
+    top: 0;
+  }
+
+  .filter-group {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .filter-dropdown,
+  .btn-sort {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .filters-left {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .filter-label {
+    font-size: 0.65rem;
+  }
+
+  .filter-dropdown,
+  .btn-sort {
+    font-size: 0.813rem;
+    padding: 0.5rem 0.875rem;
+  }
+}
+
+/* État focus visible pour l'accessibilité */
+.filter-dropdown:focus-visible,
+.btn-sort:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Amélioration visuelle au clic */
+.filter-dropdown:active,
+.btn-sort:active {
+  transform: scale(0.98);
+}
+
+/* Badge de compte (optionnel) */
+.filter-count {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  margin-left: 0.5rem;
+}
+
+/* Style pour le dropdown ouvert */
+.dropdown-toggle[aria-expanded="true"] {
+  border-color: var(--primary-color);
+  background-color: var(--bg-light);
+}
+
+/* Icône personnalisée pour le chevron */
+.dropdown-toggle::after {
+  border: none;
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.75rem;
+  vertical-align: middle;
+  color: var(--text-muted);
+}
+
+.dropdown-toggle[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+  color: var(--primary-color);
+}
+
+/* Animation du chevron */
+.dropdown-toggle::after {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Effet de surbrillance sur les options */
+.dropdown-item:focus {
+  outline: none;
+  background-color: var(--bg-light);
+  color: var(--primary-color);
+}
+
+/* Séparateur visuel entre les filtres */
+.filter-group:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 30px;
+  background-color: var(--border-color);
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .filter-group {
+    position: relative;
+  }
+
+  .filter-group:not(:last-child)::after {
+    display: block;
+  }
+}

@@ -1,0 +1,137 @@
+<div class="page-header">
+  <div class="container-fluid">
+
+    <div class="header-top mb-4">
+      <div>
+        <h4>D&eacute;couvrer nos articles</h4>
+      </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <div class="filters-section">
+
+      <!-- Recherche -->
+      <div class="search-box">
+        <i class="fa fa-search search-icon"></i>
+        <input
+          type="text"
+          class="search-input"
+          [(ngModel)]="filters.nom"
+          (input)="applyFilters()"
+          placeholder="Search stores...">
+      </div>
+      <div class="filter-group col-12 col-md-3">
+        <input
+          type="number"
+          class="form-control filter-dropdown search-input-number"
+          placeholder="Prix min"
+          [(ngModel)]="filters.prix_min"
+          (change)="applyFilters()">
+      </div>
+      <div class="filter-group col-12 col-md-3">
+        <input
+          type="number"
+          class="form-control filter-dropdown search-input-number"
+          placeholder="Prix max"
+          [(ngModel)]="filters.prix_max"
+          (change)="applyFilters()">
+      </div>
+      <!-- Tri -->
+      <div class="sort-select">
+        <select
+          class="form-select"
+          [(ngModel)]="filters.categorie"
+          (change)="applyFilters()">
+          <option value="">Tous</option>
+          <option *ngFor="let option of categories" [value]="option._id">
+            {{ option.val }}
+          </option>
+        </select>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="container-fluid pl-4 pr-4">
+  <div class="row g-3" style="min-height: 60vh">
+    <div *ngFor="let item of getPaginatedItems()" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+
+      <div class="product-card">
+        <!-- Badge remise -->
+        <!--        <span class="badge-discount">11% off</span>-->
+
+        <!-- Badge statut -->
+        <!--              <div class="m-0 d-flex align-items-center bg-transparent w-100 h-100 position-absolute" style="z-index: 400">-->
+        <!--                <div class="spinner-border text-primary" role="status"></div>-->
+        <!--              </div>-->
+        <span class="badge-status badge-red">limit&eacute;</span>
+
+        <!-- Image -->
+        <div class="product-image">
+          <img src="{{item.photo?.url}}" alt="{{item.photo?.nom}}" (click)="goToDetails(item._id||'')">
+
+          <!-- Bouton Quick Add -->
+          <button class="btn-quick-add" [disabled]="loading" (click)="addToCart(item)">
+            <i class="fa fa-add" *ngIf="!loading"></i>
+            <i class="spinner-border" *ngIf="loading"></i>
+          </button>
+        </div>
+
+        <!-- Prix -->
+        <div class="product-price" (click)="goToDetails(item._id||'')">
+          <span><sup>Ar</sup>{{UtilitaireUtil.formatAmountV2(item.prix)}}<sup>00</sup></span>
+          <!--                <span class="price-original">List: $99.99</span>-->
+        </div>
+
+        <!-- Titre -->
+        <h3 class="product-title text-truncate-3 mb-1" (click)="goToDetails(item._id||'')">
+          {{item.nom}}
+        </h3>
+        <p class="product-description text-truncate-3 p-0 mb-1" (click)="goToDetails(item._id||'')">{{item.description}}</p>
+        <!-- Indicateur de vente -->
+        <!--        <div class="sales-indicator">-->
+        <!--          <span class="sales-text">54% claimed</span>-->
+        <!--          <div class="progress-bar">-->
+        <!--            <div class="progress-fill" style="width: 100%;"></div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!-- Lien -->
+        <a href="javascript:void(0)" class="product-link" (click)="goToBoutique(item.idBoutique)">{{item.boutique?.nom}}</a>
+      </div>
+    </div>
+  </div>
+  <nav aria-label="Navigation des produits" class="mt-5">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a
+          class="page-link"
+          tabindex="-1"
+          (click)="previousPage()"
+          href="javascript:void(0)">
+          <i class="fa fa-chevron-left"></i>
+        </a>
+      </li>
+      <li
+        class="page-item"
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        [class.active]="currentPage === i + 1">
+        <a
+          class="page-link"
+          href="javascript:void(0)"
+          (click)="goToPage(i + 1)">
+          {{ i + 1 }}
+        </a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link"
+           href="javascript:void(0)"
+           (click)="nextPage()">
+          <i class="fa fa-chevron-right"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</div>

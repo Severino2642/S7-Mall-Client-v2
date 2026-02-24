@@ -1,0 +1,162 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <!-- Contenu principal -->
+  <main class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div>
+        <h4 class="text-3xl font-bold" style="color: #101828;">{{getTitre()}}</h4>
+      </div>
+      <div class="boxe-form-container">
+        <form [formGroup]="boxeForm" (ngSubmit)="submitForm()">
+
+          <!-- General Information Section -->
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+              <!-- Section Header -->
+              <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center">
+                  <i class="fa fa-info-circle text-white"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-semibold">Information General</h6>
+                  <small class="text-muted">Details de l'objet</small>
+                </div>
+              </div>
+
+              <!-- Form Fields -->
+              <div class="row g-3">
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Nom
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('nom')"
+                    formControlName="nom"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('nom')">
+                    {{ getFieldError('nom') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Prenom <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('prenom')"
+                    formControlName="prenom"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('prenom')">
+                    {{ getFieldError('prenom') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('email')"
+                    formControlName="email"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                    {{ getFieldError('email') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Contact
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('contact')"
+                    formControlName="contact"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('contact')">
+                    {{ getFieldError('contact') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Boutique <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('idBoutique')"
+                    formControlName="idBoutique">
+                    <option value="" disabled>Selectionner</option>
+                    <option *ngFor="let item of listBoutique" [value]="item._id">
+                      {{ item.nom }} - {{item.boxe?.nom}} - {{item.centreCommercial?.nom}}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('idBoutique')">
+                    {{ getFieldError('idBoutique') }}
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Identifiant <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('identifiant')"
+                    formControlName="identifiant"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('identifiant')">
+                    {{ getFieldError('identifiant') }}
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <label class="form-label fw-medium">
+                    Mot de passe <span class="text-danger" *ngIf="!isEditMode">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('mdp')"
+                    formControlName="mdp"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('mdp')">
+                    {{ getFieldError('mdp') }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="card-footer form-actions d-flex gap-2 justify-content-end">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetForm()">
+                <i class="fa fa-times"></i>
+                R&eacute;initialiser
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="boxeForm.invalid">
+                <i class="fa fa-check"></i>
+                {{ isEditMode ? 'Modifier' : 'Enregistrer' }}
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+</div>
+

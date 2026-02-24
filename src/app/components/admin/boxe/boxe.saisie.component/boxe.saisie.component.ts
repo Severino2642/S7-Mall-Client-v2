@@ -34,11 +34,10 @@ export class BoxeSaisieComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
-    if (this.id) {
+    if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
       this.isEditMode = true;
-
     } else {
       // Mode création
       this.isEditMode = false;
@@ -118,15 +117,14 @@ export class BoxeSaisieComponent implements OnInit {
   async createItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     var res = await this.boxeService.create(formData);
-    this.router.navigate([`admin/boxe/${res._id}`]);
+    this.router.navigate([`admin/boxe/details/${res._id}`]);
     this.loading = false;
   }
 
   async updateItem(formData: BoxeModel): Promise<void> {
     this.loading = true;
     await this.boxeService.update(this.id!, formData);
-    // this.router.navigate([`admin/boxe/${this.id}`]);
-    this.router.navigate([`admin/boxe`]);
+    this.router.navigate([`admin/boxe/details/${this.id}`]);
     this.loading = false;
   }
   // Annuler

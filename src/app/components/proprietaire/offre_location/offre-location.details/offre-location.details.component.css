@@ -1,0 +1,593 @@
+
+/* Titre */
+.product-title {
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.product-title .text-primary {
+  color: var(--primary-color) !important;
+  font-weight: 700;
+}
+
+/* ========================================
+   GALERIE D'IMAGES - CÔTÉ GAUCHE
+   ======================================== */
+
+.gallery-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Image principale */
+.main-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  cursor: zoom-in;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.main-image-container:hover .main-image {
+  transform: scale(1.05);
+}
+
+/* Badge type d'image */
+.image-type-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(26, 74, 84, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+/* Bouton zoom */
+.btn-zoom {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.25rem;
+}
+
+.btn-zoom:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Wrapper du carousel */
+.thumbnails-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Carousel de thumbnails */
+.thumbnails-carousel {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0;
+  flex: 1;
+  /* Cacher la scrollbar mais garder la fonctionnalité */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.thumbnails-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thumbnail item */
+.thumbnail-item {
+  position: relative;
+  min-width: 100px;
+  width: 100px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.thumbnail-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.thumbnail-item:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.thumbnail-item:hover img {
+  transform: scale(1.1);
+}
+
+.thumbnail-item.active {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(26, 74, 84, 0.2);
+}
+
+/* Badge sur thumbnail */
+.thumbnail-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(26, 74, 84, 0.9);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* Boutons de navigation du carousel */
+.carousel-nav {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.carousel-nav:hover {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.carousel-nav:active {
+  transform: scale(0.95);
+}
+
+/* ========================================
+   DÉTAILS DU PRODUIT - CÔTÉ DROIT
+   ======================================== */
+
+.product-info {
+  border-radius: 8px;
+}
+
+.model-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Caractéristiques principales */
+.main-features {
+  background-color: var(--bg-light);
+  border-radius: 8px;
+}
+
+.feature-box {
+  padding: 1rem;
+}
+
+.feature-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.25rem;
+}
+
+.feature-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sections */
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.description {
+  line-height: 1.7;
+}
+
+.main-details{
+  border-top: 2px solid var(--border-color);
+  padding: 0.5rem 0;
+}
+/* Liste des caractéristiques */
+.feature-item {
+  padding: 0.5rem 0;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.feature-item i {
+  flex-shrink: 0;
+}
+
+/* Prix */
+.price-section {
+  border-top: 2px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
+  padding: 1rem 0;
+}
+
+.price-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Boutons d'action */
+.actions-buttons .btn {
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.actions-buttons input {
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 1.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--hover-color);
+}
+
+.btn-primary:hover {
+  color: var(--primary-color);
+  border-color: var(--hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(103, 103, 103, 0.3);
+  background-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.stat-box {
+  padding: 0.75rem 0;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.stat-value-muted {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ========================================
+   LIGHTBOX / POPUP
+   ======================================== */
+
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.lightbox-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Bouton fermer */
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.lightbox-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Image de la lightbox */
+.lightbox-image-wrapper {
+  max-width: 90%;
+  max-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Navigation de la lightbox */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.lightbox-nav:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-nav-left {
+  left: 2rem;
+}
+
+.lightbox-nav-right {
+  right: 2rem;
+}
+
+/* Compteur */
+.lightbox-counter {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+/* Thumbnails de la lightbox */
+.lightbox-thumbnails {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  max-width: 90%;
+  overflow-x: auto;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.lightbox-thumbnail {
+  min-width: 80px;
+  width: 80px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lightbox-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightbox-thumbnail:hover {
+  border-color: white;
+  transform: scale(1.05);
+}
+
+.lightbox-thumbnail.active {
+  border-color: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 992px) {
+  .product-info {
+    position: relative;
+    top: 0;
+  }
+
+  .main-image-container {
+    aspect-ratio: 4/3;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-title {
+    font-size: 1.5rem;
+  }
+
+  .model-name {
+    font-size: 1.5rem;
+  }
+
+  .price-value {
+    font-size: 1.75rem;
+  }
+
+  .thumbnail-item {
+    min-width: 80px;
+    width: 80px;
+    height: 64px;
+  }
+
+  .carousel-nav {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+
+  .lightbox-nav {
+    width: 44px;
+    height: 44px;
+  }
+
+  .lightbox-nav-left {
+    left: 1rem;
+  }
+
+  .lightbox-nav-right {
+    right: 1rem;
+  }
+
+  .lightbox-thumbnails {
+    bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  .lightbox-thumbnail {
+    min-width: 60px;
+    width: 60px;
+    height: 45px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Scrollbar personnalisée pour les thumbnails */
+.lightbox-thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.lightbox-thumbnails::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}

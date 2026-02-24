@@ -1,0 +1,191 @@
+<app-header></app-header>
+<div class="d-flex flex-column" style="background-color: #f7f8fa;">
+  <main class="m-auto" style="width: 85%">
+    <div class="shopping-cart-page">
+      <div class="container-fluid py-4">
+        <div class="row">
+
+          <!-- COLONNE GAUCHE - Liste des articles -->
+          <div class="col-12 col-lg-9">
+            <div class="cart-main">
+
+              <!-- En-tête -->
+              <div class="cart-header">
+                <h1 class="cart-title">Panier</h1>
+                <button class="btn-deselect" (click)="deselectAll()">
+                  Deselect all items
+                </button>
+              </div>
+
+              <!-- Label prix -->
+              <div class="price-label text-end mb-3">
+                <strong>Price</strong>
+              </div>
+
+              <hr class="mb-4">
+
+              <!-- Liste des articles -->
+              <div class="cart-items">
+                <div *ngFor="let item of cartItems" class="cart-item">
+
+                  <!-- Checkbox -->
+                  <div class="item-checkbox">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [(ngModel)]="item.selected"
+                      (change)="toggleItemSelection(item)">
+                  </div>
+
+                  <!-- Image -->
+                  <div class="item-image">
+                    <img [src]="item.produit?.photo?.url" [alt]="item.produit?.photo?.nom">
+                  </div>
+
+                  <!-- Détails -->
+                  <div class="item-details">
+                    <h3 class="item-name">{{ item.produit?.nom }}</h3>
+
+                    <div class="item-status mb-2" *ngIf="(item.produit?.quantite||0)>0">
+                      <span class="text-success">
+                        <i class="fa fa-check-circle me-1"></i>
+                        En Stock
+                      </span>
+                    </div>
+                    <div class="item-status mb-2" *ngIf="(item.produit?.quantite||0)<=0">
+                      <span class="text-danger">
+                        <i class="fa fa-ban me-1"></i>
+                        Rupture de stock
+                      </span>
+                    </div>
+
+                    <div class="item-options mt-2 text-dark">
+                      <span class="me-3" *ngFor="let v of item.produit?.variantes">
+                        <strong>{{v.val}}:</strong> {{ v.desce }}
+                      </span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="item-actions mt-3">
+                      <!-- Quantité -->
+                      <div class="quantity-selector border-warning border-3">
+                        <button
+                          class="qty-btn"
+                          (click)="decrementQuantity(item)"
+                          [disabled]="loading">
+                          <i class="fa fa-{{(item.quantite||0) <= 1? 'trash-alt' : 'minus'}}"></i>
+                        </button>
+                        <span class="fw-bold pl-2 pr-2">
+                          <ng-container *ngIf="!loading">
+                            {{item.quantite}}
+                          </ng-container>
+                          <div class="loader" *ngIf="loading"></div>
+                        </span>
+                        <button
+                          class="qty-btn"
+                          (click)="incrementQuantity(item)"
+                          [disabled]="loading || (item.produit?.quantite||0) <= (item.quantite||0)">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+
+                      <span class="action-separator">|</span>
+
+                      <!-- Supprimer -->
+                      <button class="btn-action" (click)="deleteItem(item)">
+                        Delete
+                      </button>
+
+                      <span class="action-separator">|</span>
+
+                      <!-- Sauvegarder -->
+                      <button class="btn-action" (click)="goToBoutique(item.produit?.idBoutique||'')">
+                        {{item.produit?.boutique?.nom}}
+                      </button>
+
+                      <span class="action-separator">|</span>
+
+                      <!-- Comparer -->
+                      <button class="btn-action" (click)="goToMall(item.produit?.centreCommercial?._id||'')">
+                        {{item.produit?.centreCommercial?.nom}}
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Prix -->
+                  <div class="item-price">
+                    <!-- Badge -->
+<!--                    <div class="deal-badge mb-2" *ngIf="item.badge">-->
+<!--                      {{ item.badge }}-->
+<!--                    </div>-->
+
+                    <!-- Réduction -->
+<!--                    <div class="discount-badge mb-1" *ngIf="item.discount">-->
+<!--                      -{{ item.discount }}%-->
+<!--                    </div>-->
+
+                    <!-- Prix actuel -->
+                    <div class="current-price mb-1">
+                      <sup>Ar</sup>{{ UtilitaireUtil.formatAmountV2(item.produit?.prix) }}<sup>00</sup>
+                    </div>
+
+                    <!-- Info prix -->
+                    <div class="price-info">
+                      (Ar{{ UtilitaireUtil.formatAmountV2(item.produit?.prix) }} / unit&eacute;)
+                    </div>
+
+                    <!-- Prix original -->
+<!--                    <div class="original-price" *ngIf="item.originalPrice">-->
+<!--                      List Price: <span class="line-through">${{ item.originalPrice.toFixed(2) }}</span>-->
+<!--                    </div>-->
+                  </div>
+
+                </div>
+
+                <hr class="my-4">
+              </div>
+
+              <!-- Sous-total bas -->
+              <div class="subtotal-bottom text-end">
+                <strong>Total ({{ getSelectedItemsCount() }} items): {{ UtilitaireUtil.formatAmountV2(getSubtotal()) }} <small class="text-muted">Ar</small></strong>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- COLONNE DROITE - Résumé -->
+          <div class="col-12 col-lg-3">
+            <div class="cart-summary sticky-top">
+
+              <!-- Sous-total -->
+              <div class="summary-subtotal mb-3">
+                <span>Total ({{ getSelectedItemsCount() }} items): </span>
+                <strong class="text-dark">{{ UtilitaireUtil.formatAmountV2(getSubtotal()) }} <small class="text-muted">Ar</small></strong>
+              </div>
+
+              <!-- Option cadeau -->
+<!--              <div class="gift-option mb-3">-->
+<!--                <input-->
+<!--                  type="checkbox"-->
+<!--                  class="form-check-input me-2"-->
+<!--                  id="orderGift">-->
+<!--                <label for="orderGift">This order contains a gift</label>-->
+<!--              </div>-->
+
+              <!-- Bouton checkout -->
+              <button
+                class="btn btn-warning w-100"
+                (click)="proceedToCheckout()"
+                [disabled]="getSelectedItemsCount() === 0">
+                Passez à la commande
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+  <app-footer></app-footer>
+</div>

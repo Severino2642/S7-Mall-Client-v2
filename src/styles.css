@@ -7,12 +7,23 @@
   --primary-color: #1A4A54;
   --secondary-color: #DDC9A4;
   --success-color: #28a745;
-  --warning-color: #ffc107;
+  --warning-color: #fbbf24;
   --danger-color: #dc3545;
   --hover-color: #ecf0f4;
   --header-height: 60px;
   --header-bg: #ffffff;
   --header-border: #e5e7eb;
+  --border-color: #e5e7eb;
+  --text-muted: #6b7280;
+  --bg-light: #f9fafb;
+  --text-primary: #111827;
+  --text-dark: #0f1111;
+  --red-badge: #cc0c39;
+  --purple-badge: #7c2d8e;
+  --header-dark: #0f1c21;
+  --header-hover: #16333d;
+  --text-light: #ffffff;
+  --info-color: #3b82f6;
 }
 
 
@@ -20,4 +31,75 @@
   padding: 20px;
   background-color: #f8f9fa;
   min-height: 100vh;
+}
+
+.card {
+  border-radius: 8px;
+}
+
+.badge {
+  padding: 0.4em 0.8em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724 !important;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404 !important;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24 !important;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Optionnel : hauteur fixe pour plus de contrôle */
+  /*max-height: calc(1.5em * 3); !* Si line-height: 1.5 *!*/
+  /*line-height: 1.5;*/
+}
+
+.loader {
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(farthest-side, #12a8ff 94%,#0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%, #12a8ff);
+  -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+  animation: l13 1s infinite linear;
+}
+@keyframes l13{
+  100%{transform: rotate(1turn)}
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.125rem;
+}
+
+.stat-value,
+.stat-value-muted {
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: #111827 !important;
 }

@@ -1,0 +1,166 @@
+<app-header></app-header>
+<div class="d-flex flex-column" style="background-color: #f8f9fa;">
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="pl-4 pr-4" style="background-color: #f8f9fa;">
+    <div class="p-4" style="width: 90%; margin: auto">
+      <div class="store-page" *ngIf="item">
+
+        <!-- BANNIÈRE -->
+        <div class="store-banner">
+          <img [src]="item.pdc?.url" [alt]="item.pdc?.nom + ' banner'" class="banner-image">
+        </div>
+
+        <!-- EN-TÊTE BOUTIQUE -->
+        <div class="store-header-section">
+          <div class="container-fluid">
+            <div class="store-header">
+
+              <!-- Logo et infos -->
+              <div class="store-info-left">
+                <div class="store-logo">
+                  <img [src]="item.pdp?.url" [alt]="item.pdp?.nom">
+                </div>
+
+                <div class="store-details">
+                  <h1 class="store-name">{{ item.nom }}</h1>
+
+                  <div class="store-meta">
+                    <!--                    <div class="rating">-->
+                    <!--                      <span>-->
+                    <!--                        <i class="fa fa-star"></i>-->
+                    <!--                        <i class="fa fa-star"></i>-->
+                    <!--                        <i class="fa fa-star"></i>-->
+                    <!--                        <i class="fa fa-star"></i>-->
+                    <!--                        <i class="fa fa-star-half"></i>-->
+                    <!--                      </span>-->
+                    <!--                      <span class="rating-count">({{ 4 | number }} reviews)</span>-->
+                    <!--                    </div>-->
+
+                    <!--                    <span class="meta-separator">•</span>-->
+
+                    <div class="followers">
+                      <i class="fa fa-users"></i>
+                      <span>{{UtilitaireUtil.formatNumberToMetric(item.followers?.length||0)}} followers</span>
+                    </div>
+
+                    <span class="meta-separator">•</span>
+
+                    <div class="followers">
+                      <i class="fa fa-map-marker-alt"></i>
+                      <span>{{ item.adresse }}</span>
+                    </div>
+                    <span class="meta-separator">•</span>
+
+                    <!-- Statut ouvert/fermé -->
+                    <div class="store-status" [class.open]="item.isOuvert">
+                      <i class="fa fa-circle"></i>
+                      <span>{{ CentreCommercial.getStatusLabel(item.isOuvert) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="store-actions">
+                <button
+                  class="btn btn-follow"
+                  [class.following]="isFollowing"
+                  (click)="toggleFollow()">
+                  <i class="fa" [class.fa-plus]="!isFollowing" [class.fa-check]="isFollowing"></i>
+                  {{ isFollowing ? 'Following' : 'Follow' }}
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="store-navigation">
+          <div class="container-fluid">
+            <nav class="store-nav">
+              <a
+                *ngFor="let item of menuItems"
+                href="javascript:void(0)"
+                class="nav-item"
+                [class.active]="item.active"
+                (click)="selectMenu(item.id)">
+                {{ item.label }}
+              </a>
+            </nav>
+
+            <!-- Barre de recherche -->
+            <!--            <div class="store-search">-->
+            <!--              <form (submit)="onSearch(); $event.preventDefault()">-->
+            <!--                <div class="search-input-wrapper">-->
+            <!--                  <i class="fa fa-search search-icon"></i>-->
+            <!--                  <input-->
+            <!--                    type="text"-->
+            <!--                    class="search-input"-->
+            <!--                    [(ngModel)]="searchQuery"-->
+            <!--                    [placeholder]="'Search all ' + item.nom"-->
+            <!--                    name="search">-->
+            <!--                </div>-->
+            <!--              </form>-->
+            <!--            </div>-->
+          </div>
+        </div>
+
+        <!-- CONTENU PRINCIPAL -->
+        <div class="store-content">
+          <div class="container-fluid">
+            <div class="w-100">
+
+              <!-- COLONNE GAUCHE - Informations boutique -->
+              <!--              <div class="col-12 col-lg-2">-->
+              <!--                <div class="store-sidebar">-->
+
+              <!--                  &lt;!&ndash; Contact &ndash;&gt;-->
+              <!--                  <div class="sidebar-card">-->
+              <!--                    <h3 class="sidebar-title">-->
+              <!--                      <i class="fa fa-map-marker-alt me-2"></i>-->
+              <!--                      Contact Information-->
+              <!--                    </h3>-->
+              <!--                    <div class="contact-info">-->
+              <!--                      <div class="contact-item">-->
+              <!--                        <i class="fa fa-map-marker-alt"></i>-->
+              <!--                        <span>{{ item.adresse }}</span>-->
+              <!--                      </div>-->
+              <!--                      <div class="contact-item">-->
+              <!--                        <i class="fa fa-phone"></i>-->
+              <!--                        <a [href]="'tel:' + item.adresse">{{ item.adresse }}</a>-->
+              <!--                      </div>-->
+              <!--                      <div class="contact-item">-->
+              <!--                        <i class="fa fa-envelope"></i>-->
+              <!--                        <a [href]="'mailto:' + item.adresse">{{item.adresse }}</a>-->
+              <!--                      </div>-->
+              <!--                      <div class="contact-item">-->
+              <!--                        <i class="fa fa-globe"></i>-->
+              <!--                        <a [href]="'https://' + item.adresse" target="_blank">{{ item.adresse }}</a>-->
+              <!--                      </div>-->
+              <!--                    </div>-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--              </div>-->
+
+              <!-- COLONNE DROITE - Produits -->
+              <div class="w-100">
+                <div *ngIf="activeTab=='tab1'">
+                  <app-centre-commercial-boutique-liste [idCentreCommercial]="item._id"></app-centre-commercial-boutique-liste>
+                </div>
+                <div *ngIf="activeTab=='tab2'">
+                  <app-centre-commercial-produit-liste [idCentreCommercial]="item._id||''"></app-centre-commercial-produit-liste>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,157 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+  <!-- Contenu principal -->
+  <div *ngIf="isLoading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main  *ngIf="!isLoading"  class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div>
+        <h4 class="text-3xl font-bold" style="color: #101828;">Ajout de fichier rattacher</h4>
+      </div>
+      <div class="multi-file-form-container">
+
+        <!-- En-tête avec actions -->
+        <div class="form-header d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="mb-1">Gestion des fichiers</h5>
+            <small class="text-muted">{{ files.length }} ligne(s) - {{ getSelectedCount() }} sélectionnée(s)</small>
+          </div>
+          <div class="d-flex gap-2">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              [disabled]="!hasSelection()"
+              (click)="deleteSelected()">
+              <i class="fa fa-trash me-1"></i>
+              Supprimer sélection
+            </button>
+            <button
+              class="btn btn-sm btn-primary"
+              (click)="addRow()">
+              <i class="fa fa-plus me-1"></i>
+              Ajouter une ligne
+            </button>
+          </div>
+        </div>
+
+        <!-- Tableau avec formulaire -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+              <!-- Checkbox select all -->
+              <th style="width: 50px;" class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="selectAll"
+                  (change)="toggleSelectAll()">
+              </th>
+
+              <!-- Colonnes -->
+              <th style="width: 40px;">#</th>
+              <th style="width: 30%;">Nom du fichier <span class="text-danger">*</span></th>
+              <th style="width: 35%;">URL <span class="text-danger">*</span></th>
+              <th style="width: 20%;">Type</th>
+              <th style="width: 80px;" class="text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let file of files; let i = index; trackBy: trackByFn">
+
+              <!-- Checkbox -->
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="file.selected"
+                  (change)="updateSelectAll()">
+              </td>
+
+              <!-- Numéro de ligne -->
+              <td class="text-center text-muted">
+                {{ i + 1 }}
+              </td>
+
+              <!-- Nom du fichier -->
+              <td>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="file.nom"
+                  placeholder="Nom du fichier"
+                  required>
+              </td>
+
+              <!-- URL -->
+              <td>
+                <input
+                  type="file"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="file.url"
+                  placeholder="https://..."
+                  accept="image/*"
+                  (change)="onFileSelected(i,$event)"
+                  required>
+              </td>
+
+              <!-- Type de fichier -->
+              <td>
+                <select
+                  class="form-select form-select-sm"
+                  [(ngModel)]="file.idType">
+                  <option *ngFor="let type of fileTypes" [value]="type._id">
+                    {{ type.desce }}
+                  </option>
+                </select>
+              </td>
+
+              <!-- Actions -->
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteRow(i)"
+                  title="Supprimer cette ligne">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Ligne vide si aucune donnée -->
+            <tr *ngIf="files.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">
+                <i class="fa fa-inbox fa-2x mb-2 d-block opacity-25"></i>
+                <p class="mb-0">Aucune ligne. Cliquez sur "Ajouter une ligne" pour commencer.</p>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Actions du formulaire -->
+        <div class="form-actions d-flex justify-content-end gap-2 mt-3">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="cancel()">
+            <i class="fa fa-times me-2"></i>
+            Annuler
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="submitForm()"
+            [disabled]="files.length === 0">
+            <i class="fa fa-check me-2"></i>
+            Enregistrer ({{ files.length }})
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+

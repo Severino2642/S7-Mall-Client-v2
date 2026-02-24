@@ -8,13 +8,6 @@
   </div>
   <!-- Contenu principal -->
   <main *ngIf="!loading" class="flex-1 overflow-y-auto">
-    <!-- Header -->
-<!--    <header class="bg-white shadow-sm">-->
-<!--      <div class="px-8 py-6">-->
-<!--        <h1 class="text-3xl font-bold" style="color: #101828;">Liste des boxes</h1>-->
-<!--        <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace de gestion des boxes</p>-->
-<!--      </div>-->
-<!--    </header>-->
     <app-header></app-header>
     <div class="main-page">
       <div>
@@ -178,7 +171,7 @@
               <tbody>
               <tr *ngFor="let item of getPaginatedItems()">
                 <td class="fw-semibold" style="color: #1A4A54;">
-                  {{ item._id }}
+                  <a [routerLink]="['/admin/boxe/details', item._id]">{{ item._id }}</a>
                 </td>
                 <td>
                   {{ item.nom }}
@@ -190,8 +183,8 @@
                   {{ formatTaille(item.longueur,item.largeur) }}
                 </td>
                 <td>
-                  <span class="badge" [ngClass]="getStatusClass(item.status)">
-                    {{ getStatusLabel(item.status) }}
+                  <span class="badge" [ngClass]="Boxe.getStatusClass(item.status)">
+                    {{ Boxe.getStatusLabel(item.status) }}
                   </span>
                 </td>
                 <td>
@@ -227,7 +220,7 @@
         <!-- Pagination -->
         <div class="pagination-box card-footer border-top d-flex justify-content-between align-items-center">
           <div class="text-muted" style="font-size: 0.875rem;">
-            Affichage de {{ (currentPage - 1) * itemsPerPage + 1 }} sur {{ filteredItems.length }} résultats
+            Affichage de {{ getPaginatedItems().length }} sur {{ filteredItems.length }} résultats
           </div>
 
           <nav>
