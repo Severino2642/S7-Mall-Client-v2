@@ -1,8 +1,8 @@
 import {ActivatedRoute, Router} from "@angular/router";
 
 export class UrlUtil{
-  // static apiUrl = 'http://localhost:3000';
-  static apiUrl = 'https://s7-mall-management-server.vercel.app';
+  static apiUrl = 'http://localhost:3000';
+  // static apiUrl = 'https://s7-mall-management-server.vercel.app';
 
   static async refreshCurrentRoute(route: ActivatedRoute, router: Router): Promise<void> {
     try {

@@ -124,6 +124,7 @@ import {
 import {
   LocationBoxeFormComponent
 } from "./components/proprietaire/location_boxe/location-boxe-form/location-boxe-form.component";
+import {AdminDashboardComponent} from "./components/admin/admin-dashboard/admin-dashboard.component";
 
 export const routes: Routes = [
     { path: 'login', component:  LoginComponent},
@@ -224,6 +225,8 @@ export const routes: Routes = [
     { path: 'client/market/commande/details/:id', component:  CommandeDetailsComponent},
     { path: 'client/market/bon_commande/details/:id', component:  MarketBonCommandeDetailsComponent},
 
+    // Dashboard admin
+    { path: 'admin/dashboard', component:  AdminDashboardComponent},
 
     { path: 'admin/parking', component:  ParkingComponent},
     { path: 'invoice', component:  InvoicesComponent},

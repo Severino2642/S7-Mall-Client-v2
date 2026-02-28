@@ -33,9 +33,9 @@ export class HeaderComponent {
   idUser = "";
   // Breadcrumb
   breadcrumbs = [
-    { label: 'Dashboard', link: '/dashboard' },
-    { label: 'Home', link: '/home' },
-    { label: 'Accounting', link: null } // null = page actuelle
+    { label: '----', link: '/' },
+    { label: '----', link: '/' },
+    { label: '----', link: null } // null = page actuelle
   ];
 
   constructor(
@@ -55,7 +55,7 @@ export class HeaderComponent {
     else {
       this.idUser = boutique._id;
     }
-
+    this.updateBreadcrumbs();
     await this.loadNotifications();
     this.notifRefreshTimer = setInterval(() => {
       this.loadNotifications();
@@ -130,6 +130,26 @@ export class HeaderComponent {
     }
   }
 
+  getCleanUrlSegments(): string[] {
+    const url = this.router.url;
+    // Enlever les paramètres d'URL (ex: ?id=123)
+    const urlWithoutParams = url.split('?')[0];
+
+    return urlWithoutParams.split('/').filter(segment => segment !== '');
+  }
+
+  updateBreadcrumbs(): void {
+    const segments = this.getCleanUrlSegments();
+    this.breadcrumbs = segments.map((segment, index) => {
+      const label = segment.charAt(0).toUpperCase() + segment.slice(1);
+      const link = '/' + segments.slice(0, index + 1).join('/');
+      return { label, link };
+    });
+    // Marquer le dernier breadcrumb comme page actuelle
+    if (this.breadcrumbs.length > 0) {
+      this.breadcrumbs[this.breadcrumbs.length - 1].link = null;
+    }
+  }
   // Raccourci clavier pour la recherche (⌘F ou Ctrl+F)
   // handleSearchShortcut(event: KeyboardEvent): void {
   //   if ((event.metaKey || event.ctrlKey) && event.key === 'f') {

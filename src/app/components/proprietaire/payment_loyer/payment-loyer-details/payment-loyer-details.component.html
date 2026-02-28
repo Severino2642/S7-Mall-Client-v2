@@ -37,6 +37,14 @@
                     <div class="stat-value-muted">{{ item?.date | date:'dd/MM/YYYY' }}</div>
                   </div>
                 </div>
+                <div class="col-12 col-md-3">
+                  <div class="stat-box">
+                    <div class="stat-label text-uppercase text-muted">Contrat de location</div>
+                    <div class="stat-value">
+                      <a [routerLink]="['/owner/location_boxe/details',item?.idBoutique]">{{ item?.idBoutique }}</a>
+                    </div>
+                  </div>
+                </div>
                 <div class="col-6 col-md-3" *ngIf="roleUser===ConstanteUtil.role_proprietaire">
                   <div class="stat-box">
                     <div class="stat-label text-uppercase text-muted">Centre Commercial</div>

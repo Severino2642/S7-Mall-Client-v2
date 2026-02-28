@@ -9,6 +9,7 @@ import {NavbarComponent} from "../../navbar.component/navbar.component";
 import {HeaderComponent} from "../../header.component/header.component";
 import {CommonModule, NgIf} from "@angular/common";
 import {OffreLocationServiceService} from "../../../../services/offre_location.service/offre-location.service.service";
+import {ConstanteUtil} from "../../../../utils/constante.util";
 
 @Component({
   selector: 'app-offre-location.form',
@@ -55,7 +56,7 @@ export class OffreLocationFormComponent {
     var auth = StorageUtil.getFromStorage<any>("auth");
     var res = await this.boxeService.getByIdCentreCommercial(auth?.idUser);
     if (res!=null){
-      this.listBoxe = res;
+      this.listBoxe = res.filter(boxe => boxe.status===ConstanteUtil.ETAT_DISPONIBLE || (this.isEditMode && boxe._id === this.item?.idBoxe));
       console.log("Liste des boxe du centre commercial:", this.listBoxe);
     }
     this.loading = false;

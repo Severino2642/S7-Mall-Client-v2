@@ -138,5 +138,8 @@ export class OffreLocationDetailsFrontOfficeComponent {
     this.loading = false;
   }
 
+  gotoMall():void{
+    this.router.navigate(['owner/centre_commercial/details',this.item?.idCentreCommercial]);
+  }
   protected readonly UtilitaireUtil = UtilitaireUtil;
 }

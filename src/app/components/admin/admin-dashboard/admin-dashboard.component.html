@@ -1,0 +1,48 @@
+<div class="flex h-screen" style="background-color: #f5f5f5;">
+  <!-- Sidebar à gauche -->
+  <app-navbar></app-navbar>
+
+  <div *ngIf="loading" class="text-center py-4 position-absolute" style="top: 50%;left: 50%">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Chargement...</div>
+  </div>
+  <main *ngIf="!loading" class="flex-1 overflow-y-auto">
+    <app-header></app-header>
+    <div class="main-page">
+      <div class="dashboard-container">
+
+        <!-- En-tête -->
+        <div>
+          <h4 class="text-3xl font-bold" style="color: #101828;">Tableau de bord</h4>
+          <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace de gestion de location</p>
+        </div>
+        <!-- KPI Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-12 col-sm-6 col-xl-3" *ngFor="let card of kpiCards">
+            <div class="kpi-card d-flex align-items-start justify-content-between" [style.border-left-color]="card.color">
+              <div class="kpi-body p-0 m-0">
+                <div class="kpi-value p-0 m-0">{{ formatValue(card) }}</div>
+                <div class="kpi-label">{{ card.title }}</div>
+              </div>
+              <div class="kpi-header">
+                <div class="kpi-icon" [style.background-color]="card.color + '20'">
+                  <i class="fa {{ card.icon }}" [style.color]="card.color"></i>
+                </div>
+<!--                <div class="kpi-change" [class.positive]="card.changeType === 'increase'"-->
+<!--                     [class.negative]="card.changeType === 'decrease'">-->
+<!--                  <i class="fa" [class.fa-arrow-up]="card.changeType === 'increase'"-->
+<!--                     [class.fa-arrow-down]="card.changeType === 'decrease'"></i>-->
+<!--                  {{ card.change }}%-->
+<!--                </div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <app-visitors-chart></app-visitors-chart>
+
+
+      </div>
+    </div>
+  </main>
+</div>

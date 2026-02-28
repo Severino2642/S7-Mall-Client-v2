@@ -50,7 +50,8 @@
                   <select
                     class="form-select"
                     [class.is-invalid]="isFieldInvalid('idBoutique')"
-                    formControlName="idBoutique">
+                    formControlName="idBoutique"
+                  (change)="getDefaultMontant()">
                     <option value="" disabled>Selectionner</option>
                     <option *ngFor="let item of listBoutique" [value]="item._id">
                       {{ item?.boutique?.nom }} - {{item.boxe?.nom}} - {{item.centreCommercial?.nom}}

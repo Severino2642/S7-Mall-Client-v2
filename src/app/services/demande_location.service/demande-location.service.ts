@@ -94,9 +94,9 @@ export class DemandeLocationService {
     }
   }
 
-  async accepter(id: string): Promise<DemandeLocationModel | null> {
+  async accepter(id: string): Promise<any | null> {
     try {
-      const res = await firstValueFrom(this.http.get<DemandeLocationModel>(`${this.apiUrl}/accepter/${id}`));
+      const res = await firstValueFrom(this.http.get<any>(`${this.apiUrl}/accepter/${id}`));
       return res;
     } catch (err: any) {
       console.error(err);

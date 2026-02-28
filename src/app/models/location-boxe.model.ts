@@ -8,6 +8,9 @@ export interface LocationBoxeModel {
   idBoxe ?:string;
   idProprietaire ?:string;
   idBoutique ?:string;
+  loyer ?:number;
+  echeance_payment ?:Number;
+  date_expiration ?:Date;
   status ?:number;
   date ?:Date;
 }

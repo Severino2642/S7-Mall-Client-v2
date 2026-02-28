@@ -11,7 +11,7 @@
     <app-header></app-header>
     <div class="main-page">
       <div>
-        <h4 class="text-3xl font-bold" style="color: #101828;">Liste des locations de boxes</h4>
+        <h4 class="text-3xl font-bold" style="color: #101828;">Liste des contrats de location</h4>
         <p class="mt-2 text-sm text-gray-600">Bienvenue sur votre espace de gestion de location</p>
       </div>
 
@@ -164,10 +164,25 @@
               Bloquer
             </span>
                 <div class="stat-icon bg-danger bg-opacity-10 text-danger rounded p-2">
-                  <i class="fa fa-clock"></i>
+                  <i class="fa fa-cancel"></i>
                 </div>
               </div>
               <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalBloquer) }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-start justify-content-between mb-2">
+            <span class="text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+              Montant total du loyer
+            </span>
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded p-2">
+                  <i class="fa fa-money-bill"></i>
+                </div>
+              </div>
+              <h3 class="mb-1">{{ UtilitaireUtil.formatAmount(statistics.totalLoyer) }} <small class="text-muted">Ar</small></h3>
             </div>
           </div>
         </div>
@@ -198,7 +213,13 @@
                   Boutique
                 </th>
                 <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+                  Montant du loyer
+                </th>
+                <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
                   Date
+                </th>
+                <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
+                  Date d'expiration
                 </th>
                 <th class="border-0 text-muted text-uppercase" style="font-size: 0.7rem; font-weight: 600;">
                   Status
@@ -216,14 +237,20 @@
                 <td *ngIf="roleUser===ConstanteUtil.role_centre_commercial">
                   <a [routerLink]="['/owner/details', item.idProprietaire]">{{ item.proprietaire?.nom }} {{ item.proprietaire?.prenom }}</a>
                 </td>
-                <td class="fw-semibold">
+                <td>
                   {{ item.boxe?.nom }}
                 </td>
                 <td>
                 {{ item.boutique?.nom }}
                 </td>
+                <td class="fw-semibold">
+                  {{ UtilitaireUtil.formatAmount(item.loyer) }} <small class="text-muted">Ar</small>
+                </td>
                 <td class="text-muted">
                   {{ item.date | date:'dd/MM/yyyy' }}
+                </td>
+                <td class="text-muted">
+                  {{ item.date_expiration | date:'dd/MM/yyyy' }}
                 </td>
                 <td>
                   <span class="badge" [ngClass]="LocationBoxe.getStatusClass(item.status)">
