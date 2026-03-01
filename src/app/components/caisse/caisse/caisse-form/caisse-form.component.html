@@ -38,7 +38,7 @@
                     class="form-control"
                     [class.is-invalid]="isFieldInvalid('nom')"
                     formControlName="nom"
-                    placeholder="0">
+                    placeholder="">
                   <div class="invalid-feedback" *ngIf="isFieldInvalid('nom')">
                     {{ getFieldError('nom') }}
                   </div>
@@ -52,7 +52,7 @@
                     class="form-control"
                     [class.is-invalid]="isFieldInvalid('numero_compte')"
                     formControlName="numero_compte"
-                    placeholder="0">
+                    placeholder="">
                   <div class="invalid-feedback" *ngIf="isFieldInvalid('numero_compte')">
                     {{ getFieldError('numero_compte') }}
                   </div>
