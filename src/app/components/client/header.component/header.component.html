@@ -16,12 +16,9 @@
         <!-- Barre de recherche -->
         <div class="search-section">
           <form class="search-form" (submit)="onSearch(); $event.preventDefault()">
-            <select class="search-category">
-              <option value="all">Toutes</option>
-              <option value="electronics">Électronique</option>
-              <option value="fashion">Mode</option>
-              <option value="home">Maison</option>
-              <option value="books">Livres</option>
+            <select class="search-category" [(ngModel)]="categoryFilter" name="category">
+              <option value="">Toutes</option>
+              <option *ngFor="let item of categories" [value]="item._id">{{item.desce}}</option>
             </select>
             <input
               type="text"

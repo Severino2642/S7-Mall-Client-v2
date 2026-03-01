@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {AuthService} from '../../../services/auth.service/auth.service';
@@ -14,7 +14,7 @@ import {BoutiqueService} from "../../../services/boutique.service/boutique.servi
 
 @Component({
   selector: 'app-login.component',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   standalone: true
@@ -24,7 +24,30 @@ export class LoginComponent {
   showPassword = false;
   isLoading = false;
   errorMessage = '';
-
+  listRoles = ['Centre Commercial', 'Proprietaire', 'Client', 'Manager'];
+  role = this.listRoles[0];
+  defaultLogin = [
+    {
+      role: 'Centre Commercial',
+      identifiant: 'olympia@gmail.com',
+      mdp: '12345678'
+    },
+    {
+      role: 'Proprietaire',
+      identifiant: 'jeanmichel@gmail.com',
+      mdp: '12345678'
+    },
+    {
+      role: 'Client',
+      identifiant: 'jose@gmail.com',
+      mdp: '12345678'
+    },
+    {
+      role: 'Manager',
+      identifiant: 'severino@gmail.com',
+      mdp: '12345678'
+    }
+  ];
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -41,6 +64,7 @@ export class LoginComponent {
       mdp: ['', [Validators.required]],
       rememberMe: [false]
     });
+    this.changeDefaultLogin();
   }
 
   togglePasswordVisibility(): void {
@@ -132,5 +156,16 @@ export class LoginComponent {
 
   get mdp() {
     return this.loginForm.get('mdp');
+  }
+
+  changeDefaultLogin(): void {
+    const selectedLogin = this.defaultLogin.find(login => login.role === this.role);
+    if (selectedLogin) {
+      console.log('Selected default login:', selectedLogin);
+      this.loginForm.patchValue({
+        identifiant: selectedLogin.identifiant,
+        mdp: selectedLogin.mdp
+      });
+    }
   }
 }
