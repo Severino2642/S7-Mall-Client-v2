@@ -3,7 +3,7 @@ import {CategorieModel} from "../../../../../models/categorie.model";
 import {ProduitCPLModel} from "../../../../../models/produit.model";
 import {ProduitService} from "../../../../../services/produit.service/produit.service";
 import {CategorieService} from "../../../../../services/categorie.service/categorie.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {StorageUtil} from "../../../../../utils/storage.util";
 import {BoutiqueModel} from "../../../../../models/boutique.model";
 import {ConstanteUtil} from "../../../../../utils/constante.util";
@@ -76,7 +76,8 @@ export class MarketProduitListeComponent {
     private centreCommercialService: MallService,
     private boutiqueService: BoutiqueService,
     private panierService: PanierService,
-    private router : Router
+    private router : Router,
+    private route : ActivatedRoute
   ) {
   }
 
@@ -91,6 +92,17 @@ export class MarketProduitListeComponent {
     await this.loadBoutique();
     this.applyFilters();
     this.updatePagination();
+
+    let q = this.route.snapshot.queryParamMap.get('q');
+    let categorie = this.route.snapshot.queryParamMap.get('categorie');
+    if (q){
+      this.filters.nom = q;
+    }
+    if (categorie){
+      this.filters.categorie = categorie;
+      this.activeCategory = categorie || "";
+    }
+    this.applyFilters();
   }
 
   async loadCategories(): Promise<void> {

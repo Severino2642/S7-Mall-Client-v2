@@ -1,13 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {StorageUtil} from "../../../utils/storage.util";
 import {UserInfo} from "../../admin/navbar.component/navbar.component";
 import {NotificationModel} from "../../../models/notification.model";
 import {NotificationService} from "../../../services/notification.service/notification.service";
 import {UtilitaireUtil} from "../../../utils/utilitaire.util";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {CategorieModel} from "../../../models/categorie.model";
+import {CategorieService} from "../../../services/categorie.service/categorie.service";
 
 
 @Component({
@@ -19,11 +21,13 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 })
 export class HeaderComponent implements OnInit{
   searchQuery = '';
+  categoryFilter = "";
   showUserMenu = false;
   showNotifications = false;
   cartItemsCount = 0;
   private cartRefreshTimer: any;
   private notifRefreshTimer: any;
+  categories : CategorieModel[] = [];
 
   userInfo: UserInfo = {
     name: 'Wrath Neon',
@@ -43,7 +47,9 @@ export class HeaderComponent implements OnInit{
   constructor(
     private router: Router,
     private notificationService: NotificationService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private categorieService: CategorieService,
+    private route : ActivatedRoute
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -77,6 +83,16 @@ export class HeaderComponent implements OnInit{
       this.userInfo.email = boutique.email;
     }
 
+    let q = this.route.snapshot.queryParamMap.get('q');
+    if (q) {
+      this.searchQuery = q;
+    }
+    let categorie = this.route.snapshot.queryParamMap.get('categorie');
+    if (categorie) {
+      this.categoryFilter = categorie;
+    }
+
+    await this.loadCategories();
     this.cartItemsCount = StorageUtil.getFromStorage<number>("cartItemsCount") || 0;
 
     this.cartRefreshTimer = setInterval(() => {
@@ -87,6 +103,13 @@ export class HeaderComponent implements OnInit{
     this.notifRefreshTimer = setInterval(() => {
       this.loadNotifications();
     }, 5000);
+  }
+
+  async loadCategories(): Promise<void> {
+    var res = await this.categorieService.getAll();
+    if (res!=null){
+      this.categories = res;
+    }
   }
 
   async loadNotifications(): Promise<void> {
@@ -105,11 +128,16 @@ export class HeaderComponent implements OnInit{
 
   // Recherche
   onSearch(): void {
-    if (this.searchQuery.trim()) {
-      console.log('Recherche:', this.searchQuery);
-      // Navigation vers page de résultats
-      // this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
-    }
+    console.log('Recherche:', this.searchQuery);
+    this.router.navigate(['/client/market/produit/'], {
+      queryParams: {
+        categorie: this.categoryFilter,
+        q: this.searchQuery
+      }
+    }).then(() => {
+      // Forcer le rechargement de la page après navigation
+      window.location.reload();
+    });
   }
 
   // Toggle notifications
