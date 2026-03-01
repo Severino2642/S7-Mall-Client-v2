@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {PaymentLoyerModel} from "../../../../models/payment-loyer.model";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {LocationBoxeCPLModel, LocationBoxeModel} from "../../../../models/location-boxe.model";
+import {LocationBoxe, LocationBoxeCPLModel, LocationBoxeModel} from "../../../../models/location-boxe.model";
 import {ConstanteUtil} from "../../../../utils/constante.util";
 import {PaymentLoyerService} from "../../../../services/payment_loyer.service/payment-loyer.service";
 import {LocationBoxeService} from "../../../../services/location_boxe.service/location-boxe.service";
@@ -39,7 +39,8 @@ export class LocationBoxeFormComponent {
   id = null;
   loading = false;
   listBoutique: BoutiqueCPLModel[] = [];
-
+  userRole = "";
+  listJoursDuMois = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
   constructor(
     private fb: FormBuilder,
     private itemService:LocationBoxeService,
@@ -49,8 +50,12 @@ export class LocationBoxeFormComponent {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    const auth = StorageUtil.getFromStorage<any>("auth");
+    this.userRole = auth.role.val;
     this.id = this.route.snapshot.params['id'];
-    await this.loadListeBoutique();
+    if (this.userRole === ConstanteUtil.role_proprietaire) {
+      await this.loadListeBoutique();
+    }
     if (this.id!=null && this.id!="") {
       // Mode modification
       this.loadItem(this.id);
@@ -75,6 +80,9 @@ export class LocationBoxeFormComponent {
   // Initialiser le formulaire
   initForm(): void {
     this.boxeForm = this.fb.group({
+      loyer: [this.item?.loyer || '', [Validators.min(0)]],
+      echeance_payment: [this.item?.echeance_payment || '', [Validators.min(1)]],
+      date_expiration: [UtilitaireUtil.getFormattedDate(this.item?.date_expiration) || ''],
       idBoutique: [this.item?.idBoutique || ''],
     });
   }
@@ -118,7 +126,7 @@ export class LocationBoxeFormComponent {
   // Soumettre le formulaire
   submitForm(): void {
     if (this.boxeForm.valid) {
-      const formData: MouvementCaisseModel = {
+      const formData: LocationBoxeModel = {
         ...this.boxeForm.value
       };
 
@@ -140,14 +148,14 @@ export class LocationBoxeFormComponent {
     }
   }
 
-  async createItem(formData: BoxeModel): Promise<void> {
+  async createItem(formData: LocationBoxeModel): Promise<void> {
     this.loading = true;
     var res = await this.itemService.create(formData);
     this.router.navigate([`owner/location_boxe/details/${res._id}`]);
     this.loading = false;
   }
 
-  async updateItem(formData: BoxeModel): Promise<void> {
+  async updateItem(formData: LocationBoxeModel): Promise<void> {
     this.loading = true;
     await this.itemService.update(this.id!, formData);
     this.router.navigate([`owner/location_boxe/details/${this.id}`]);
@@ -171,6 +179,8 @@ export class LocationBoxeFormComponent {
   }
 
   getTitre(): string {
-    return this.isEditMode ? "Modification de location de boxe" : "Saisie d'un payment de loyer";
+    return this.isEditMode ? "Modification du contrat de location" : "Saisie d'un payment de loyer";
   }
+
+  protected readonly ConstanteUtil = ConstanteUtil;
 }

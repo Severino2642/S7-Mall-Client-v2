@@ -45,15 +45,14 @@ export class NavbarComponent implements OnInit{
       icon: '',
       role:'Centre Commercial',
       children: [
-        { label: 'Tableau de bord', icon: 'fa fa-area-chart', route: '/home' },
+        { label: 'Tableau de bord', icon: 'fa fa-compass', route: 'admin/dashboard/' },
         {
           label: 'Boxes',
           icon: 'fa fa-warehouse',
           route: '',
           children: [
             { label: 'Saisie', icon: 'fa fa-plus', route: 'admin/boxe/create' },
-            { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' },
-            { label: 'Locations', icon: 'fa fa-list', route: '/owner/location_boxe' }
+            { label: 'Liste', icon: 'fa fa-list', route: 'admin/boxe/' }
           ]
         },
         {
@@ -66,8 +65,9 @@ export class NavbarComponent implements OnInit{
           ]
         },
         { label: 'Demande de location', icon: 'fa fa-file-alt', route: '/owner/demandeLocation' },
+        { label: 'Contrat de location', icon: 'fa fa-clipboard-list', route: '/owner/location_boxe' },
         { label: 'Boutiques', icon: 'fa fa-shop', route: '/owner/boutique' },
-        { label: 'Payment de loyer', icon: 'fa fa-money-bill', route: '/owner/payment_loyer' },
+        { label: 'Paiement de loyer', icon: 'fa fa-money-bill', route: '/owner/payment_loyer' },
         {
           label: 'Caisse',
           icon: 'fa fa-cash-register',
@@ -95,7 +95,7 @@ export class NavbarComponent implements OnInit{
       children: [
         { label: 'Offres de location', icon: 'fa fa-tag', route: '/owner/offreLocation/liste' },
         { label: 'Demande de location', icon: 'fa fa-file-alt', route: '/owner/demandeLocation' },
-        { label: 'Mes boxes', icon: 'fa fa-warehouse', route: '/owner/location_boxe' },
+        { label: 'Contrat de location', icon: 'fa fa-clipboard-list', route: '/owner/location_boxe' },
         {
           label: 'Boutique',
           icon: 'fa fa-shop',
@@ -115,7 +115,7 @@ export class NavbarComponent implements OnInit{
           ]
         },
         {
-          label: 'Payment de loyer',
+          label: 'Paiement de loyer',
           icon: 'fa fa-money-bill',
           route: '',
           children: [

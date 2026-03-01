@@ -13,7 +13,7 @@
         <span>
           <i class="fa fa-arrow-left text-muted cursor-pointer" (click)="goBack()"></i>
         </span>
-        <h4 class="text-3xl fw-bold" style="color: #101828;">Details de la location</h4>
+        <h4 class="text-3xl fw-bold" style="color: #101828;">Details du contrat de location</h4>
       </div>
       <!-- Header Section avec Image et Détails -->
       <div class="card border-0 shadow-sm mb-4">
@@ -64,11 +64,29 @@
                         <div class="stat-value" [class.text-danger]="!item?.boutique">{{ item?.boutique?.nom || 'Aucune' }}</div>
                       </div>
                     </div>
-
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Montant du loyer</div>
+                        <div class="stat-value">{{ UtilitaireUtil.formatAmount(item?.loyer) }} <small class="text-muted">Ar</small></div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Echeance de paiement <small class="text-muted">(jour du mois)</small></div>
+                        <div class="stat-value">{{ item?.echeance_payment }}</div>
+                      </div>
+                    </div>
                     <div class="col-12 col-md-4">
                       <div class="stat-box">
                         <div class="stat-label text-uppercase text-muted">Date</div>
                         <div class="stat-value">{{ item?.date|date:'dd/MM/YYYY' }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                      <div class="stat-box">
+                        <div class="stat-label text-uppercase text-muted">Date d'expiration</div>
+                        <div class="stat-value">{{ item?.date_expiration|date:'dd/MM/YYYY' }}</div>
                       </div>
                     </div>
                   </div>
@@ -95,18 +113,32 @@
               Debloquer
             </button>
             <button
-              *ngIf="userRole===ConstanteUtil.role_centre_commercial && item?.status===ConstanteUtil.ETAT_OCCUPEE"
+              *ngIf="item?.status===ConstanteUtil.ETAT_OCCUPEE"
               class="btn btn-danger"
               (click)="deleteItem()">
               <i class="fa fa-trash me-2"></i>
               Supprimer
             </button>
             <button
+              *ngIf="userRole===ConstanteUtil.role_centre_commercial && item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              class="btn btn-warning"
+              (click)="editItem()">
+              <i class="fa fa-edit me-2"></i>
+              Modifier
+            </button>
+            <button
               *ngIf="userRole===ConstanteUtil.role_proprietaire && item?.status===ConstanteUtil.ETAT_DISPONIBLE"
-              class="btn btn-primary"
+              class="btn btn-warning"
               (click)="editItem()">
               <i class="fa fa-edit me-2"></i>
               Attribuer une boutique
+            </button>
+            <button
+              *ngIf="userRole===ConstanteUtil.role_proprietaire && item?.status===ConstanteUtil.ETAT_DISPONIBLE"
+              class="btn btn-primary"
+              (click)="goToPayement()">
+              <i class="fa fa-credit-card me-2"></i>
+              Payer le loyer
             </button>
           </div>
         </div>

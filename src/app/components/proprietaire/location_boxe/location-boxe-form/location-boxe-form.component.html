@@ -29,7 +29,51 @@
 
               <!-- Form Fields -->
               <div class="row g-3">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3" *ngIf="userRole===ConstanteUtil.role_centre_commercial">
+                  <label class="form-label fw-medium">
+                    Montant du loyer
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('loyer')"
+                    formControlName="loyer"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('loyer')">
+                    {{ getFieldError('loyer') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="userRole===ConstanteUtil.role_centre_commercial">
+                  <label class="form-label fw-medium">
+                    Echeance de paiement <small class="text-muted">(jour du mois)</small>
+                  </label>
+                  <select
+                    class="form-select"
+                    [class.is-invalid]="isFieldInvalid('echeance_payment')"
+                    formControlName="echeance_payment">
+                    <option *ngFor="let item of listJoursDuMois" [value]="item">
+                      {{ item }}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('echeance_payment')">
+                    {{ getFieldError('echeance_payment') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="userRole===ConstanteUtil.role_centre_commercial">
+                  <label class="form-label fw-medium">
+                    Date d'expiration
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    [class.is-invalid]="isFieldInvalid('date_expiration')"
+                    formControlName="date_expiration"
+                    placeholder="">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid('date_expiration')">
+                    {{ getFieldError('date_expiration') }}
+                  </div>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="userRole===ConstanteUtil.role_proprietaire">
                   <label class="form-label fw-medium">
                     Boutique
                   </label>

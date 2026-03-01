@@ -71,10 +71,20 @@ export class PaymentLoyerFormComponent {
 
   // Initialiser le formulaire
   initForm(): void {
+    let idContrat = this.route.snapshot.queryParams['idContrat'];
+    let montant = this.route.snapshot.queryParams['montant'];
+    if (idContrat && !this.isEditMode) {
+      this.item = {
+        idBoutique: idContrat,
+        mois: '',
+        montant: montant ? parseFloat(montant) : 0,
+        date: new Date(),
+      };
+    }
     this.boxeForm = this.fb.group({
       idBoutique: [this.item?.idBoutique || '', [Validators.required]],
       mois: [this.item?.mois || '', [Validators.required]],
-      annee: [this.item?.annee || '', [Validators.required, Validators.min(2025)]],
+      annee: [this.item?.annee || new Date().getFullYear(), [Validators.required, Validators.min(2025)]],
       montant: [this.item?.montant || '', [Validators.required, Validators.min(0)]],
       date: [UtilitaireUtil.getFormattedDate(this.item?.date) || '', [Validators.required]],
     });
@@ -175,5 +185,14 @@ export class PaymentLoyerFormComponent {
 
   getTitre(): string {
     return this.isEditMode ? "Modification d'un payment de loyer" : "Saisie d'un payment de loyer";
+  }
+
+  getDefaultMontant(): void {
+    let contrat = this.listBoutique.find(p => p._id === this.boxeForm.get('idBoutique')?.value);
+    if (contrat) {
+      this.boxeForm.get('montant')?.setValue(contrat.loyer);
+    } else {
+      this.boxeForm.get('montant')?.setValue(0);
+    }
   }
 }

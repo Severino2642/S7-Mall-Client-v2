@@ -186,7 +186,7 @@ export class DemandeLocationListeComponent {
     if (item?._id != null) {
       const updatedItem = await this.itemService.accepter(item?._id);
       this.items[index].status = ConstanteUtil.ETAT_VALIDER;
-      this.applyFilters()
+      this.router.navigate(['owner/location_boxe/details',updatedItem.idLocation]);
     }
   }
 

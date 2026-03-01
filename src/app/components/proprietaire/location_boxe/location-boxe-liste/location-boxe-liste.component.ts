@@ -39,6 +39,9 @@ export class LocationBoxeListeComponent {
     {val : 0, label : "TOUS"},
     {val : 1, label : "DISPONIBLE"},
     {val : 3, label : "BLOQUER"},
+    {val : 4, label : "EN COURS"},
+    {val : 5, label : "EXPIRER"},
+
   ];
 
 
@@ -46,7 +49,8 @@ export class LocationBoxeListeComponent {
   statistics = {
     totalListe: 0,
     totalDisponible:0,
-    totalBloquer:0
+    totalBloquer:0,
+    totalLoyer:0
   };
 
   // Objet Miova2
@@ -93,12 +97,14 @@ export class LocationBoxeListeComponent {
     this.statistics.totalListe = this.filteredItems.length;
     this.statistics.totalDisponible = 0;
     this.statistics.totalBloquer = 0;
+    this.statistics.totalLoyer = 0;
     this.filteredItems.forEach(item => {
       if (item.status == ConstanteUtil.ETAT_DISPONIBLE){
         this.statistics.totalDisponible += 1;
       }else if (item.status == ConstanteUtil.ETAT_OCCUPEE){
         this.statistics.totalBloquer += 1;
       }
+      this.statistics.totalLoyer += item.loyer || 0;
     });
   }
 
@@ -125,8 +131,17 @@ export class LocationBoxeListeComponent {
         }
       }
 
-      if (this.filters.status != 0 && item.status != this.filters.status) {
+      if (this.filters.status != 0 && this.filters.status < 4 && item.status != this.filters.status) {
         return false;
+      }
+      if (item.date_expiration!=undefined){
+        const dateNow = new Date();
+        if (this.filters.status == 4 && new Date(item.date_expiration).getTime() < dateNow.getTime()) {
+          return false;
+        }
+        if (this.filters.status == 5 && new Date(item.date_expiration).getTime() >= dateNow.getTime()) {
+          return false;
+        }
       }
       return true;
     });

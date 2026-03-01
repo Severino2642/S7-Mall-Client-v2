@@ -1,6 +1,7 @@
 import {BonDeCommandeDetailsModel} from "./bon-de-commande-details.model";
 import {BoutiqueModel} from "./boutique.model";
 import {ClientModel} from "./client.model";
+import {BoxeModel} from "./boxe.model";
 
 export interface BonDeCommandeModel {
   _id?: string;
@@ -18,6 +19,7 @@ export interface BonDeCommandeCPLModel extends BonDeCommandeModel{
   filles?: BonDeCommandeDetailsModel[];
   boutique?: BoutiqueModel;
   client?: ClientModel;
+  boxe?: BoxeModel;
 }
 
 export class BonDeCommande {

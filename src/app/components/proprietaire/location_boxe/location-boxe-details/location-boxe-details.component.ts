@@ -18,6 +18,7 @@ import {
 import {
   PaymentLoyerOngletListeComponent
 } from "../../boutique/boutique/onglet/payment-loyer-onglet-liste/payment-loyer-onglet-liste.component";
+import {UtilitaireUtil} from "../../../../utils/utilitaire.util";
 
 @Component({
   selector: 'app-location-boxe-details',
@@ -90,6 +91,20 @@ export class LocationBoxeDetailsComponent {
     }
   }
 
+  goToPayement(): void {
+    if (this.item?._id) {
+      this.router.navigate(
+        ['owner/payment_loyer/create'],
+        {
+          queryParams: {
+            idContrat: this.item._id,
+            montant: this.item.loyer || 0,
+          }
+        }
+      );
+    }
+  }
   protected readonly ConstanteUtil = ConstanteUtil;
   protected readonly LocationBoxe = LocationBoxe;
+  protected readonly UtilitaireUtil = UtilitaireUtil;
 }

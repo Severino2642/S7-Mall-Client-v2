@@ -4,6 +4,7 @@ import {firstValueFrom, Observable} from 'rxjs';
 import {UrlUtil} from '../../utils/url.util';
 import {CentreCommercialCPLModel, CentreCommercialModel} from '../../models/mall.model';
 import {BoutiqueModel} from "../../models/boutique.model";
+import {BonDeCommandeCPLModel} from "../../models/bon-de-commande.model";
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,28 @@ export class MallService {
   async fermer(id: string): Promise<CentreCommercialModel | null> {
     try {
       const res = await firstValueFrom(this.http.get<CentreCommercialModel>(`${this.apiUrl}/fermer/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
+
+  async getEtatLoyerMensuel(id: string): Promise<any | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<any>(`${this.apiUrl}/etatLoyer/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
+  }
+
+  async getVisiteurs(id: string): Promise<BonDeCommandeCPLModel[] | null> {
+    try {
+      const res = await firstValueFrom(this.http.get<BonDeCommandeCPLModel[]>(`${this.apiUrl}/visiteurs/${id}`));
       return res;
     } catch (err: any) {
       console.error(err);
