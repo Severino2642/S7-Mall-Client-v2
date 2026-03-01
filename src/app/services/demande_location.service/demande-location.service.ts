@@ -35,8 +35,15 @@ export class DemandeLocationService {
     }
   }
 
-  delete(id:any): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+  async delete(id:any): Promise<any|null> {
+    try {
+      const res = await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
+      return res;
+    } catch (err: any) {
+      console.error(err);
+      alert(err.error?.message || 'Erreur serveur');
+      return null;
+    }
   }
 
   async getById(id: string): Promise<DemandeLocationModel | null> {
